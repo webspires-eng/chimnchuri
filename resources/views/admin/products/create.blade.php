@@ -93,7 +93,7 @@
         </div>
         <div class="card-body">
             <!-- File Upload -->
-            <form action="" method="post" class="dropzone" id="myAwesomeDropzone" data-plugin="dropzone"
+            <form action="" method="post" class="dropzone" id="productDropzone" data-plugin="dropzone"
                 data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
                 <div class="fallback">
                     <input name="file" type="file" multiple />
@@ -113,6 +113,29 @@
 
 @section('javascript')
     <script>
+        Dropzone.autoDiscover = false;
+
+        let productId = null;
+
+        const myDropzone = new Dropzone("#productDropzone", {
+            url: "/",
+            autoProcessQueue: false,
+            maxFilesize: 5,
+            maxFiles: 10,
+            uploadMultiple: false,
+            parallelUploads: 10,
+            acceptedFiles: ".jpg,.jpeg,.png",
+            addRemoveLinks: true,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            }
+        });
+
+        myDropzone.on("queuecomplete", function() {
+            console.log("completed")
+            window.location.href = "{{ route('products.index') }}";
+        });
+
         $(document).ready(function() {
 
             $('#productForm').on('submit', function(e) {
@@ -136,7 +159,20 @@
                         $('#productForm .invalid-feedback').remove();
                     },
                     success: function(response) {
-                        window.location.href = "{{ route('products.index') }}";
+                        console.log(response)
+
+                        productId = response.id;
+
+                        // NOW set real upload URL
+                        myDropzone.options.url = `/products/${productId}/media`;
+
+                        if (myDropzone.files.length > 0) {
+                            myDropzone.processQueue();
+                        } else {
+                            window.location.href = "{{ route('products.index') }}";
+                        }
+
+                        // window.location.href = "{{ route('products.index') }}";
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
@@ -174,6 +210,7 @@
             });
 
         });
+
 
 
 

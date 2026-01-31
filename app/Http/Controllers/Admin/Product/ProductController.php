@@ -16,8 +16,8 @@ class ProductController extends Controller
     public function index()
     {
         $products = $this->itemService->getAllItems();
-        // return $products->load("sizes");
-        $data["products"] = $products;
+        $data["products"] = $products->load("media");
+        // return $data;
         return view("admin.products.index", $data);
     }
 
@@ -53,8 +53,7 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        $product = Item::with("sizes")->find($id);
-        // return $product;
+        $product = Item::with(["sizes", "media"])->find($id);
 
         return view("admin.products.edit", compact("product"));
     }

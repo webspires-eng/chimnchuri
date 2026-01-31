@@ -132,6 +132,72 @@
 
 @section('javascript')
     <script>
+        Dropzone.autoDiscover = false;
+        const myDropzone = new Dropzone("#myAwesomeDropzone", {
+            url: "{{ route('products.media.store', $product->id) }}",
+            autoProcessQueue: false,
+            maxFilesize: 5,
+            maxFiles: 10,
+            uploadMultiple: false,
+            parallelUploads: 10,
+            acceptedFiles: ".jpg,.jpeg,.png",
+            addRemoveLinks: true,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            init: function() {
+                var myDropzone = this;
+
+                // Existing images
+                @if ($product->media)
+                    @foreach ($product->media as $media)
+                        var mockFile = {
+                            name: "{{ $media->file_name }}",
+                            size: {{ $media->size }},
+                            id: "{{ $media->id }}"
+                        };
+
+                        mockFile.status = Dropzone.SUCCESS;
+                        mockFile.accepted = true;
+
+                        myDropzone.emit("addedfile", mockFile);
+                        myDropzone.emit("thumbnail", mockFile, "{{ $media->getUrl() }}");
+                        myDropzone.emit("success", mockFile);
+                        myDropzone.emit("complete", mockFile);
+                    @endforeach
+                @endif
+
+
+                this.on("removedfile", function(file) {
+                    if (file.id) {
+                        $.ajax({
+                            type: 'DELETE',
+                            url: '/products/media/' + file.id,
+                            headers: {
+                                'X-CSRF-TOKEN': $('meta[name="csrf-token"]')
+                                    .attr('content')
+                            },
+                            success: function(data) {
+                                console.log("File has been successfully removed!!");
+                            },
+                            error: function(e) {
+                                console.log(e);
+                            }
+                        });
+                    }
+                });
+
+
+            }
+        });
+        myDropzone.on("queuecomplete", function() {
+            if (myDropzone.getUploadingFiles().length === 0 &&
+                myDropzone.getQueuedFiles().length === 0 &&
+                myDropzone.getAcceptedFiles().length > 0) {
+
+                window.location.href = "{{ route('products.index') }}";
+            }
+        });
         $(document).ready(function() {
 
             $('#productForm').on('submit', function(e) {
@@ -156,7 +222,13 @@
                         $('#productForm .invalid-feedback').remove();
                     },
                     success: function(response) {
-                        window.location.href = "{{ route('products.index') }}";
+                        console.log(response);
+                        if (myDropzone.getQueuedFiles().length > 0) {
+                            myDropzone.processQueue();
+                        } else {
+                            window.location.href = "{{ route('products.index') }}";
+                        }
+                        // window.location.href = "{{ route('products.index') }}";
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
@@ -194,8 +266,6 @@
             });
 
         });
-
-
 
         // Dynamically handle item size rows
         document.addEventListener('DOMContentLoaded', function() {

@@ -31,7 +31,7 @@
                                             <div class="d-flex align-items-center gap-2">
                                                 <div
                                                     class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                    <img src="{{ asset('admin/assets/images/product/p-1.png') }}"
+                                                    <img src="{{ $product->getFirstMediaUrl('images') ? $product->getFirstMediaUrl('images') : asset('admin/assets/images/product/p-1.png') }}"
                                                         alt="" class="avatar-md">
                                                 </div>
                                                 <div>

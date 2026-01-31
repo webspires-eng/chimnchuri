@@ -6,9 +6,12 @@ use Illuminate\Database\Eloquent\Factories\HasFactory;
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
-class Item extends Model
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
+
+class Item extends Model implements HasMedia
 {
-    use SoftDeletes, HasFactory;
+    use SoftDeletes, HasFactory, InteractsWithMedia;
     protected $fillable = [
         "uuid",
         "name",
@@ -36,5 +39,32 @@ class Item extends Model
         return $this->hasMany(AddonGroup::class)
             ->where('is_active', true)
             ->orderBy('sort_order');
+    }
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('images')
+            ->useDisk('public');
+    }
+
+
+    public function getImagesAttribute()
+    {
+        return $this->getMedia('images')->map(function ($media) {
+            return [
+                'id' => $media->id,
+                'url' => $media->getUrl(),
+                'thumb' => $media->getUrl('thumb'),
+                'preview' => $media->getUrl('preview'),
+                'name' => $media->file_name,
+                'size' => $media->human_readable_size,
+            ];
+        });
+    }
+
+    // Optional: Get first image URL quickly
+    public function getFeaturedImageAttribute()
+    {
+        return $this->getFirstMediaUrl('images');
     }
 }
