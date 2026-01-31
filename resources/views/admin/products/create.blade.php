@@ -3,6 +3,89 @@
 
 @section("content")
 
+    <form id="productForm">
+        <div class="card">
+            <div class="card-header">
+                <h4 class="card-title">Product Information</h4>
+            </div>
+            <div class="card-body">
+                <div class="row">
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label for="product-name" class="form-label">Product Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="Items Name">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <div class="mb-3">
+                            <label for="slug" class="form-label">Product Slug</label>
+                            <input type="text" id="slug" name="slug" class="form-control" placeholder="Items Slug">
+                        </div>
+                    </div>
+                    <div class="col-lg-4">
+                        <label for="product-categories" class="form-label">Product Categories</label>
+                        <select class="form-control" id="product-categories" data-choices data-choices-groups
+                            data-placeholder="Select Categories" name="choices-single-groups">
+                            <option value="">Choose a categories</option>
+                            <option value="Fashion">Fashion</option>
+                            <option value="Electronics">Electronics</option>
+                            <option value="Footwear">Footwear</option>
+                            <option value="Sportswear">Sportswear</option>
+                            <option value="Watches">Watches</option>
+                            <option value="Furniture">Furniture</option>
+                            <option value="Appliances">Appliances</option>
+                            <option value="Headphones">Headphones</option>
+                            <option value="Other Accessories">Other Accessories</option>
+                        </select>
+                    </div>
+                </div>
+                <div class="row mb-2">
+                    <div class="col-lg-12">
+                        <div class="mt-3">
+                            <h5 class="text-dark fw-medium">Sizes & Prices:</h5>
+                            <div class="item-sizes " id="item-sizes">
+                                <div class="row">
+
+                                    <div class="col-md-3 mb-3">
+                                        <label class="form-label">Name</label>
+                                        <input type="text" name="sizes[0][name]" class="form-control" required>
+                                    </div>
+                                    <div class="col-md-2 mb-3">
+                                        <label class="form-label">Price</label>
+                                        <input type="number" name="sizes[0][price]" class="form-control" step="0.01"
+                                            required>
+                                    </div>
+
+                                    <div class="col-md-3 mb-3 d-flex align-items-end">
+
+
+                                    </div>
+                                </div>
+                            </div>
+
+                        </div>
+                    </div>
+
+                </div>
+                <div class="row">
+                    <div class="col-lg-12">
+                        <div class="mb-3">
+                            <label for="description" class="form-label">Description</label>
+                            <textarea class="form-control bg-light-subtle" id="description" rows="7"
+                                placeholder="Short description about the product" name="description"></textarea>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="p-3 bg-light mb-3 rounded">
+            <div class="row justify-content-end g-2">
+                <div class="col-lg-2">
+                    <button type="submit" class="btn btn-outline-secondary w-100">Create Product</button>
+                </div>
+            </div>
+        </div>
+    </form>
     <div class="card">
         <div class="card-header">
             <h4 class="card-title">Add Product Photo</h4>
@@ -24,222 +107,165 @@
             </form>
         </div>
     </div>
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Product Information</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-6">
-                    <form>
-                        <div class="mb-3">
-                            <label for="product-name" class="form-label">Product Name</label>
-                            <input type="text" id="product-name" class="form-control" placeholder="Items Name">
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-6">
-                    <form>
-                        <label for="product-categories" class="form-label">Product Categories</label>
-                        <select class="form-control" id="product-categories" data-choices data-choices-groups
-                            data-placeholder="Select Categories" name="choices-single-groups">
-                            <option value="">Choose a categories</option>
-                            <option value="Fashion">Fashion</option>
-                            <option value="Electronics">Electronics</option>
-                            <option value="Footwear">Footwear</option>
-                            <option value="Sportswear">Sportswear</option>
-                            <option value="Watches">Watches</option>
-                            <option value="Furniture">Furniture</option>
-                            <option value="Appliances">Appliances</option>
-                            <option value="Headphones">Headphones</option>
-                            <option value="Other Accessories">Other Accessories</option>
-                        </select>
-                    </form>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4">
-                    <form>
-                        <div class="mb-3">
-                            <label for="product-brand" class="form-label">Brand</label>
-                            <input type="text" id="product-brand" class="form-control" placeholder="Brand Name">
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <form>
-                        <div class="mb-3">
-                            <label for="product-weight" class="form-label">Weight</label>
-                            <input type="text" id="product-weight" class="form-control" placeholder="In gm & kg">
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <form>
-                        <label for="gender" class="form-label">Gender</label>
-                        <select class="form-control" id="gender" data-choices data-choices-groups
-                            data-placeholder="Select Gender">
-                            <option value="">Select Gender</option>
-                            <option value="Men">Men</option>
-                            <option value="Women">Women</option>
-                            <option value="Other">Other</option>
-                        </select>
-                    </form>
-                </div>
-            </div>
-            <div class="row mb-4">
-                <div class="col-lg-4">
-                    <div class="mt-3">
-                        <h5 class="text-dark fw-medium">Size :</h5>
-                        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Basic checkbox toggle button group">
-                            <input type="checkbox" class="btn-check" id="size-xs1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="size-xs1">XS</label>
 
-                            <input type="checkbox" class="btn-check" id="size-s1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="size-s1">S</label>
+@endsection
 
-                            <input type="checkbox" class="btn-check" id="size-m1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="size-m1">M</label>
 
-                            <input type="checkbox" class="btn-check" id="size-xl1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="size-xl1">Xl</label>
+@section("javascript")
 
-                            <input type="checkbox" class="btn-check" id="size-xxl1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="size-xxl1">XXL</label>
-                            <input type="checkbox" class="btn-check" id="size-3xl1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="size-3xl1">3XL</label>
+    <script>
 
-                        </div>
-                    </div>
-                </div>
-                <div class="col-lg-5">
-                    <div class="mt-3">
-                        <h5 class="text-dark fw-medium">Colors :</h5>
-                        <div class="d-flex flex-wrap gap-2" role="group" aria-label="Basic checkbox toggle button group">
-                            <input type="checkbox" class="btn-check" id="color-dark1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-dark1"> <i class="bx bxs-circle fs-18 text-dark"></i></label>
+        $(document).ready(function () {
 
-                            <input type="checkbox" class="btn-check" id="color-yellow1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-yellow1"> <i class="bx bxs-circle fs-18 text-warning"></i></label>
+            $('#productForm').on('submit', function (e) {
+                e.preventDefault();
 
-                            <input type="checkbox" class="btn-check" id="color-white1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-white1"> <i class="bx bxs-circle fs-18 text-white"></i></label>
+                let form = this;
+                let formData = new FormData(form);
 
-                            <input type="checkbox" class="btn-check" id="color-red1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-red1"> <i class="bx bxs-circle fs-18 text-primary"></i></label>
+                $.ajax({
+                    url: "{{ route('products.store') }}",
+                    type: "POST",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                    headers: {
+                        'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+                    },
+                    success: function (response) {
+                        window.location.href = "{{ route('products.index') }}";
+                    },
+                    error: function (xhr) {
+                        if (xhr.status === 422) {
+                            // Laravel validation errors
+                            let errors = xhr.responseJSON.errors;
+                            let message = Object.values(errors).flat().join('\n');
+                            alert(message);
+                        } else {
+                            alert("Something went wrong. Check server logs.");
+                        }
+                    }
+                });
 
-                            <input type="checkbox" class="btn-check" id="color-green1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-green1"> <i class="bx bxs-circle fs-18 text-success"></i></label>
+            });
 
-                            <input type="checkbox" class="btn-check" id="color-blue1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-blue1"> <i class="bx bxs-circle fs-18 text-danger"></i></label>
+        });
 
-                            <input type="checkbox" class="btn-check" id="color-sky1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-sky1"> <i class="bx bxs-circle fs-18 text-info"></i></label>
 
-                            <input type="checkbox" class="btn-check" id="color-gray1">
-                            <label class="btn btn-light avatar-sm rounded d-flex justify-content-center align-items-center"
-                                for="color-gray1"> <i class="bx bxs-circle fs-18 text-secondary"></i></label>
 
-                        </div>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-12">
-                    <div class="mb-3">
-                        <label for="description" class="form-label">Description</label>
-                        <textarea class="form-control bg-light-subtle" id="description" rows="7"
-                            placeholder="Short description about the product"></textarea>
-                    </div>
-                </div>
-            </div>
-            <div class="row">
-                <div class="col-lg-4">
-                    <form>
-                        <div class="mb-3">
-                            <label for="product-id" class="form-label">Tag Number</label>
-                            <input type="number" id="product-id" class="form-control" placeholder="#******">
-                        </div>
+        // Dynamically handle item size rows
+        document.addEventListener('DOMContentLoaded', function () {
+            // References to sizes container and add-row button
+            const sizesContainer = document.getElementById('item-sizes');
 
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <form>
-                        <div class="mb-3">
-                            <label for="product-stock" class="form-label">Stock</label>
-                            <input type="number" id="product-stock" class="form-control" placeholder="Quantity">
-                        </div>
+            // Remove all but the first row on page load
+            (function showOnlyFirstRow() {
+                // Find all grouped fields for sizes
+                function getRowIndexes() {
+                    // Find all distinct indexes currently in the DOM
+                    const nameInputs = sizesContainer.querySelectorAll('input[name^="sizes["][name$="[name]"]');
+                    const indexes = [];
+                    nameInputs.forEach(input => {
+                        const match = input.name.match(/^sizes\[(\d+)]/);
+                        if (match) indexes.push(Number(match[1]));
+                    });
+                    return indexes;
+                }
+                const indexes = getRowIndexes();
+                // For this template, it's possible there are several rows pre-existing
+                for (let i = 1; i < indexes.length; i++) {
+                    const idx = indexes[i];
+                    removeRowByIndex(idx);
+                }
+            })();
 
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <label for="product-stock" class="form-label">Tag</label>
-                    <select class="form-control" id="choices-multiple-remove-button" data-choices data-choices-removeItem
-                        name="choices-multiple-remove-button" multiple>
-                        <option value="Fashion" selected>Fashion</option>
-                        <option value="Electronics">Electronics</option>
-                        <option value="Watches">Watches</option>
-                        <option value="Headphones">Headphones</option>
-                    </select>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="card">
-        <div class="card-header">
-            <h4 class="card-title">Pricing Details</h4>
-        </div>
-        <div class="card-body">
-            <div class="row">
-                <div class="col-lg-4">
-                    <form>
-                        <label for="product-price" class="form-label">Price</label>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fs-20"><i class='bx bx-dollar'></i></span>
-                            <input type="number" id="product-price" class="form-control" placeholder="000">
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <form>
-                        <label for="product-discount" class="form-label">Discount</label>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fs-20"><i class='bx bxs-discount'></i></span>
-                            <input type="number" id="product-discount" class="form-control" placeholder="000">
-                        </div>
-                    </form>
-                </div>
-                <div class="col-lg-4">
-                    <form>
-                        <label for="product-tex" class="form-label">Tex</label>
-                        <div class="input-group mb-3">
-                            <span class="input-group-text fs-20"><i class='bx bxs-file-txt'></i></span>
-                            <input type="number" id="product-tex" class="form-control" placeholder="000">
-                        </div>
-                    </form>
-                </div>
-            </div>
-        </div>
-    </div>
-    <div class="p-3 bg-light mb-3 rounded">
-        <div class="row justify-content-end g-2">
-            <div class="col-lg-2">
-                <a href="#!" class="btn btn-outline-secondary w-100">Create Product</a>
-            </div>
-        </div>
-    </div>
+            // Button to add another row
+            const addRowBtn = document.createElement("button");
+            addRowBtn.type = "button";
+            addRowBtn.className = "btn btn-outline-primary";
+            addRowBtn.textContent = "Add Another Size";
+
+            // Insert button at the end of the sizes container
+            sizesContainer.appendChild(document.createElement("div")).appendChild(addRowBtn);
+
+            // Next index tracker
+            let sizeRowIndex = 1;
+            addRowBtn.addEventListener("click", function () {
+                // Template for a row
+                const rowHtml = `<div class="row">
+
+                                            <div class="col-md-3 mb-3">
+                                                <label class="form-label">Name</label>
+                                                <input type="text" name="sizes[${sizeRowIndex}][name]" class="form-control" required>
+                                            </div>
+                                            <div class="col-md-2 mb-3">
+                                                <label class="form-label">Price</label>
+                                                <input type="number" name="sizes[${sizeRowIndex}][price]" class="form-control" step="0.01" required>
+                                            </div>
+
+                                            <div class="col-md-3 mb-3 d-flex align-items-end">
+
+                                                <button type="button" class="btn btn-sm btn-danger ms-2 remove-size-row" title="Remove row">&times;</button>
+                                            </div>
+                                            </div>
+                                                    `;
+
+                // Insert the row BEFORE the add-row button's wrapper div (so add button remains last)
+                const wrapper = document.createElement("div");
+                wrapper.innerHTML = rowHtml;
+                // Insert before the button row
+                sizesContainer.insertBefore(wrapper, addRowBtn.parentElement);
+
+                sizeRowIndex++;
+            });
+
+            // Remove row event
+            sizesContainer.addEventListener('click', function (e) {
+                if (e.target.classList.contains('remove-size-row')) {
+                    // Remove the complete group (5 x col-md-x + w-100)
+                    let parentDiv = e.target.closest('.col-md-3.mb-3');
+                    let toRemove = [];
+                    // Traverse backwards to get preceding fields
+                    let el = parentDiv;
+                    for (let i = 0; i < 4; i++) {
+                        el = el.previousElementSibling;
+                        if (!el) break;
+                        toRemove.push(el);
+                    }
+                    // Remove current, then collected, then next sibling "w-100" row clear
+                    parentDiv.parentElement.removeChild(parentDiv);
+                    toRemove.forEach(elem => {
+                        if (elem) elem.parentElement.removeChild(elem);
+                    });
+                    // Remove w-100
+                    if (addRowBtn.parentElement.previousElementSibling &&
+                        addRowBtn.parentElement.previousElementSibling.classList.contains('w-100')) {
+                        addRowBtn.parentElement.parentElement.removeChild(addRowBtn.parentElement.previousElementSibling);
+                    }
+                }
+            });
+
+            // Helper to remove a row by index (for initial cleanup)
+            function removeRowByIndex(idx) {
+                const input = sizesContainer.querySelector(`input[name="sizes[${idx}][name]"]`);
+                if (!input) return;
+                // Go backwards to catch 'item_id', then as above
+                let itemIdDiv = input.closest('.col-md-3.mb-3').previousElementSibling.previousElementSibling;
+                // Remove 5 cols and w-100 after
+                for (let i = 0; i < 5; i++) {
+                    if (itemIdDiv) {
+                        let toRemoveDiv = itemIdDiv;
+                        let next = itemIdDiv.nextElementSibling;
+                        itemIdDiv = itemIdDiv.nextElementSibling;
+                        if (toRemoveDiv) toRemoveDiv.parentElement.removeChild(toRemoveDiv);
+                    }
+                }
+                // Remove w-100
+                let w100Div = sizesContainer.querySelector('.w-100');
+                if (w100Div) w100Div.parentElement.removeChild(w100Div);
+            }
+        });
+    </script>
+
+
 @endsection

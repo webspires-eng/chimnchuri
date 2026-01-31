@@ -3,16 +3,22 @@
 namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
+use App\Http\Requests\Api\V1\Admin\ItemStoreRequest;
+use App\Services\Api\V1\Admin\ItemService;
 use Illuminate\Http\Request;
 
 class ProductController extends Controller
 {
-    /**
-     * Display a listing of the resource.
-     */
+    public function __construct(
+        protected ItemService $itemService
+    ) {
+    }
     public function index()
     {
-        return view("admin.products.index");
+        $products = $this->itemService->getAllItems();
+        // return $products->load("sizes");
+        $data["products"] = $products;
+        return view("admin.products.index", $data);
     }
 
     /**
@@ -27,9 +33,12 @@ class ProductController extends Controller
     /**
      * Store a newly created resource in storage.
      */
-    public function store(Request $request)
+    public function store(ItemStoreRequest $request)
     {
-        //
+
+        $products = $this->itemService->store($request->all());
+
+        return $products;
     }
 
     /**
