@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Admin\ItemStoreRequest;
+use App\Models\Category;
 use App\Models\Item;
 use App\Services\Api\V1\Admin\ItemService;
 use Illuminate\Http\Request;
@@ -26,7 +27,8 @@ class ProductController extends Controller
      */
     public function create()
     {
-        return view("admin.products.create");
+        $categories = Category::all();
+        return view("admin.products.create", compact("categories"));
     }
 
     /**
@@ -54,8 +56,10 @@ class ProductController extends Controller
     public function edit(string $id)
     {
         $product = Item::with(["sizes", "media"])->find($id);
+        $data["product"] = $product;
+        $data["categories"] = Category::all();
 
-        return view("admin.products.edit", compact("product"));
+        return view("admin.products.edit", $data);
     }
 
     /**

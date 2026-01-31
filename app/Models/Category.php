@@ -34,6 +34,10 @@ class Category extends Model
             ->orderBy("sort_order");
     }
 
+    public function categoryItems()
+    {
+        return $this->hasMany(CategoryItem::class);
+    }
 
 
     // SCOOPES
@@ -51,5 +55,4 @@ class Category extends Model
     {
         return $query->orderBy("scope_order");
     }
-
 }

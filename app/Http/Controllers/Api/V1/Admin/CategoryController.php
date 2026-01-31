@@ -25,13 +25,12 @@ class CategoryController extends Controller
             return response()->json([
                 "success" => true,
                 "message" => "All Categories are retrived.",
-                "data" => $categories
+                "data" => $categories->load("categoryItems.item")
             ], 200);
-
         } catch (Exception $e) {
 
             logger()->error($e);
-            
+
             return response()->json([
                 "success" => false,
                 "message" => "Something went wrong.",
@@ -51,7 +50,6 @@ class CategoryController extends Controller
                 "message" => "Category created successfully.",
                 "data" => $category
             ], 200);
-
         } catch (Exception $e) {
 
             logger()->error($e);
@@ -113,7 +111,6 @@ class CategoryController extends Controller
                 "success" => true,
                 "message" => "Category updated successfully.",
             ], 200);
-
         } catch (Exception $e) {
             logger()->error($e);
             return response()->json([
@@ -141,7 +138,6 @@ class CategoryController extends Controller
                 "success" => true,
                 "message" => "Category deleted successfully",
             ], 200);
-
         } catch (Exception $e) {
             logger()->error($e);
             return response()->json([

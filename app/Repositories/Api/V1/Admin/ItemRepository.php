@@ -2,6 +2,7 @@
 
 namespace App\Repositories\Api\V1\Admin;
 
+use App\Models\CategoryItem;
 use App\Models\Item;
 
 class ItemRepository
@@ -24,7 +25,15 @@ class ItemRepository
     // STORE ITEM
     public function store(array $data)
     {
-        return Item::create($data);
+        $item =  Item::create($data);
+
+        if ($item && !empty($data["category_id"])) {
+            $this->createCategoryItem([
+                "category_id" => (int) $data["category_id"],
+                "item_id" => (int) $item->id,
+            ]);
+        }
+        return $item;
     }
 
     public function getItem($id)
@@ -46,7 +55,16 @@ class ItemRepository
             return false;
         }
 
-        return $item->update($data);
+        $updateditem = $item->update($data);
+
+        if ($item && !empty($data["category_id"])) {
+            $this->updateCategoryItem([
+                "category_id" => (int) $data["category_id"],
+                "item_id" => (int) $item->id
+            ]);
+        }
+
+        return $updateditem;
     }
 
     // DELETE ITEM
@@ -57,5 +75,22 @@ class ItemRepository
             return false;
         }
         return $item->forceDelete();
+    }
+
+
+    public function createCategoryItem($data)
+    {
+
+        $categoryItem = CategoryItem::create($data);
+
+        return $categoryItem;
+    }
+
+    public function updateCategoryItem(array $data)
+    {
+        return CategoryItem::updateOrCreate(
+            ['item_id' => $data['item_id']],
+            ['category_id' => $data['category_id']]
+        );
     }
 }

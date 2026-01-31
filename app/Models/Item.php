@@ -33,6 +33,10 @@ class Item extends Model implements HasMedia
         return $this->hasMany(ItemSize::class);
     }
 
+    public function items()
+    {
+        return $this->hasMany(CategoryItem::class);
+    }
 
     public function addonGroups()
     {

@@ -14,8 +14,7 @@ class ItemController extends Controller
 
     public function __construct(
         protected ItemService $itemService
-    ) {
-    }
+    ) {}
 
     /**
      * Display a listing of the resource.
@@ -28,9 +27,8 @@ class ItemController extends Controller
             return response()->json([
                 "success" => true,
                 "message" => "All items are retrived",
-                "data" => $items->load("sizes")
+                "data" => $items->load("sizes", "media")
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
@@ -52,8 +50,6 @@ class ItemController extends Controller
                 "message" => "Item created successfully.",
                 "data" => $item
             ], 201);
-
-
         } catch (Exception $e) {
             logger()->error($e);
             return response()->json([
@@ -84,7 +80,6 @@ class ItemController extends Controller
                 "message" => "Item retrived",
                 "data" => $item->load("sizes")
             ], 200);
-
         } catch (Exception $e) {
             logger()->error($e);
             return response()->json([
@@ -114,7 +109,6 @@ class ItemController extends Controller
                 "message" => "Item Updated",
                 "data" => $item
             ], 200);
-
         } catch (Exception $e) {
             logger()->error($e);
             return response()->json([
@@ -143,7 +137,6 @@ class ItemController extends Controller
                 "message" => "Item deleted",
                 "data" => $item
             ], 200);
-
         } catch (Exception $e) {
             logger()->error($e);
             return response()->json([
