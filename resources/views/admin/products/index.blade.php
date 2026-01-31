@@ -1,15 +1,13 @@
-@extends("admin.layouts.app")
+@extends('admin.layouts.app')
 
-@section("content")
-
-
+@section('content')
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center gap-1">
                     <h4 class="card-title flex-grow-1">All Product List</h4>
 
-                    <a href="{{ route("products.create") }}" class="btn btn-sm btn-primary">
+                    <a href="{{ route('products.create') }}" class="btn btn-sm btn-primary">
                         Add Product
                     </a>
 
@@ -33,32 +31,42 @@
                                             <div class="d-flex align-items-center gap-2">
                                                 <div
                                                     class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
-                                                    <img src="{{ asset("admin/assets/images/product/p-1.png") }}" alt="" class="avatar-md">
+                                                    <img src="{{ asset('admin/assets/images/product/p-1.png') }}"
+                                                        alt="" class="avatar-md">
                                                 </div>
                                                 <div>
-                                                    <a href="#!" class="text-dark fw-medium fs-15">{{ $product->name }}</a>
+                                                    <a href="#!"
+                                                        class="text-dark fw-medium fs-15">{{ $product->name }}</a>
                                                 </div>
                                             </div>
 
                                         </td>
-                                        <td>£ {{ $product->sizes[0]->price }}</td>
-                                       
+                                        <td>£ {{ $product?->sizes[0]->price ?? 'N/A' }}</td>
+
                                         <td> Fashion</td>
-                                       
+
                                         <td>
                                             <div class="d-flex gap-2">
-                                                <a href="#!" class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken"
+                                                {{-- <a href="#!" class="btn btn-light btn-sm"><iconify-icon
+                                                        icon="solar:eye-broken"
+                                                        class="align-middle fs-18"></iconify-icon></a> --}}
+                                                <a href="{{ route('products.edit', $product->id) }}"
+                                                    class="btn btn-soft-primary btn-sm"><iconify-icon
+                                                        icon="solar:pen-2-broken"
                                                         class="align-middle fs-18"></iconify-icon></a>
-                                                <a href="#!" class="btn btn-soft-primary btn-sm"><iconify-icon
-                                                        icon="solar:pen-2-broken" class="align-middle fs-18"></iconify-icon></a>
-                                                <a href="#!" class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                        icon="solar:trash-bin-minimalistic-2-broken"
-                                                        class="align-middle fs-18"></iconify-icon></a>
+                                                <form action="{{ route('products.destroy', $product->id) }}" method="POST"
+                                                    onsubmit="return confirm('Are you sure you want to delete this product?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-soft-danger btn-sm">
+                                                        <iconify-icon icon="solar:trash-bin-minimalistic-2-broken"
+                                                            class="align-middle fs-18"></iconify-icon>
+                                                    </button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
                                 @empty
-
                                 @endforelse
 
 
@@ -84,6 +92,4 @@
         </div>
 
     </div>
-
-
 @endsection

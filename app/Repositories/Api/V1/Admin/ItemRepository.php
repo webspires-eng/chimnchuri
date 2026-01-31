@@ -47,7 +47,6 @@ class ItemRepository
         }
 
         return $item->update($data);
-
     }
 
     // DELETE ITEM
@@ -57,8 +56,6 @@ class ItemRepository
         if (!$item) {
             return false;
         }
-        return $item->delete();
+        return $item->forceDelete();
     }
-
-
 }

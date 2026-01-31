@@ -1,13 +1,11 @@
-@extends("admin.layouts.app");
+@extends('admin.layouts.app');
 
 
-@section("style")
-
-
+@section('style')
 @endsection
 
 
-@section("content")
+@section('content')
     <!-- Start here.... -->
     <div class="row">
         <div class="col-xxl-5">
@@ -532,6 +530,7 @@
 @endsection
 
 
-@section("javascript")
-
+@section('javascript')
+    <!-- Dashboard Js -->
+    <script src="{{ asset('admin/assets/js/pages/dashboard.js') }}"></script>
 @endsection

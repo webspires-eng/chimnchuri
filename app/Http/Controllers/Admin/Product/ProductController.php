@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Admin\ItemStoreRequest;
+use App\Models\Item;
 use App\Services\Api\V1\Admin\ItemService;
 use Illuminate\Http\Request;
 
@@ -11,8 +12,7 @@ class ProductController extends Controller
 {
     public function __construct(
         protected ItemService $itemService
-    ) {
-    }
+    ) {}
     public function index()
     {
         $products = $this->itemService->getAllItems();
@@ -27,7 +27,6 @@ class ProductController extends Controller
     public function create()
     {
         return view("admin.products.create");
-
     }
 
     /**
@@ -54,7 +53,10 @@ class ProductController extends Controller
      */
     public function edit(string $id)
     {
-        return view("admin.products.edit");
+        $product = Item::with("sizes")->find($id);
+        // return $product;
+
+        return view("admin.products.edit", compact("product"));
     }
 
     /**
@@ -62,7 +64,8 @@ class ProductController extends Controller
      */
     public function update(Request $request, string $id)
     {
-        //
+        $products = $this->itemService->updateItem($id, $request->all());
+        return $products;
     }
 
     /**
@@ -70,6 +73,8 @@ class ProductController extends Controller
      */
     public function destroy(string $id)
     {
-        //
+        $products = $this->itemService->deleteItem($id);
+
+        return redirect()->route('products.index');
     }
 }

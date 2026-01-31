@@ -19,18 +19,18 @@
     <link rel="shortcut icon" href="assets/images/favicon.ico"> --}}
 
     <!-- Vendor css (Require in all Page) -->
-    <link href="{{ asset("admin/assets/css/vendor.min.css") }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/assets/css/vendor.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- Icons css (Require in all Page) -->
-    <link href="{{ asset("admin/assets/css/icons.min.css") }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/assets/css/icons.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- App css (Require in all Page) -->
-    <link href="{{ asset("admin/assets/css/app.min.css") }}" rel="stylesheet" type="text/css" />
+    <link href="{{ asset('admin/assets/css/app.min.css') }}" rel="stylesheet" type="text/css" />
 
     <!-- Theme Config js (Require in all Page) -->
-    <script src="{{ asset("admin/assets/js/config.js") }}"></script>
+    <script src="{{ asset('admin/assets/js/config.js') }}"></script>
 
-    @yield("style")
+    @yield('style')
 
 
 
@@ -99,7 +99,7 @@
                                     <a href="javascript:void(0);" class="dropdown-item py-3 border-bottom text-wrap">
                                         <div class="d-flex">
                                             <div class="flex-shrink-0">
-                                                <img src="{{ asset("admin/assets/images/users/avatar-1.jpg") }}"
+                                                <img src="{{ asset('admin/assets/images/users/avatar-1.jpg') }}"
                                                     class="img-fluid me-2 avatar-sm rounded-circle" alt="avatar-1" />
                                             </div>
                                             <div class="flex-grow-1">
@@ -132,7 +132,7 @@
                                     <a href="javascript:void(0);" class="dropdown-item py-3 border-bottom">
                                         <div class="d-flex">
                                             <div class="flex-shrink-0">
-                                                <img src="{{ asset("admin/assets/images/users/avatar-3.jpg") }}"
+                                                <img src="{{ asset('admin/assets/images/users/avatar-3.jpg') }}"
                                                     class="img-fluid me-2 avatar-sm rounded-circle" alt="avatar-3" />
                                             </div>
                                             <div class="flex-grow-1">
@@ -210,7 +210,7 @@
                                 data-bs-toggle="dropdown" aria-haspopup="true" aria-expanded="false">
                                 <span class="d-flex align-items-center">
                                     <img class="rounded-circle" width="32"
-                                        src="{{ asset("admin/assets/images/users/avatar-1.jpg") }}" alt="avatar-3">
+                                        src="{{ asset('admin/assets/images/users/avatar-1.jpg') }}" alt="avatar-3">
                                 </span>
                             </a>
                             <div class="dropdown-menu dropdown-menu-end">
@@ -395,8 +395,8 @@
                 </a> --}}
 
                 <a href="index.html" class="">
-                    <img src="{{ asset("admin/assets/images/logo-sm.png") }}" class="logo-sm" alt="logo sm">
-                    <img src="{{ asset("admin/assets/images/logo-light.png") }}" class="logo-lg" alt="logo light">
+                    <img src="{{ asset('admin/assets/images/logo-sm.png') }}" class="logo-sm" alt="logo sm">
+                    <img src="{{ asset('admin/assets/images/logo-light.png') }}" class="logo-lg" alt="logo light">
                 </a>
             </div>
 
@@ -421,8 +421,8 @@
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse" role="button"
-                            aria-expanded="false" aria-controls="sidebarProducts">
+                        <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse"
+                            role="button" aria-expanded="false" aria-controls="sidebarProducts">
                             <span class="nav-icon">
                                 <iconify-icon icon="solar:t-shirt-bold-duotone"></iconify-icon>
                             </span>
@@ -431,7 +431,7 @@
                         <div class="collapse" id="sidebarProducts">
                             <ul class="nav sub-navbar-nav">
                                 <li class="sub-nav-item">
-                                    <a class="sub-nav-link" href="{{ route("products.index") }}">List</a>
+                                    <a class="sub-nav-link" href="{{ route('products.index') }}">List</a>
                                 </li>
                                 {{-- <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="product-grid.html">Grid</a>
@@ -443,15 +443,15 @@
                                     <a class="sub-nav-link" href="product-edit.html">Edit</a>
                                 </li> --}}
                                 <li class="sub-nav-item">
-                                    <a class="sub-nav-link" href="{{ route("products.create") }}">Create</a>
+                                    <a class="sub-nav-link" href="{{ route('products.create') }}">Create</a>
                                 </li>
                             </ul>
                         </div>
                     </li>
 
                     <li class="nav-item">
-                        <a class="nav-link menu-arrow" href="#sidebarCategory" data-bs-toggle="collapse" role="button"
-                            aria-expanded="false" aria-controls="sidebarCategory">
+                        <a class="nav-link menu-arrow" href="#sidebarCategory" data-bs-toggle="collapse"
+                            role="button" aria-expanded="false" aria-controls="sidebarCategory">
                             <span class="nav-icon">
                                 <iconify-icon icon="solar:clipboard-list-bold-duotone"></iconify-icon>
                             </span>
@@ -460,13 +460,13 @@
                         <div class="collapse" id="sidebarCategory">
                             <ul class="nav sub-navbar-nav">
                                 <li class="sub-nav-item">
-                                    <a class="sub-nav-link" href="{{ route("category.index") }}">List</a>
+                                    <a class="sub-nav-link" href="{{ route('category.index') }}">List</a>
                                 </li>
                                 <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="">Edit</a>
                                 </li>
                                 <li class="sub-nav-item">
-                                    <a class="sub-nav-link" href="{{ route("category.create") }}">Create</a>
+                                    <a class="sub-nav-link" href="{{ route('category.create') }}">Create</a>
                                 </li>
                             </ul>
                         </div>
@@ -486,7 +486,7 @@
             <!-- Start Container Fluid -->
             <div class="container-fluid">
 
-                @yield("content")
+                @yield('content')
 
             </div>
             <!-- End Container Fluid -->
@@ -515,22 +515,21 @@
     <!-- END Wrapper -->
 
     <!-- Vendor Javascript (Require in all Page) -->
-    <script src="{{ asset("admin/assets/js/vendor.js") }}"></script>
+    <script src="{{ asset('admin/assets/js/vendor.js') }}"></script>
 
     <!-- App Javascript (Require in all Page) -->
-    <script src="{{ asset("admin/assets/js/app.js") }}"></script>
+    <script src="{{ asset('admin/assets/js/app.js') }}"></script>
 
     <!-- Vector Map Js -->
-    <script src="{{ asset("admin/assets/vendor/jsvectormap/js/jsvectormap.min.js") }}"></script>
-    <script src="{{ asset("admin/assets/vendor/jsvectormap/maps/world-merc.js") }}"></script>
-    <script src="{{ asset("admin/assets/vendor/jsvectormap/maps/world.js") }}"></script>
+    <script src="{{ asset('admin/assets/vendor/jsvectormap/js/jsvectormap.min.js') }}"></script>
+    <script src="{{ asset('admin/assets/vendor/jsvectormap/maps/world-merc.js') }}"></script>
+    <script src="{{ asset('admin/assets/vendor/jsvectormap/maps/world.js') }}"></script>
 
-    <!-- Dashboard Js -->
-    <script src="{{ asset("admin/assets/js/pages/dashboard.js") }}"></script>
+
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
 
 
-    @yield("javascript")
+    @yield('javascript')
 
 
 </body>

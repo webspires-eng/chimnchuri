@@ -1,8 +1,7 @@
-@extends("admin.layouts.app")
+@extends('admin.layouts.app')
 
 
-@section("content")
-
+@section('content')
     <form id="productForm">
         <div class="card">
             <div class="card-header">
@@ -13,13 +12,15 @@
                     <div class="col-lg-4">
                         <div class="mb-3">
                             <label for="product-name" class="form-label">Product Name</label>
-                            <input type="text" id="name" name="name" class="form-control" placeholder="Items Name">
+                            <input type="text" id="name" name="name" class="form-control"
+                                placeholder="Items Name">
                         </div>
                     </div>
                     <div class="col-lg-4">
                         <div class="mb-3">
                             <label for="slug" class="form-label">Product Slug</label>
-                            <input type="text" id="slug" name="slug" class="form-control" placeholder="Items Slug">
+                            <input type="text" id="slug" name="slug" class="form-control"
+                                placeholder="Items Slug">
                         </div>
                     </div>
                     <div class="col-lg-4">
@@ -107,17 +108,14 @@
             </form>
         </div>
     </div>
-
 @endsection
 
 
-@section("javascript")
-
+@section('javascript')
     <script>
+        $(document).ready(function() {
 
-        $(document).ready(function () {
-
-            $('#productForm').on('submit', function (e) {
+            $('#productForm').on('submit', function(e) {
                 e.preventDefault();
 
                 let form = this;
@@ -132,15 +130,41 @@
                     headers: {
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
-                    success: function (response) {
+                    beforeSend: function() {
+                        // Clear previous errors
+                        $('#productForm .is-invalid').removeClass('is-invalid');
+                        $('#productForm .invalid-feedback').remove();
+                    },
+                    success: function(response) {
                         window.location.href = "{{ route('products.index') }}";
                     },
-                    error: function (xhr) {
+                    error: function(xhr) {
                         if (xhr.status === 422) {
-                            // Laravel validation errors
                             let errors = xhr.responseJSON.errors;
-                            let message = Object.values(errors).flat().join('\n');
-                            alert(message);
+                            $.each(errors, function(key, value) {
+                                // Handle dot notation for arrays like sizes.0.name -> sizes[0][name]
+                                let inputName = key;
+                                if (key.includes('.')) {
+                                    let parts = key.split('.');
+                                    inputName = parts.shift(); // get first part
+                                    parts.forEach(part => {
+                                        inputName += `[${part}]`;
+                                    });
+                                }
+
+                                let input = $(`[name="${inputName}"]`);
+                                if (input.length > 0) {
+                                    input.addClass('is-invalid');
+                                    // Append error message if not already present
+                                    if (input.next('.invalid-feedback').length === 0) {
+                                        input.after(
+                                            `<div class="invalid-feedback">${value[0]}</div>`
+                                        );
+                                    } else {
+                                        input.next('.invalid-feedback').text(value[0]);
+                                    }
+                                }
+                            });
                         } else {
                             alert("Something went wrong. Check server logs.");
                         }
@@ -154,7 +178,7 @@
 
 
         // Dynamically handle item size rows
-        document.addEventListener('DOMContentLoaded', function () {
+        document.addEventListener('DOMContentLoaded', function() {
             // References to sizes container and add-row button
             const sizesContainer = document.getElementById('item-sizes');
 
@@ -190,7 +214,7 @@
 
             // Next index tracker
             let sizeRowIndex = 1;
-            addRowBtn.addEventListener("click", function () {
+            addRowBtn.addEventListener("click", function() {
                 // Template for a row
                 const rowHtml = `<div class="row">
 
@@ -220,7 +244,7 @@
             });
 
             // Remove row event
-            sizesContainer.addEventListener('click', function (e) {
+            sizesContainer.addEventListener('click', function(e) {
                 if (e.target.classList.contains('remove-size-row')) {
                     // Remove the complete group (5 x col-md-x + w-100)
                     let parentDiv = e.target.closest('.col-md-3.mb-3');
@@ -240,7 +264,8 @@
                     // Remove w-100
                     if (addRowBtn.parentElement.previousElementSibling &&
                         addRowBtn.parentElement.previousElementSibling.classList.contains('w-100')) {
-                        addRowBtn.parentElement.parentElement.removeChild(addRowBtn.parentElement.previousElementSibling);
+                        addRowBtn.parentElement.parentElement.removeChild(addRowBtn.parentElement
+                            .previousElementSibling);
                     }
                 }
             });
@@ -266,6 +291,4 @@
             }
         });
     </script>
-
-
 @endsection

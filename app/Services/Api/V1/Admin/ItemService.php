@@ -54,13 +54,10 @@ class ItemService
                 "message" => "Item created successfully.",
                 "data" => $item->load("sizes")
             ]);
-
-
         } catch (Exception $e) {
             DB::rollBack();
             logger()->error($e);
             throw $e;
-
         }
     }
 
@@ -88,20 +85,37 @@ class ItemService
                 ]);
             }
         }
-
     }
 
     public function updateItem($id, $data)
     {
         $item = $this->itemRepository->updateItem($id, $data);
+
+        if (!empty($data["sizes"])) {
+            $this->updateSizes($id, $data["sizes"]);
+        }
+
         return $item;
     }
+
+
+    public function updateSizes($itemId, $data)
+    {
+        if (!empty($itemId)) {
+            ItemSize::where('item_id', $itemId)->forceDelete();
+            $this->createSize($itemId, $data);
+        }
+    }
+
 
     // DELETE ITEM
     public function deleteItem($id)
     {
         $item = $this->itemRepository->deleteItem($id);
+        if ($item) {
+            ItemSize::where('item_id', $id)->forceDelete();
+        }
+
         return $item;
     }
-
 }
