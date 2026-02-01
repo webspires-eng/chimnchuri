@@ -45,7 +45,7 @@
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <div
-                                                    class="rounded bg-light avatar-md d-flex align-items-center justify-content-center">
+                                                    class="rounded overflow-hidden bg-light avatar-md d-flex align-items-center justify-content-center">
                                                     <img src="{{ $product->getFirstMediaUrl('images') ? $product->getFirstMediaUrl('images') : asset('admin/assets/images/product/p-1.png') }}"
                                                         alt="" class="avatar-md">
                                                 </div>
@@ -99,7 +99,7 @@
                     <!-- end table-responsive -->
                 </div>
                 <div class="card-footer border-top">
-                    <nav aria-label="Page navigation example">
+                    {{-- <nav aria-label="Page navigation example">
                         <ul class="pagination justify-content-end mb-0">
                             <li class="page-item"><a class="page-link" href="javascript:void(0);">Previous</a></li>
                             <li class="page-item active"><a class="page-link" href="javascript:void(0);">1</a></li>
@@ -107,7 +107,7 @@
                             <li class="page-item"><a class="page-link" href="javascript:void(0);">3</a></li>
                             <li class="page-item"><a class="page-link" href="javascript:void(0);">Next</a></li>
                         </ul>
-                    </nav>
+                    </nav> --}}
                 </div>
             </div>
         </div>

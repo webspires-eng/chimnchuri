@@ -10,13 +10,6 @@
     <div class="row">
         <div class="col-xxl-5">
             <div class="row">
-                <div class="col-12">
-                    <div class="alert alert-primary text-truncate mb-3" role="alert">
-                        We regret to inform you that our server is currently experiencing technical
-                        difficulties.
-                    </div>
-                </div>
-
                 <div class="col-md-6">
                     <div class="card overflow-hidden">
                         <div class="card-body">
