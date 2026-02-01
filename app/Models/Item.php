@@ -49,12 +49,12 @@ class Item extends Model implements HasMedia
         return $this->belongsToMany(Category::class, 'category_items');
     }
 
-    public function addonGroups()
-    {
-        return $this->hasMany(AddonGroup::class)
-            ->where('is_active', true)
-            ->orderBy('sort_order');
-    }
+    // public function addonGroups()
+    // {
+    //     return $this->hasMany(AddonGroup::class)
+    //         ->where('is_active', true)
+    //         ->orderBy('sort_order');
+    // }
 
     public function registerMediaCollections(): void
     {
@@ -81,5 +81,26 @@ class Item extends Model implements HasMedia
     public function getFeaturedImageAttribute()
     {
         return $this->getFirstMediaUrl('images');
+    }
+
+    public function addonGroups()
+    {
+        return $this->hasMany(AddonGroup::class)
+            ->where('is_active', true)
+            ->orderBy('sort_order')
+            ->with('items.addonItem'); // Auto-load nested relations
+    }
+
+    public function addonItems()
+    {
+        return $this->hasManyThrough(
+            AddonItem::class,
+            AddonGroup::class,
+            'item_id',           // Foreign key on addon_groups table
+            'id',                // Foreign key on addon_items table
+            'id',                // Local key on items table
+            'id'                 // Local key on addon_groups table
+        )->join('addon_group_items', 'addon_groups.id', '=', 'addon_group_items.addon_group_id')
+            ->where('addon_groups.is_active', true);
     }
 }

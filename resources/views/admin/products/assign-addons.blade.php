@@ -46,7 +46,7 @@
 
     {{-- Template for Addon Group --}}
     <template id="group-template">
-        <div class="addon-group-block border rounded p-3 mb-3 bg-white" data-index="{index}">
+        <div class="addon-group-block border rounded p-2 mb-3 bg-white" data-index="{index}">
             <div class="d-flex justify-content-between align-items-center mb-3">
                 <h5 class="mb-0 text-primary group-title">{CategoryName}</h5>
                 <button type="button" class="btn btn-danger btn-sm remove-group">Remove Group</button>

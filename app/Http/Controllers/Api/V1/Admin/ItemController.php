@@ -27,7 +27,7 @@ class ItemController extends Controller
             return response()->json([
                 "success" => true,
                 "message" => "All items are retrived",
-                "data" => $items->load("sizes", "media")
+                "data" => $items->load("addonGroups", "sizes", "media")
             ], 200);
         } catch (Exception $e) {
             return response()->json([

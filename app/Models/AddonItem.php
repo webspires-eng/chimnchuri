@@ -21,4 +21,8 @@ class AddonItem extends Model
         "is_active",
     ];
 
+    public function items()
+    {
+        return $this->belongsToMany(Item::class, 'item_addons', 'addon_item_id', 'item_id');
+    }
 }
