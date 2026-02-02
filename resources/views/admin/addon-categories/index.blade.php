@@ -32,10 +32,7 @@
                             <thead class="bg-light-subtle">
                                 <tr>
                                     <th style="width: 20px;">
-                                        <div class="form-check">
-                                            <input type="checkbox" class="form-check-input" id="customCheck1">
-                                            <label class="form-check-label" for="customCheck1"></label>
-                                        </div>
+                                        #ID
                                     </th>
                                     <th>Name</th>
                                     <th>Slug</th>
@@ -47,12 +44,7 @@
                                 @forelse ($categories as $category)
                                     <tr>
                                         <td>
-                                            <div class="form-check">
-                                                <input type="checkbox" class="form-check-input"
-                                                    id="customCheck{{ $category->id }}">
-                                                <label class="form-check-label"
-                                                    for="customCheck{{ $category->id }}"></label>
-                                            </div>
+                                            {{ $category->id }}
                                         </td>
                                         <td>
                                             <a href="#!" class="text-dark fw-medium fs-15">{{ $category->name }}</a>

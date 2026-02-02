@@ -6,6 +6,7 @@ use App\Http\Controllers\Admin\Addon\CategoryController as AddonCategoryControll
 use App\Http\Controllers\Admin\LoginController;
 use App\Http\Controllers\Admin\Product\ProductController;
 use App\Http\Controllers\Admin\Product\ProductMediaController;
+use App\Http\Controllers\Admin\UserController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -34,5 +35,7 @@ Route::prefix('admin')->group(function () {
         Route::resource("/addon-categories", AddonCategoryController::class)->names("admin.addon-categories");
 
         Route::resource("/addon-items", AddonItemController::class)->names("admin.addon-items");
+
+        Route::resource("/users", UserController::class)->names("admin.users");
     });
 });

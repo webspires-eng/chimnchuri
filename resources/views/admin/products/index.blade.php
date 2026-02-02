@@ -33,6 +33,7 @@
                             <thead class="bg-light-subtle">
                                 <tr>
 
+                                    <th>#ID</th>
                                     <th>Product Name & Size</th>
                                     <th>Price</th>
                                     <th>Category</th>
@@ -42,6 +43,9 @@
                             <tbody>
                                 @forelse ($products as $key => $product)
                                     <tr>
+                                        <td style="width: 20px;">
+                                            {{ $product->id }}
+                                        </td>
                                         <td>
                                             <div class="d-flex align-items-center gap-2">
                                                 <div

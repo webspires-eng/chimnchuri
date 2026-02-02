@@ -98,5 +98,6 @@
             });
 
         });
+        slugGenerator('#name', '#slug');
     </script>
 @endsection

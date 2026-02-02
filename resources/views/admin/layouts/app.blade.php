@@ -388,13 +388,8 @@
         <!-- ========== App Menu Start ========== -->
         <div class="main-nav">
             <!-- Sidebar Logo -->
-            <div class="logo-box">
-                {{-- <a href="index.html" class="logo-dark">
-                    <img src="assets/images/logo-sm.png" class="logo-sm" alt="logo sm">
-                    <img src="assets/images/logo-dark.png" class="logo-lg" alt="logo dark">
-                </a> --}}
-
-                <a href="index.html" class="">
+            <div class="logo-box ">
+                <a href="{{ route('admin.dashboard') }}" style="height: 100px;">
                     <img src="{{ asset('admin/assets/images/logo-sm.png') }}" class="logo-sm" alt="logo sm">
                     <img src="{{ asset('admin/assets/images/logo-light.png') }}" class="logo-lg" alt="logo light">
                 </a>
@@ -420,6 +415,7 @@
                         </a>
                     </li>
 
+                    {{-- PRODUCTS --}}
                     <li class="nav-item">
                         <a class="nav-link menu-arrow" href="#sidebarProducts" data-bs-toggle="collapse"
                             role="button" aria-expanded="false" aria-controls="sidebarProducts">
@@ -440,6 +436,7 @@
                         </div>
                     </li>
 
+                    {{-- CATEGORY --}}
                     <li class="nav-item">
                         <a class="nav-link menu-arrow" href="#sidebarCategory" data-bs-toggle="collapse"
                             role="button" aria-expanded="false" aria-controls="sidebarCategory">
@@ -461,6 +458,7 @@
                         </div>
                     </li>
 
+                    {{-- ADDON CATEGORY --}}
                     <li class="nav-item">
                         <a class="nav-link menu-arrow" href="#sidebarAddonCategory" data-bs-toggle="collapse"
                             role="button" aria-expanded="false" aria-controls="sidebarAddonCategory">
@@ -484,7 +482,7 @@
                         </div>
                     </li>
 
-
+                    {{-- ADDON ITEMS --}}
                     <li class="nav-item">
                         <a class="nav-link menu-arrow" href="#sidebarAddonItems" data-bs-toggle="collapse"
                             role="button" aria-expanded="false" aria-controls="sidebarAddonItems">
@@ -500,6 +498,27 @@
                                 </li>
                                 <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.addon-items.create') }}">Create</a>
+                                </li>
+                            </ul>
+                        </div>
+                    </li>
+
+                    {{-- USERS --}}
+                    <li class="nav-item">
+                        <a class="nav-link menu-arrow" href="#sidebarUsers" data-bs-toggle="collapse" role="button"
+                            aria-expanded="false" aria-controls="sidebarUsers">
+                            <span class="nav-icon">
+                                <iconify-icon icon="solar:users-group-rounded-bold"></iconify-icon>
+                            </span>
+                            <span class="nav-text"> Users </span>
+                        </a>
+                        <div class="collapse" id="sidebarUsers">
+                            <ul class="nav sub-navbar-nav">
+                                <li class="sub-nav-item">
+                                    <a class="sub-nav-link" href="{{ route('admin.users.index') }}">List</a>
+                                </li>
+                                <li class="sub-nav-item">
+                                    <a class="sub-nav-link" href="{{ route('admin.users.create') }}">Create</a>
                                 </li>
                             </ul>
                         </div>
@@ -560,6 +579,7 @@
 
 
     <script src="https://code.jquery.com/jquery-3.7.1.min.js"></script>
+    <script src="{{ asset('admin/assets/js/slugGenerator.js') }}"></script>
 
     @yield('javascript')
 

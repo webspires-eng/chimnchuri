@@ -1,43 +1,62 @@
 @extends('admin.layouts.app')
 
 @section('content')
-    <form id="addonCategoryForm">
+    <form id="userForm">
         <div class="card">
             <div class="card-header">
-                <h4 class="card-title">Addon Category Information</h4>
+                <h4 class="card-title">User Information</h4>
             </div>
             <div class="card-body">
                 <div class="row">
                     <div class="col-lg-6">
                         <div class="mb-3">
-                            <label for="name" class="form-label">Category Name</label>
-                            <input type="text" id="name" name="name" class="form-control"
-                                placeholder="Category Name" required>
+                            <label for="name" class="form-label">User Name</label>
+                            <input type="text" id="name" name="name" class="form-control" placeholder="User Name"
+                                required>
                         </div>
                     </div>
                     <div class="col-lg-6">
                         <div class="mb-3">
-                            <label for="slug" class="form-label">Category Slug</label>
-                            <input type="text" id="slug" name="slug" class="form-control"
-                                placeholder="Category Slug">
+                            <label for="email" class="form-label">Email</label>
+                            <input type="text" id="email" name="email" class="form-control" placeholder="Email"
+                                required>
                         </div>
                     </div>
-                </div>
-                <div class="row">
-                    <div class="col-lg-12">
+
+                    <div class="col-lg-6">
                         <div class="mb-3">
-                            <label for="description" class="form-label">Description</label>
-                            <textarea class="form-control bg-light-subtle" id="description" rows="5" placeholder="Category Description"
-                                name="description"></textarea>
+                            <label for="phone" class="form-label">Phone</label>
+                            <input type="text" id="phone" name="phone" class="form-control" placeholder="Phone"
+                                required>
                         </div>
                     </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="password" class="form-label">Password</label>
+                            <input type="password" id="password" name="password" class="form-control"
+                                placeholder="Password" required>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="role" class="form-label">Role</label>
+                            <select name="role" id="role" class="form-select">
+                                <option value="">Select Role</option>
+                                <option value="user">User</option>
+                                <option value="admin">Admin</option>
+                            </select>
+                        </div>
+                    </div>
+
                 </div>
             </div>
         </div>
         <div class="p-3 bg-light mb-3 rounded">
             <div class="row justify-content-end g-2">
                 <div class="col-lg-2">
-                    <button type="submit" class="btn btn-outline-secondary w-100">Create Category</button>
+                    <button type="submit" class="btn btn-outline-secondary w-100">Create User</button>
                 </div>
             </div>
         </div>
@@ -49,14 +68,15 @@
     <script>
         $(document).ready(function() {
 
-            $('#addonCategoryForm').on('submit', function(e) {
+
+            $("#userForm").on("submit", function(e) {
                 e.preventDefault();
 
                 let form = this;
                 let formData = new FormData(form);
 
                 $.ajax({
-                    url: "{{ route('addon-categories.store') }}",
+                    url: "{{ route('admin.users.store') }}",
                     type: "POST",
                     data: formData,
                     processData: false,
@@ -65,12 +85,11 @@
                         'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
                     },
                     beforeSend: function() {
-                        // Clear previous errors
-                        $('#addonCategoryForm .is-invalid').removeClass('is-invalid');
-                        $('#addonCategoryForm .invalid-feedback').remove();
+                        $('#userForm .is-invalid').removeClass('is-invalid');
+                        $('#userForm .invalid-feedback').remove();
                     },
                     success: function(response) {
-                        window.location.href = "{{ route('admin.addon-categories.index') }}";
+                        window.location.href = "{{ route('admin.users.index') }}";
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
@@ -92,12 +111,10 @@
                             alert("Something went wrong. Check server logs.");
                         }
                     }
-                });
+                })
+
 
             });
-
         });
-
-        slugGenerator('#name', '#slug');
     </script>
 @endsection

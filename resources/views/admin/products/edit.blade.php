@@ -362,5 +362,7 @@
                 if (w100Div) w100Div.parentElement.removeChild(w100Div);
             }
         });
+
+        slugGenerator('#name', '#slug');
     </script>
 @endsection

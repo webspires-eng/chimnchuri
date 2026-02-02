@@ -327,21 +327,6 @@
         });
 
 
-        // Slug generation logic
-        const nameInput = document.getElementById('name');
-        const slugInput = document.getElementById('slug');
-
-        if (nameInput && slugInput) {
-            nameInput.addEventListener('input', function() {
-                const slug = this.value
-                    .toLowerCase()
-                    .trim()
-                    .replace(/[^\w\s-]/g, '')
-                    .replace(/[\s_-]+/g, '-')
-                    .replace(/^-+|-+$/g, '');
-
-                slugInput.value = slug;
-            });
-        }
+        slugGenerator('#name', '#slug');
     </script>
 @endsection
