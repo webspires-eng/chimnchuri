@@ -523,6 +523,15 @@
                         </div>
                     </li>
 
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.smtp.index') }}">
+                            <span class="nav-icon">
+                                <iconify-icon icon="solar:letter-bold-duotone"></iconify-icon>
+                            </span>
+                            <span class="nav-text"> SMTP Settings </span>
+                        </a>
+                    </li>
+
 
                 </ul>
             </div>

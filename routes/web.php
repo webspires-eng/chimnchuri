@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AddonItemController;
 use App\Http\Controllers\Admin\Category\CategoryController;
 use App\Http\Controllers\Admin\Addon\CategoryController as AddonCategoryController;
 use App\Http\Controllers\Admin\LoginController;
+use App\Http\Controllers\Admin\PaymentGatewayController;
 use App\Http\Controllers\Admin\Product\ProductController;
 use App\Http\Controllers\Admin\Product\ProductMediaController;
 use App\Http\Controllers\Admin\SmtpController;
@@ -40,5 +41,7 @@ Route::prefix('admin')->group(function () {
         Route::resource("/users", UserController::class)->names("admin.users");
 
         Route::resource("/smtp", SmtpController::class)->names("admin.smtp");
+
+        Route::resource('/payment-gateways', PaymentGatewayController::class);
     });
 });
