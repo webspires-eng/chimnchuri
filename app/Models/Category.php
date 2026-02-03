@@ -4,10 +4,18 @@ namespace App\Models;
 
 use Illuminate\Database\Eloquent\Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Spatie\MediaLibrary\HasMedia;
+use Spatie\MediaLibrary\InteractsWithMedia;
 
-class Category extends Model
+class Category extends Model implements HasMedia
 {
-    use SoftDeletes;
+    use SoftDeletes, InteractsWithMedia;
+
+    public function registerMediaCollections(): void
+    {
+        $this->addMediaCollection('category')->singleFile();
+    }
+
 
     protected $fillable = [
         "uuid",
@@ -21,6 +29,9 @@ class Category extends Model
         "is_active",
         "is_featured",
     ];
+
+
+
 
     protected $casts = [
         'is_active' => 'boolean',

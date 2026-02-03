@@ -21,6 +21,8 @@
                     </span> --}}
                 </div>
             </form>
+            <span class="text-muted fs-13">Max upload file size 2 MB</span>
+
         </div>
     </div>
 
@@ -118,7 +120,7 @@
         const myDropzone = new Dropzone("#productDropzone", {
             url: "/",
             autoProcessQueue: false,
-            maxFilesize: 5,
+            maxFilesize: 2,
             maxFiles: 10,
             uploadMultiple: false,
             parallelUploads: 10,

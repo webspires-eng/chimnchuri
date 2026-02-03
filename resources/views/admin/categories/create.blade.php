@@ -1,6 +1,30 @@
 @extends('admin.layouts.app')
 
 @section('content')
+    <div class="card">
+        <div class="card-header">
+            <h4 class="card-title">Add Category Photo</h4>
+        </div>
+        <div class="card-body">
+            <!-- File Upload -->
+            <form action="" method="post" class="dropzone" id="categoryDropzone" data-plugin="dropzone"
+                data-previews-container="#file-previews" data-upload-preview-template="#uploadPreviewTemplate">
+                <div class="fallback">
+                    <input name="file" type="file" />
+                </div>
+                <div class="dz-message needsclick">
+                    <i class="bx bx-cloud-upload fs-48 text-primary"></i>
+                    <h3 class="mt-4">Drop your images here, or <span class="text-primary">click to browse</span></h3>
+                    {{-- <span class="text-muted fs-13">
+                        1600 x 1200 (4:3) recommended. PNG, JPG and GIF files are allowed
+                    </span> --}}
+                </div>
+            </form>
+            <span class="text-muted fs-13">Max upload file size 2 MB</span>
+
+        </div>
+    </div>
+
     <form id="categoryForm">
         <div class="card">
             <div class="card-header">
@@ -25,18 +49,18 @@
                 </div>
                 <!-- Optional: Parent Category -->
                 <!--
-                        <div class="row">
-                             <div class="col-lg-12">
-                                <div class="mb-3">
-                                    <label for="parent_id" class="form-label">Parent Category</label>
-                                     <select class="form-control" name="parent_id">
-                                        <option value="">None</option>
-                                         ...
-                                     </select>
-                                </div>
-                             </div>
-                        </div>
-                        -->
+                                                                                                                                    <div class="row">
+                                                                                                                                         <div class="col-lg-12">
+                                                                                                                                            <div class="mb-3">
+                                                                                                                                                <label for="parent_id" class="form-label">Parent Category</label>
+                                                                                                                                                 <select class="form-control" name="parent_id">
+                                                                                                                                                    <option value="">None</option>
+                                                                                                                                                     ...
+                                                                                                                                                 </select>
+                                                                                                                                            </div>
+                                                                                                                                         </div>
+                                                                                                                                    </div>
+                                                                                                                                    -->
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="mb-3">
@@ -61,6 +85,37 @@
 
 @section('javascript')
     <script>
+        Dropzone.autoDiscover = false;
+
+        let productId = null;
+
+        const myDropzone = new Dropzone("#categoryDropzone", {
+            url: "/",
+            autoProcessQueue: false,
+            maxFilesize: 2,
+            maxFiles: 1, // Enforce single file
+            uploadMultiple: false,
+            parallelUploads: 1,
+            acceptedFiles: ".jpg,.jpeg,.png",
+            addRemoveLinks: true,
+            headers: {
+                'X-CSRF-TOKEN': $('meta[name="csrf-token"]').attr('content')
+            },
+            init: function() {
+                this.on("addedfile", function(file) {
+                    if (this.files.length > 1) {
+                        this.removeFile(this.files[0]);
+                    }
+                });
+            }
+        });
+
+        myDropzone.on("queuecomplete", function() {
+            console.log("completed")
+            // window.location.href = "{{ route('category.index') }}";
+        });
+
+
         $(document).ready(function() {
 
             $('#categoryForm').on('submit', function(e) {
@@ -84,7 +139,19 @@
                         $('#categoryForm .invalid-feedback').remove();
                     },
                     success: function(response) {
-                        window.location.href = "{{ route('category.index') }}";
+                        console.log(response);
+
+                        categoryId = response.id;
+
+                        myDropzone.options.url = `/admin/category/${categoryId}/media`;
+
+                        if (myDropzone.files.length > 0) {
+                            myDropzone.processQueue();
+                        } else {
+                            window.location.href = "{{ route('category.index') }}";
+                        }
+
+                        // window.location.href = "{{ route('category.index') }}";
                     },
                     error: function(xhr) {
                         if (xhr.status === 422) {
@@ -93,12 +160,14 @@
                                 let input = $(`[name="${key}"]`);
                                 if (input.length > 0) {
                                     input.addClass('is-invalid');
-                                    if (input.next('.invalid-feedback').length === 0) {
+                                    if (input.next('.invalid-feedback')
+                                        .length === 0) {
                                         input.after(
                                             `<div class="invalid-feedback">${value[0]}</div>`
                                         );
                                     } else {
-                                        input.next('.invalid-feedback').text(value[0]);
+                                        input.next('.invalid-feedback').text(
+                                            value[0]);
                                     }
                                 }
                             });

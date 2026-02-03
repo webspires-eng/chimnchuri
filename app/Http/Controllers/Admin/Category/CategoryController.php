@@ -18,6 +18,7 @@ class CategoryController extends Controller
     public function index()
     {
         $categories = $this->categoryService->getAllCategories();
+        $categories->load("media");
         return view("admin.categories.index", compact("categories"));
     }
 
@@ -43,7 +44,7 @@ class CategoryController extends Controller
      */
     public function edit(string $id)
     {
-        $category = $this->categoryService->getById($id);
+        $category = $this->categoryService->getById($id)->load("media");
         return view("admin.categories.edit", compact("category"));
     }
 

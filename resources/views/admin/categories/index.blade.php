@@ -19,6 +19,7 @@
                                     <th style="width: 20px;">
                                         #ID
                                     </th>
+                                    <th>Image</th>
                                     <th>Name</th>
                                     <th>Slug</th>
                                     <th>Status</th>
@@ -30,6 +31,13 @@
                                     <tr>
                                         <td>
                                             {{ $category->id }}
+                                        </td>
+                                        <td>
+                                            <div
+                                                class="rounded overflow-hidden bg-light avatar-md d-flex align-items-center justify-content-center">
+                                                <img src="{{ $category->getFirstMediaUrl('category') ? $category->getFirstMediaUrl('category') : asset('admin/assets/images/product/p-1.png') }}"
+                                                    alt="" class="avatar-md">
+                                            </div>
                                         </td>
                                         <td>
                                             <a href="#!" class="text-dark fw-medium fs-15">{{ $category->name }}</a>
