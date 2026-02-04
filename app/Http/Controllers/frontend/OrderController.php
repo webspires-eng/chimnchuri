@@ -8,6 +8,7 @@ use App\Models\ItemSize;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\Payment;
+use App\Models\PaymentGateway;
 use App\Services\OrderTimelineService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
@@ -18,6 +19,8 @@ class OrderController extends Controller
 {
     public function placeOrder(Request $request)
     {
+
+
 
         $validator = Validator::make($request->all(), [
             'customer_name' => 'required',
@@ -112,6 +115,42 @@ class OrderController extends Controller
             );
 
             if ($request->payment_method == 'online') {
+
+                $stripe = PaymentGateway::with("setting")->where("code", "stripe")->first();
+
+                $stripe = PaymentGateway::with("setting")->where("code", "stripe")->first();
+
+                $stripePublicKey = $stripe->setting->config['publishable_key'];
+                $stripeSecret = $stripe->setting->config['secret_key'];
+
+
+
+                \Stripe\Stripe::setApiKey($stripeSecret);
+
+                $paymentIntent = \Stripe\PaymentIntent::create([
+                    'amount' => $grandTotal * 100,
+                    'currency' => 'usd',
+                    'metadata' => [
+                        'order_id' => $order->id
+                    ]
+                ]);
+
+                OrderTimelineService::add(
+                    $order->id,
+                    'Payment Initiated',
+                    'Stripe payment session created',
+                    'payment'
+                );
+
+                return response()->json([
+                    'status' => 'success',
+                    'message' => 'Order created. Proceed to payment',
+                    'data' => [
+                        'order_id' => $order->id,
+                        'client_secret' => $paymentIntent->client_secret,
+                        'amount' => $grandTotal
+                    ]
+                ]);
 
                 return response()->json([
                     'status' => 'success',

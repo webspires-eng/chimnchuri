@@ -14,7 +14,7 @@ class OrderTimelineService
             'title' => $title,
             'description' => $description,
             'status_type' => $type,
-            'created_by' => Auth::user()->name ?? 'System'
+            'created_by' => Auth::guard('admin')->user()->name ?? 'System'
         ]);
     }
 }

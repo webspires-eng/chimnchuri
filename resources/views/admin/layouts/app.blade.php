@@ -522,6 +522,15 @@
                             </ul>
                         </div>
                     </li>
+                    <li class="nav-item">
+                        <a class="nav-link {{ Route::is('admin.orders*') ? 'active' : '' }}"
+                            href="{{ route('admin.orders') }}">
+                            <span class="nav-icon">
+                                <iconify-icon icon="solar:bag-smile-bold-duotone"></iconify-icon>
+                            </span>
+                            <span class="nav-text"> Orders </span>
+                        </a>
+                    </li>
 
                     <li class="nav-item">
                         <a class="nav-link" href="{{ route('admin.smtp.index') }}">

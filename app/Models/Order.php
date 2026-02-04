@@ -23,4 +23,9 @@ class Order extends Model
     {
         return $this->hasMany(OrderTimeline::class)->latest();
     }
+
+    public function user()
+    {
+        return $this->belongsTo(User::class);
+    }
 }

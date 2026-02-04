@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AddonItemController;
+use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\Category\CategoryController;
 use App\Http\Controllers\Admin\Addon\CategoryController as AddonCategoryController;
 use App\Http\Controllers\Admin\Category\CategoryMediaController;
@@ -50,5 +51,9 @@ Route::prefix('admin')->group(function () {
         Route::resource("/smtp", SmtpController::class)->names("admin.smtp");
 
         Route::resource('/payment-gateways', PaymentGatewayController::class)->names("payment-gateways");
+
+        Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
+        Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
+        Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');
     });
 });
