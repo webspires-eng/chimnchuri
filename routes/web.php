@@ -11,6 +11,7 @@ use App\Http\Controllers\Admin\Product\ProductController;
 use App\Http\Controllers\Admin\Product\ProductMediaController;
 use App\Http\Controllers\Admin\SmtpController;
 use App\Http\Controllers\Admin\UserController;
+use App\Http\Controllers\Admin\VoucherController;
 use Illuminate\Support\Facades\Route;
 
 Route::get('/', function () {
@@ -52,8 +53,13 @@ Route::prefix('admin')->group(function () {
 
         Route::resource('/payment-gateways', PaymentGatewayController::class)->names("payment-gateways");
 
+        // ORDER
         Route::get('/orders', [AdminOrderController::class, 'index'])->name('admin.orders');
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
         Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');
+
+
+        // VOUCHERS
+        Route::resource('/vouchers', VoucherController::class)->names("vouchers");
     });
 });

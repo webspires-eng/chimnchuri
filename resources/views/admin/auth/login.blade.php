@@ -38,12 +38,12 @@
 
 
                                     <a href="#" class="">
-                                        <img src="{{ asset('admin/assets/images/logo-light.png') }}" height="24"
-                                            alt="logo light">
+                                        <img src="{{ asset('admin/assets/images/logo.png') }}" height="50"
+                                            alt="Chimnchuri">
                                     </a>
                                 </div>
 
-                                <h2 class="fw-bold fs-24">Sign In {{ Auth::user()->name ?? 'null' }}</h2>
+                                <h2 class="fw-bold fs-24">Sign In</h2>
 
                                 <p class="text-muted mt-1 mb-4">Enter your email address and password to access admin
                                     panel.</p>

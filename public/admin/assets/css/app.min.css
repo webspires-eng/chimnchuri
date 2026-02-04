@@ -7991,6 +7991,10 @@ fieldset:disabled .btn {
   }
 }
 
+input::placeholder {
+  color: #8486a1 !important;
+}
+
 .modal.show .modal-dialog {
   -webkit-transform: none;
   transform: none;
