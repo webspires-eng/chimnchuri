@@ -56,7 +56,7 @@
                 let formData = new FormData(form);
 
                 $.ajax({
-                    url: "{{ route('addon-categories.store') }}",
+                    url: "{{ route('admin.addon-categories.store') }}",
                     type: "POST",
                     data: formData,
                     processData: false,
