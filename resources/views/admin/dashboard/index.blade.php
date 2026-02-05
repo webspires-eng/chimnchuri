@@ -145,13 +145,13 @@
             <div class="card">
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
-                        <h4 class="card-title">Performance</h4>
-                        <div>
+                        <h4 class="card-title">Monthly Sales</h4>
+                        {{-- <div>
                             <button type="button" class="btn btn-sm btn-outline-light">ALL</button>
                             <button type="button" class="btn btn-sm btn-outline-light">1M</button>
                             <button type="button" class="btn btn-sm btn-outline-light">6M</button>
                             <button type="button" class="btn btn-sm btn-outline-light active">1Y</button>
-                        </div>
+                        </div> --}}
                     </div> <!-- end card-title-->
 
                     <div dir="ltr">
@@ -538,4 +538,149 @@
 @section('javascript')
     <!-- Dashboard Js -->
     <script src="{{ asset('admin/assets/js/pages/dashboard.js') }}"></script>
+
+
+    <script>
+        document.addEventListener("DOMContentLoaded", async function() {
+
+
+            const data = await fetch("{{ route('admin.data') }}")
+                .then(response => response.json())
+                .then(data => {
+                    console.log(data);
+                    return data;
+                })
+                .catch(error => console.error(error));
+            console.log(data);
+            var options = {
+                series: [{
+                        name: "Orders",
+                        type: "bar",
+                        data: data.sales,
+                    },
+                    {
+                        name: "Sales",
+                        type: "area",
+                        data: data.sales,
+                    },
+                ],
+                chart: {
+                    height: 313,
+                    type: "line",
+                    toolbar: {
+                        show: false,
+                    },
+                },
+                stroke: {
+                    dashArray: [0, 0],
+                    width: [0, 2],
+                    curve: 'smooth'
+                },
+                fill: {
+                    opacity: [1, 1],
+                    type: ['solid', 'gradient'],
+                    gradient: {
+                        type: "vertical",
+                        inverseColors: false,
+                        opacityFrom: 0.5,
+                        opacityTo: 0,
+                        stops: [0, 90]
+                    },
+                },
+                markers: {
+                    size: [0, 0],
+                    strokeWidth: 2,
+                    hover: {
+                        size: 4,
+                    },
+                },
+                xaxis: {
+                    categories: data.months,
+                    axisTicks: {
+                        show: false,
+                    },
+                    axisBorder: {
+                        show: false,
+                    },
+                },
+                yaxis: {
+                    min: 0,
+                    axisBorder: {
+                        show: false,
+                    }
+                },
+                grid: {
+                    show: true,
+                    strokeDashArray: 3,
+                    xaxis: {
+                        lines: {
+                            show: false,
+                        },
+                    },
+                    yaxis: {
+                        lines: {
+                            show: true,
+                        },
+                    },
+                    padding: {
+                        top: 0,
+                        right: -2,
+                        bottom: 0,
+                        left: 10,
+                    },
+                },
+                legend: {
+                    show: false,
+                    horizontalAlign: "center",
+                    offsetX: 0,
+                    offsetY: 5,
+                    markers: {
+                        width: 9,
+                        height: 9,
+                        radius: 6,
+                    },
+                    itemMargin: {
+                        horizontal: 10,
+                        vertical: 0,
+                    },
+                },
+                plotOptions: {
+                    bar: {
+                        columnWidth: "30%",
+                        barHeight: "70%",
+                        borderRadius: 3,
+                    },
+                },
+                colors: ["#396430", "#22c55e"],
+                tooltip: {
+                    shared: true,
+                    y: [{
+                            formatter: function(y) {
+                                if (typeof y !== "undefined") {
+                                    return y;
+                                }
+                                return y;
+                            },
+                        },
+                        {
+                            formatter: function(y) {
+                                if (typeof y !== "undefined") {
+                                    return y.toFixed(1);
+                                }
+                                return y;
+                            },
+                        },
+                    ],
+                },
+            }
+
+            var chart = new ApexCharts(
+                document.querySelector("#dash-performance-chart"),
+                options
+            );
+
+            chart.render();
+
+        });
+    </script>
 @endsection

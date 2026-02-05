@@ -216,12 +216,12 @@ var options = {
     },
 }
 
-var chart = new ApexCharts(
-    document.querySelector("#dash-performance-chart"),
-    options
-);
+// var chart = new ApexCharts(
+//     document.querySelector("#dash-performance-chart"),
+//     options
+// );
 
-chart.render();
+// chart.render();
 
 
 class VectorMap {

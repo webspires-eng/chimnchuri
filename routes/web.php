@@ -73,5 +73,7 @@ Route::prefix('admin')->group(function () {
 
         // OFFERS
         Route::resource("offers", OfferController::class);
+
+        Route::get("/data", [DashboardController::class, "getPerformanceData"])->name("admin.data");
     });
 });

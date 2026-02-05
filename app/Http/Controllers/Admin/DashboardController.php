@@ -14,6 +14,8 @@ class DashboardController extends Controller
 {
     public function index()
     {
+
+
         $totalOrders = Order::count();
 
         // Orders This Week
@@ -134,5 +136,132 @@ class DashboardController extends Controller
         }
 
         return round((($current - $previous) / $previous) * 100, 1);
+    }
+
+
+    public function getPerformanceData(Request $request)
+    {
+
+        // $month = request()->get('month', date('m'));
+        $month = request()->get('month', 2);
+        $year = request()->get('year', date('Y'));
+
+        $results = DB::table('orders')
+            ->select(
+                DB::raw('DAY(created_at) as day'),
+                DB::raw('SUM(grand_total) as total'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->whereYear('created_at', $year)
+            ->whereMonth('created_at', $month)
+            ->groupBy('day')
+            ->orderBy('day', 'ASC')
+            ->get()
+            ->keyBy('day');
+
+        $daysInMonth = cal_days_in_month(CAL_GREGORIAN, $month, $year);
+
+        $reports = [];
+
+        for ($i = 1; $i <= $daysInMonth; $i++) {
+            if (isset($results[$i])) {
+                $reports[] = [
+                    "days" => $results[$i]->day,
+                    "sales" => $results[$i]->total,
+                    "orders" => $results[$i]->count,
+                ];
+            } else {
+                $reports[] = [
+                    "days" => $i,
+                    "sales" => 0,
+                    "orders" => 0,
+                ];
+            }
+        }
+
+
+
+        $days = [];
+        $sales = [];
+        $orders = [];
+        foreach ($reports as $report) {
+            $days[] = $report['days'];
+            $sales[] = $report['sales'];
+            $orders[] = $report['orders'];
+        }
+
+        return response()->json([
+            'days' => $days,
+            'sales' => $sales,
+            'orders' => $orders
+        ]);
+
+
+        $period = $request->get('period', '1Y'); // ALL, 1M, 6M, 1Y
+
+        $startDate = match ($period) {
+            '1M' => now()->subMonth()->startOfMonth(),
+            '6M' => now()->subMonths(6)->startOfMonth(),
+            '1Y' => now()->subYear()->startOfMonth(),
+            default => now()->subYear()->startOfMonth(),
+        };
+
+        // Get actual data from database with YEAR included
+        $data = DB::table('orders')
+            ->selectRaw('
+        DATE_FORMAT(created_at, "%b") as month,
+        YEAR(created_at) as year,
+        MONTH(created_at) as month_num,
+        COUNT(*) as total_orders,
+        COALESCE(SUM(grand_total), 0) as revenue
+    ')
+            ->where('created_at', '>=', $startDate)
+            ->where('created_at', '<=', now())
+            ->groupBy('year', 'month_num', 'month')
+            ->orderBy('year')
+            ->orderBy('month_num')
+            ->get()
+            ->keyBy(function ($item) {
+                // Create unique key with year and month: "2024-01", "2024-02", etc.
+                return $item->year . '-' . str_pad($item->month_num, 2, '0', STR_PAD_LEFT);
+            });
+
+        // Generate all months in the period
+        $allMonths = [];
+        $currentDate = $startDate->copy();
+        $endDate = now();
+
+        while ($currentDate->lte($endDate)) {
+            $monthName = $currentDate->format('M');
+            $year = $currentDate->year;
+            $monthNum = $currentDate->month;
+
+            // Create unique key for lookup
+            $key = $year . '-' . str_pad($monthNum, 2, '0', STR_PAD_LEFT);
+
+            // Check if data exists for this month
+            if (isset($data[$key])) {
+                $allMonths[] = [
+                    'month' => $monthName,
+                    'total_orders' => (int) $data[$key]->total_orders,
+                    'revenue' => (float) $data[$key]->revenue,
+                ];
+            } else {
+                // No data for this month, add zeros
+                $allMonths[] = [
+                    'month' => $monthName,
+                    'total_orders' => 0,
+                    'revenue' => 0,
+                ];
+            }
+
+            $currentDate->addMonth();
+        }
+
+        return response()->json([
+            'months' => collect($allMonths)->pluck('month')->values(),
+            'orders' => collect($allMonths)->pluck('total_orders')->values(),
+            'revenue' => collect($allMonths)->pluck('revenue')->values(),
+        ]);
     }
 }
