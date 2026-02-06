@@ -43,8 +43,8 @@ html[data-menu-color=light] {
 /* Main Menu Dark */
 html[data-menu-color=dark],
 html[data-bs-theme=dark][data-menu-color=light] {
-  --bs-main-nav-bg: #262d34;
-  --bs-main-nav-item-color: #9097a7;
+  --bs-main-nav-bg: #000000;
+  --bs-main-nav-item-color: #ffffff;
   --bs-main-nav-item-hover-bg: transparent;
   --bs-main-nav-item-hover-color: #ffffff;
   --bs-main-nav-border-color: #2f3944;

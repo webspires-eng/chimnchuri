@@ -127,7 +127,7 @@ class DashboardController extends Controller
     {
 
         // $month = request()->get('month', date('m'));
-        $month = request()->get('month', 1);
+        $month = request()->get('month', 2);
         $year = request()->get('year', date('Y'));
 
         $results = DB::table('orders')

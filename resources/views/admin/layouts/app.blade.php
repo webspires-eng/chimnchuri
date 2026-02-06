@@ -403,7 +403,7 @@
             <div class="scrollbar" data-simplebar>
                 <ul class="navbar-nav" id="navbar-nav">
 
-                    <li class="menu-title">General</li>
+                    {{-- <li class="menu-title">General</li> --}}
 
                     <li class="nav-item">
                         <a class="nav-link" href="/">
@@ -533,6 +533,15 @@
                     </li>
 
                     <li class="nav-item">
+                        <a class="nav-link" href="{{ route('offers.index') }}">
+                            <span class="nav-icon">
+                                <iconify-icon icon="solar:tag-bold-duotone"></iconify-icon>
+                            </span>
+                            <span class="nav-text"> Offers </span>
+                        </a>
+                    </li>
+
+                    <li class="nav-item">
                         <a class="nav-link" href="{{ route('vouchers.index') }}">
                             <span class="nav-icon">
                                 <iconify-icon icon="solar:ticket-bold-duotone"></iconify-icon>
@@ -573,6 +582,9 @@
                                 <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.general-settings') }}">General
                                         Setting</a>
+                                </li>
+                                <li class="sub-nav-item">
+                                    <a class="sub-nav-link" href="{{ route('admin.branches.index') }}">Branches</a>
                                 </li>
                                 <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.working-hours') }}">Working
