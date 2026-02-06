@@ -46,9 +46,26 @@
                                 <option value="">Select Role</option>
                                 <option value="user" {{ $user->role == 'user' ? 'selected' : '' }}>User</option>
                                 <option value="admin" {{ $user->role == 'admin' ? 'selected' : '' }}>Admin</option>
+                                <option value="manager" {{ $user->role == 'manager' ? 'selected' : '' }}>Manager</option>
                             </select>
                         </div>
                     </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="branches" class="form-label">Assign Branches</label>
+                            <select name="branches[]" id="branches" class="form-select" data-choices-removeItem
+                                data-choices multiple>
+                                <option value="">Select Branches</option>
+                                @foreach ($branches as $branch)
+                                    <option
+                                        {{ in_array($branch->id, $user->branches->pluck('id')->toArray()) ? 'selected' : '' }}
+                                        value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                @endforeach
+                            </select>
+                        </div>
+                    </div>
+
 
                 </div>
             </div>
@@ -67,6 +84,7 @@
 @section('javascript')
     <script>
         $(document).ready(function() {
+
 
             let userId = "{{ $user->id }}";
 

@@ -13,6 +13,11 @@ return new class extends Migration
     {
         Schema::create('offers', function (Blueprint $table) {
             $table->id();
+
+            $table->json('branch_ids')->nullable();
+
+
+
             $table->string('name');
             $table->text('description')->nullable();
 

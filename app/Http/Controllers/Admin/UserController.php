@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Auth\RegisterRequest;
+use App\Models\Branch;
 use App\Models\User;
 use Illuminate\Http\Request;
 
@@ -23,7 +24,8 @@ class UserController extends Controller
      */
     public function create()
     {
-        return view('admin.users.create');
+        $branches = Branch::where('is_active', 1)->get();
+        return view('admin.users.create', compact('branches'));
     }
 
     /**
@@ -31,7 +33,12 @@ class UserController extends Controller
      */
     public function store(RegisterRequest $request)
     {
-        $user = User::create($request->all());
+        $data = $request->except('branches');
+        $user = User::create($data);
+
+        if ($request->branches) {
+            $user->branches()->attach($request->branches);
+        }
 
 
         session()->flash('success', 'User created successfully');
@@ -52,8 +59,9 @@ class UserController extends Controller
      */
     public function edit(string $id)
     {
-        $user = User::find($id);
-        return view('admin.users.edit', compact('user'));
+        $user = User::with('branches')->find($id);
+        $branches = Branch::where('is_active', 1)->get();
+        return view('admin.users.edit', compact('user', 'branches'));
     }
 
     /**
@@ -61,6 +69,7 @@ class UserController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
         $user = User::find($id);
         $user->update([
             'name' => $request->name,
@@ -69,6 +78,11 @@ class UserController extends Controller
             'role' => $request->role,
             'password' => $request->password ?? $user->password,
         ]);
+
+
+        if ($request->branches) {
+            $user->branches()->sync($request->branches);
+        }
         session()->flash('success', 'User updated successfully');
         return redirect()->route('admin.users.index');
     }

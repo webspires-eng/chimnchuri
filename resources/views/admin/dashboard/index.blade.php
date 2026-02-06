@@ -4,7 +4,7 @@
 @section('style')
 @endsection
 
-
+{{-- {{ dd(session()->get('branch_ids')) }} --}}
 @section('content')
     <!-- Start here.... -->
     <div class="row">
@@ -91,11 +91,11 @@
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
                                     @if ($pendingChange > 0)
-                                        <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i>
+                                        <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i>
                                             {{ $pendingChange }}%</span>
                                         <span class="text-muted ms-1 fs-12">Last Month</span>
                                     @else
-                                        <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i>
+                                        <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i>
                                             {{ $pendingChange }}%</span>
                                         <span class="text-muted ms-1 fs-12">Last Month</span>
                                     @endif

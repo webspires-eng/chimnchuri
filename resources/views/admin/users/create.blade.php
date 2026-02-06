@@ -46,6 +46,20 @@
                                 <option value="">Select Role</option>
                                 <option value="user">User</option>
                                 <option value="admin">Admin</option>
+                                <option value="manager">Manager</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-6">
+                        <div class="mb-3">
+                            <label for="branches" class="form-label">Assign Branches</label>
+                            <select name="branches[]" id="branches" class="form-select" data-choices-removeItem
+                                data-choices multiple>
+                                <option value="">Select Branches</option>
+                                @foreach ($branches as $branch)
+                                    <option value="{{ $branch->id }}">{{ $branch->name }}</option>
+                                @endforeach
                             </select>
                         </div>
                     </div>
@@ -67,6 +81,15 @@
 @section('javascript')
     <script>
         $(document).ready(function() {
+
+            // const element = document.getElementById('branches');
+
+            // const choices = new Choices(element, {
+            //     removeItemButton: true,
+            //     maxItemCount: 5,
+            //     searchEnabled: true,
+            //     placeholder: true,
+            // });
 
 
             $("#userForm").on("submit", function(e) {

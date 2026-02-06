@@ -16,6 +16,9 @@ return new class extends Migration
             $table->string('name');
             $table->string('code')->unique();
 
+            $table->json('branch_ids')->nullable();
+
+
             $table->enum('type', ['percentage', 'fixed']);
 
             $table->decimal('discount_amount', 10, 2);

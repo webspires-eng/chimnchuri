@@ -23,11 +23,33 @@ class LoginController extends Controller
         ]);
 
         // Add role check to credentials
-        $credentials['role'] = 'admin';
+        // $credentials['role'] = 'admin';
 
 
         if (Auth::guard('admin')->attempt($credentials, $request->boolean('remember'))) {
             $request->session()->regenerate();
+
+            $user = Auth::guard('admin')->user();
+
+            if (in_array($user->role, ["admin", "manager", "staff"])) {
+
+
+                if ($user->role !== "admin" && empty($user->branch_ids)) {
+                    Auth::guard('admin')->logout();
+                    session()->forget('branch_ids');
+                    $request->session()->invalidate();
+                    $request->session()->regenerateToken();
+                    return redirect()->route('admin.login')->with('error', 'You are not authorized to login as admin');
+                }
+            } else {
+                Auth::guard('admin')->logout();
+                session()->forget('branch_ids');
+                $request->session()->invalidate();
+                $request->session()->regenerateToken();
+                return redirect()->route('admin.login')->with('error', 'You are not authorized to login as admin');
+            }
+
+            session(['branch_ids' => $user->branch_ids]);
 
 
             return redirect()->intended(route('admin.dashboard'));
@@ -42,6 +64,7 @@ class LoginController extends Controller
     public function logout(Request $request)
     {
         Auth::guard('admin')->logout();
+        session()->forget('branch_ids');
         $request->session()->invalidate();
         $request->session()->regenerateToken();
 

@@ -4,6 +4,7 @@ use App\Http\Controllers\Admin\AddonItemController;
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\Category\CategoryController;
 use App\Http\Controllers\Admin\Addon\CategoryController as AddonCategoryController;
+use App\Http\Controllers\Admin\BranchController;
 use App\Http\Controllers\Admin\Category\CategoryMediaController;
 use App\Http\Controllers\Admin\DashboardController;
 use App\Http\Controllers\Admin\LoginController;
@@ -75,5 +76,8 @@ Route::prefix('admin')->group(function () {
         Route::resource("offers", OfferController::class);
 
         Route::get("/data", [DashboardController::class, "getPerformanceData"])->name("admin.data");
+
+        // BRANCHES
+        Route::resource("branches", BranchController::class)->names("admin.branches");
     });
 });

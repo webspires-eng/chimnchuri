@@ -14,9 +14,8 @@ class AdminMiddleware
         if (!Auth::guard('admin')->check()) {
             return redirect()->route('admin.login');
         }
-
         // Check if the authenticated user has admin role
-        if (Auth::guard('admin')->user()->role !== 'admin') {
+        if (!in_array(Auth::guard('admin')->user()->role, ["admin", "manager", "staff"])) {
             Auth::guard('admin')->logout();
             return redirect()->route('admin.login')->withErrors([
                 'email' => 'Unauthorized access.'

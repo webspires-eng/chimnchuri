@@ -22081,8 +22081,8 @@ th.fc-day-header {
   font-size: 11px;
   font-weight: 400;
   margin: 2px 5px 2px 0;
-  background-color: #ff6c2f;
-  border: 1px solid #ff6c2f;
+  background-color: var(--primary-brand-color);
+  border: 1px solid var(--primary-brand-color);
   color: #ffffff;
   -webkit-box-shadow: 0 5px 10px rgba(30, 32, 37, 0.12);
   box-shadow: 0 5px 10px rgba(30, 32, 37, 0.12);
