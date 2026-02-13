@@ -3,6 +3,7 @@
 namespace App\Providers;
 
 use App\Models\SmtpSetting;
+use App\Services\Api\V1\Auth\TokenService;
 use Illuminate\Pagination\Paginator;
 use Illuminate\Support\Facades\Config;
 use Illuminate\Support\Facades\Schema;
@@ -15,7 +16,7 @@ class AppServiceProvider extends ServiceProvider
      */
     public function register(): void
     {
-        //
+        $this->app->bind(TokenService::class);
     }
 
     /**
