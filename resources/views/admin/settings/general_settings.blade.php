@@ -15,7 +15,7 @@
                 </div>
             @endif
 
-            <form action="{{ route('admin.general-settings.update') }}" method="POST">
+            <form action="{{ route('admin.general-settings.update') }}" method="POST" enctype="multipart/form-data">
                 @csrf
                 <div class="card">
                     <div class="card-header">
@@ -34,6 +34,19 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <label for="restaurant_logo" class="form-label">Restaurant Name</label>
+                                    <input type="file" id="restaurant_logo"
+                                        value="{{ old('restaurant_logo', $settings->restaurant_logo ?? '') }}"
+                                        name="restaurant_logo" class="form-control" placeholder="Restaurant Name">
+                                    @error('restaurant_logo')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
                             <div class="col-lg-4">
                                 <div class="mb-3">
                                     <label for="phone" class="form-label">Phone</label>
@@ -93,8 +106,9 @@
                             <div class="col-lg-4">
                                 <div class="mb-3">
                                     <label for="state" class="form-label">State</label>
-                                    <input type="text" id="state" value="{{ old('state', $settings->state ?? '') }}"
-                                        name="state" class="form-control" placeholder="State">
+                                    <input type="text" id="state"
+                                        value="{{ old('state', $settings->state ?? '') }}" name="state"
+                                        class="form-control" placeholder="State">
                                     @error('state')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -122,6 +136,18 @@
                                         value="{{ old('currency_code', $settings->currency_code ?? 'PKR') }}"
                                         name="currency_code" class="form-control" placeholder="Currency">
                                     @error('currency_code')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <label for="currency_symbol" class="form-label">Currency Symbol</label>
+                                    <input type="text" id="currency_symbol"
+                                        value="{{ old('currency_symbol', $settings->currency_symbol ?? 'Rs.') }}"
+                                        name="currency_symbol" class="form-control" placeholder="Currency Symbol">
+                                    @error('currency_symbol')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
                                 </div>
@@ -251,6 +277,83 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="col-12 mt-4">
+                                <h4>Social Icons</h4>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label for="fb_link" class="form-label">Facebook Link</label>
+                                    <input type="text" id="fb_link"
+                                        value="{{ old('fb_link', $settings->fb_link ?? '') }}" name="fb_link"
+                                        class="form-control" placeholder="Facebook Link">
+                                    @error('fb_link')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label for="insta_link" class="form-label">Instagram Link</label>
+                                    <input type="text" id="insta_link"
+                                        value="{{ old('insta_link', $settings->insta_link ?? '') }}" name="insta_link"
+                                        class="form-control" placeholder="Instagram Link">
+                                    @error('insta_link')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label for="twitter_link" class="form-label">Twitter Link</label>
+                                    <input type="text" id="twitter_link"
+                                        value="{{ old('twitter_link', $settings->twitter_link ?? '') }}"
+                                        name="twitter_link" class="form-control" placeholder="Twitter Link">
+                                    @error('twitter_link')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label for="youtube_link" class="form-label">Youtube Link</label>
+                                    <input type="text" id="youtube_link"
+                                        value="{{ old('youtube_link', $settings->youtube_link ?? '') }}"
+                                        name="youtube_link" class="form-control" placeholder="Youtube Link">
+                                    @error('youtube_link')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label for="whatsapp_link" class="form-label">Whatsapp Link</label>
+                                    <input type="text" id="whatsapp_link"
+                                        value="{{ old('whatsapp_link', $settings->whatsapp_link ?? '') }}"
+                                        name="whatsapp_link" class="form-control" placeholder="Whatsapp Link">
+                                    @error('whatsapp_link')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
+                            <div class="col-lg-3">
+                                <div class="mb-3">
+                                    <label for="tiktok_link" class="form-label">Tiktok Link</label>
+                                    <input type="text" id="tiktok_link"
+                                        value="{{ old('tiktok_link', $settings->tiktok_link ?? '') }}" name="tiktok_link"
+                                        class="form-control" placeholder="Tiktok Link">
+                                    @error('tiktok_link')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
 
                         </div>
 

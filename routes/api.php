@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Api\V1\Admin\AddonCategoryController;
 use App\Http\Controllers\Api\V1\Admin\AddonGroupController;
 use App\Http\Controllers\Api\V1\Admin\AddonItemController;
@@ -77,9 +78,17 @@ Route::prefix("v1")->group(function () {
         Route::post("/place-order", [OrderController::class, "placeOrder"])->name("orders.place");
         Route::get('/orders/{order}', [OrderController::class, 'getOrder'])->name('getOrder');
 
-        // PAYMENT
+        // CHECKOUT
         Route::post("/payment-intent", [PaymentController::class, "createPaymentIntent"])->name("payment-intent")->withoutMiddleware([VerifyCsrfToken::class]);
         Route::post('/process-checkout', [PaymentController::class, 'processCheckout'])->withoutMiddleware([VerifyCsrfToken::class]);
+
+
+        // SETTINGS API
+        Route::get("/settings", [SettingController::class, "settings"]);
+
+
+        // PAYMENT SETTINGS 
+        Route::get("/payment-settings", [SettingController::class, "paymentSettings"]);
     });
 });
 

@@ -35,7 +35,7 @@ class PaymentGatewayController extends Controller
         $request->validate([
             'name' => 'required',
             'code' => 'required|unique:payment_gateways',
-            'driver_class' => 'required'
+            'driver_class' => 'nullable'
         ]);
 
         $gateway = PaymentGateway::create($request->all());
@@ -76,7 +76,12 @@ class PaymentGatewayController extends Controller
     {
         $gateway = PaymentGateway::findOrFail($id);
 
-        $gateway->update($request->only('name', 'driver_class', 'is_active'));
+        $gateway->update([
+            "name" => $request->name,
+            "driver_class" => $request->driver_class,
+            "is_active" => $request->is_enabled
+        ]);
+
 
         $config = [];
 

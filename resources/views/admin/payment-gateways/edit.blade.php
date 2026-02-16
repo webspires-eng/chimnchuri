@@ -106,6 +106,7 @@
                     </div>
                     <div class="col-lg-6 ">
                         <div class="form-check form-switch mb-3">
+                            <input class="form-check-input" type="hidden" name="is_enabled" id="is_enabled" value="0">
                             <input class="form-check-input" type="checkbox" name="is_enabled" id="is_enabled" value="1"
                                 {{ $gateway->setting->is_enabled ? 'checked' : '' }}>
                             <label class="form-check-label" for="is_enabled">Enable Gateway</label>

@@ -7,6 +7,7 @@ use App\Models\ItemSize;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderItemAddon;
+use App\Models\Setting;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -44,6 +45,8 @@ class PaymentController extends Controller
         // dd($request->all());
         // 1. Validate the request (address, cart items, etc.)
 
+        $setting = Setting::first();
+
         $subTotal = 0;
 
         // 2. Create the Order in your DB
@@ -62,14 +65,6 @@ class PaymentController extends Controller
         ]);
 
         foreach ($request->items as $cartItem) {
-            // logger()->info($cartItem["name"]);
-            $item = Item::findOrFail($cartItem["productId"]);
-            $size = ItemSize::findOrFail($cartItem["selectedSize"]["id"]);
-
-            $price = $size->price;
-            $quantity = $cartItem["quantity"];
-
-            $total = $price * $quantity;
 
             $order_item =  OrderItem::create([
                 'order_id' => $order->id,
@@ -95,45 +90,29 @@ class PaymentController extends Controller
                         'name' => $addon["name"],
                         'price' => $addon["price"],
                         'quantity' => $addon["qty"],
-                        'total' => $addon["price"] * $addon["qty"]
+                        'total' => $addon["price"] * ($addon["qty"] * $order_item->quantity)
                     ]);
 
-                    $subTotal += ($subItem->price * $subItem->quantity);
+                    $subTotal += ($subItem->price * ($subItem->quantity * $order_item->quantity));
                 }
             }
         }
 
 
-        // foreach ($request->items as $cartItem) {
+        $tax = $setting->tax_percentage > 0 ? $setting->tax_percentage : null;
+        if ($tax) {
+            $taxAmount = $subTotal * $setting->tax_percentage / 100;
+        }
 
-        //     $item = Item::findOrFail($cartItem->productId);
+        if ($setting->delivery_charge) {
+            $deliveryCharge = $setting->delivery_charge;
+        }
 
-        //     $size = ItemSize::findOrFail($cartItem->selectedSize->id);
-
-        //     $price = $size->price;
-        //     $quantity = $cartItem->quantity;
-
-        //     $total = $price * $quantity;
-
-        //     OrderItem::create([
-        //         'order_id' => $order->id,
-        //         'item_id' => $item->id,
-        //         'size_id' => $size->id,
-
-        //         'item_name' => $item->name,
-        //         'size_name' => $size->name,
-
-        //         'price' => $price,
-        //         'quantity' => $quantity,
-        //         'total' => $total
-        //     ]);
-
-        //     $subTotal += $total;
-        // }
-
-        $grandTotal = $subTotal;
+        $grandTotal = $subTotal + $taxAmount + $deliveryCharge;
 
         $order->update([
+            "tax_total" => $taxAmount ?? 0,
+            "delivery_charges" => $deliveryCharge ?? 0,
             'sub_total' => $subTotal,
             'grand_total' => $grandTotal
         ]);

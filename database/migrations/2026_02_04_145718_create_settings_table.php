@@ -15,6 +15,7 @@ return new class extends Migration
             $table->id();
 
             $table->string('restaurant_name');
+            $table->string('restaurant_logo')->nullable();
             $table->string('phone')->nullable();
             $table->string('email')->nullable();
 
@@ -37,6 +38,8 @@ return new class extends Migration
 
             $table->boolean('is_cod_enabled')->default(true);
             $table->boolean('is_online_enabled')->default(true);
+
+            $table->json("social_links")->nullable();
 
             $table->timestamps();
         });

@@ -304,14 +304,14 @@
                                                 icon="solar:kick-scooter-broken" class="align-middle"></iconify-icon>
                                             Delivery Charge : </p>
                                     </td>
-                                    <td class="text-end text-dark fw-medium px-0">£{{ $order?->delivery_charge ?? 0 }}
+                                    <td class="text-end text-dark fw-medium px-0">£{{ $order?->delivery_charges ?? 0 }}
                                     </td>
                                 </tr>
                                 <tr>
                                     <td class="px-0">
                                         <p class="d-flex mb-0 align-items-center gap-1"><iconify-icon
                                                 icon="solar:calculator-minimalistic-broken"
-                                                class="align-middle"></iconify-icon> Estimated Tax (15.5%) : </p>
+                                                class="align-middle"></iconify-icon> Estimated Tax : </p>
                                     </td>
                                     <td class="text-end text-dark fw-medium px-0">£{{ $order->tax_total ?? 0 }}</td>
                                 </tr>
