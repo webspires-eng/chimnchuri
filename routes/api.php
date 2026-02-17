@@ -93,6 +93,11 @@ Route::prefix("v1")->group(function () {
 
         // TIME SLOTS
         Route::get("/time-slots", [TimeSlotController::class, "getAllSlots"]);
+
+
+        Route::group(["middleware" => "auth:sanctum"], function () {
+            Route::get("/orders", [OrderController::class, "getOrders"]);
+        });
     });
 });
 

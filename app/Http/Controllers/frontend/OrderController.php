@@ -189,4 +189,27 @@ class OrderController extends Controller
             'data' => $order
         ]);
     }
+
+
+
+    public function getOrders(Request $request)
+    {
+        $user = $request->user();
+
+        $orders = Order::with([
+            "items.item.media",
+            "items.addons",
+            "timelines",
+            "user"
+        ])
+            ->where("user_id", $user->id)
+            ->orderBy("created_at", "desc")
+            ->get();
+
+        return response()->json([
+            "status" => "success",
+            "message" => "Orders fetched successfully",
+            "data" => $orders
+        ]);
+    }
 }
