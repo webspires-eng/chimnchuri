@@ -13,7 +13,15 @@
                                         #{{ $order->order_number }}
                                         @if ($order->payment_status == 'paid')
                                             <span class="badge bg-success-subtle text-success  px-2 py-1 fs-13">Paid</span>
-                                        @else
+                                        @elseif($order->payment_status == 'pending')
+                                            <span
+                                                class="badge bg-warning-subtle text-warning  px-2 py-1 fs-13">Pending</span>
+                                        @elseif($order->payment_status == 'failed')
+                                            <span class="badge bg-danger-subtle text-danger  px-2 py-1 fs-13">Failed</span>
+                                        @elseif($order->payment_status == 'refunded')
+                                            <span
+                                                class="badge bg-danger-subtle text-danger  px-2 py-1 fs-13">Refunded</span>
+                                        @elseif($order->payment_status == 'unpaid')
                                             <span class="badge bg-danger-subtle text-danger  px-2 py-1 fs-13">Unpaid</span>
                                         @endif
                                         @if ($order->order_status == 'pending')

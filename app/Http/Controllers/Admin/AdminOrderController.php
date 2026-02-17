@@ -7,6 +7,8 @@ use App\Models\Order;
 use App\Services\OrderTimelineService;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
+use Stripe\PaymentIntent;
+use Stripe\Stripe;
 
 class AdminOrderController extends Controller
 {
@@ -37,6 +39,39 @@ class AdminOrderController extends Controller
         }
 
         $order = Order::findOrFail($id);
+
+        if ($order->payment_method == "online" && $request->order_status == "confirmed") {
+
+            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+            $paymentIntent = PaymentIntent::retrieve(
+                $order->payment_intent_id
+            );
+            if ($paymentIntent->status == 'requires_capture') {
+                $paymentIntent->capture();
+
+                $order->update([
+                    'order_status' => $request->order_status,
+                    'payment_status' => 'pending'
+                ]);
+            }
+        } else if ($order->payment_method == "online" && $request->order_status == "cancelled") {
+            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+            $paymentIntent = PaymentIntent::retrieve(
+                $order->payment_intent_id
+            );
+
+            if ($paymentIntent->status == "requires_capture") {
+                $paymentIntent->cancel();
+            }
+
+            $order->update([
+                'order_status' => $request->order_status,
+                'payment_status' => 'unpaid'
+            ]);
+        }
+
         $order->update([
             'order_status' => $request->order_status
         ]);

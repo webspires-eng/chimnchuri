@@ -25,11 +25,13 @@ return new class extends Migration
             $table->decimal('tax_total', 10, 2)->nullable();
             $table->decimal('grand_total', 10, 2)->nullable();
 
+            $table->string('payment_intent_id')->nullable();
             $table->enum('payment_method', ['cod', 'online']);
-            $table->enum('payment_status', ['pending', 'paid', 'failed'])->default('pending');
+            $table->enum('payment_status', ['unpaid', 'paid', "failed", "refunded", 'cancelled'])->default('unpaid');
 
             $table->enum('order_status', [
                 'pending',
+                'accepted',
                 'confirmed',
                 'processing',
                 'completed',

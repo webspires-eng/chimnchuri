@@ -46,7 +46,6 @@ class PaymentController extends Controller
         // 1. Validate the request (address, cart items, etc.)
 
         $setting = Setting::first();
-
         $subTotal = 0;
 
         // 2. Create the Order in your DB
@@ -60,7 +59,7 @@ class PaymentController extends Controller
             'customer_email' => $request?->email ?? "akifullah@gmail.com",
             'delivery_address' => $request?->street_address ?? "My addresss",
             'payment_method' => $request?->payment_method ?? "cod",
-            'payment_status' => 'pending',
+            'payment_status' => 'unpaid',
             'order_status' => 'pending'
         ]);
 
@@ -117,16 +116,24 @@ class PaymentController extends Controller
             'grand_total' => $grandTotal
         ]);
 
-        if ($request?->payment_method) {
+        if ($request?->payment_method == "online") {
             // 3. Create Stripe Payment Intent
             Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
             $paymentIntent = PaymentIntent::create([
-                'amount' => $request?->amount * 100, // Convert to cents
-                'currency' => 'gbp',
+                'amount' => $grandTotal * 100,
+                'currency' => $setting->currency_code ?? 'gbp',
+                'capture_method' => 'manual',
+                'automatic_payment_methods' => [
+                    'enabled' => true,
+                ],
                 'metadata' => [
-                    'order_id' => $order->id // Link the order ID for webhooks later
+                    'order_id' => $order->id
                 ]
+            ]);
+
+            $order->update([
+                'payment_intent_id' => $paymentIntent->id,
             ]);
 
             return response()->json([
