@@ -72,7 +72,7 @@ class SettingController extends Controller
             'tiktok_link' => $request->tiktok_link,
         ];
 
-        $data['social_links'] = $socialLinks;
+        $data['social_links'] = json_encode($socialLinks);
 
         unset(
             $data['fb_link'],
@@ -82,7 +82,6 @@ class SettingController extends Controller
             $data['whatsapp_link'],
             $data['tiktok_link']
         );
-
         $setting = Setting::first();
         if ($setting) {
             $setting->update($data);

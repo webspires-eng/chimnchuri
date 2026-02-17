@@ -193,6 +193,8 @@
                                 <h4 class="text-start">Order Settings</h4>
                             </div>
 
+
+
                             <div class="col-lg-2">
                                 <div class="mb-3">
                                     <label for="is_order_enabled"
@@ -282,11 +284,16 @@
                                 <h4>Social Icons</h4>
                             </div>
 
+                            @php
+                                $social_links = json_decode($settings->social_links, true);
+                            @endphp
+
+
                             <div class="col-lg-3">
                                 <div class="mb-3">
                                     <label for="fb_link" class="form-label">Facebook Link</label>
                                     <input type="text" id="fb_link"
-                                        value="{{ old('fb_link', $settings->fb_link ?? '') }}" name="fb_link"
+                                        value="{{ old('fb_link', $social_links['fb_link'] ?? '') }}" name="fb_link"
                                         class="form-control" placeholder="Facebook Link">
                                     @error('fb_link')
                                         <span class="text-danger">{{ $message }}</span>
@@ -298,8 +305,8 @@
                                 <div class="mb-3">
                                     <label for="insta_link" class="form-label">Instagram Link</label>
                                     <input type="text" id="insta_link"
-                                        value="{{ old('insta_link', $settings->insta_link ?? '') }}" name="insta_link"
-                                        class="form-control" placeholder="Instagram Link">
+                                        value="{{ old('insta_link', $social_links['insta_link'] ?? '') }}"
+                                        name="insta_link" class="form-control" placeholder="Instagram Link">
                                     @error('insta_link')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -310,7 +317,7 @@
                                 <div class="mb-3">
                                     <label for="twitter_link" class="form-label">Twitter Link</label>
                                     <input type="text" id="twitter_link"
-                                        value="{{ old('twitter_link', $settings->twitter_link ?? '') }}"
+                                        value="{{ old('twitter_link', $social_links['twitter_link'] ?? '') }}"
                                         name="twitter_link" class="form-control" placeholder="Twitter Link">
                                     @error('twitter_link')
                                         <span class="text-danger">{{ $message }}</span>
@@ -322,7 +329,7 @@
                                 <div class="mb-3">
                                     <label for="youtube_link" class="form-label">Youtube Link</label>
                                     <input type="text" id="youtube_link"
-                                        value="{{ old('youtube_link', $settings->youtube_link ?? '') }}"
+                                        value="{{ old('youtube_link', $social_links['youtube_link'] ?? '') }}"
                                         name="youtube_link" class="form-control" placeholder="Youtube Link">
                                     @error('youtube_link')
                                         <span class="text-danger">{{ $message }}</span>
@@ -334,7 +341,7 @@
                                 <div class="mb-3">
                                     <label for="whatsapp_link" class="form-label">Whatsapp Link</label>
                                     <input type="text" id="whatsapp_link"
-                                        value="{{ old('whatsapp_link', $settings->whatsapp_link ?? '') }}"
+                                        value="{{ old('whatsapp_link', $social_links['whatsapp_link'] ?? '') }}"
                                         name="whatsapp_link" class="form-control" placeholder="Whatsapp Link">
                                     @error('whatsapp_link')
                                         <span class="text-danger">{{ $message }}</span>
@@ -346,8 +353,8 @@
                                 <div class="mb-3">
                                     <label for="tiktok_link" class="form-label">Tiktok Link</label>
                                     <input type="text" id="tiktok_link"
-                                        value="{{ old('tiktok_link', $settings->tiktok_link ?? '') }}" name="tiktok_link"
-                                        class="form-control" placeholder="Tiktok Link">
+                                        value="{{ old('tiktok_link', $social_links['tiktok_link'] ?? '') }}"
+                                        name="tiktok_link" class="form-control" placeholder="Tiktok Link">
                                     @error('tiktok_link')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror

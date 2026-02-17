@@ -14,6 +14,7 @@ use App\Http\Controllers\Admin\Product\ProductController;
 use App\Http\Controllers\Admin\Product\ProductMediaController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\SmtpController;
+use App\Http\Controllers\Admin\TimeSlotController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\PaymentController;
@@ -81,5 +82,15 @@ Route::prefix('admin')->group(function () {
 
         // BRANCHES
         Route::resource("branches", BranchController::class)->names("admin.branches");
+
+        // TIME SLOTS
+        Route::get('/time-slots', [TimeSlotController::class, 'index'])->name('admin.time-slots.index');
+        Route::get('/time-slots/create', [TimeSlotController::class, 'create'])->name('admin.time-slots.create');
+        Route::post('/time-slots/store', [TimeSlotController::class, 'store'])->name('admin.time-slots.store');
+        Route::get("/time-slots/{timeSlot}/edit", [TimeSlotController::class, "edit"])->name("admin.time-slots.edit");
+        Route::post("/time-slots/{timeSlot}/update", [TimeSlotController::class, "update"])->name("admin.time-slots.update");
+        Route::delete("/time-slots/{timeSlot}/delete", [TimeSlotController::class, "destroy"])->name("admin.time-slots.destroy");
     });
 });
+
+Route::post("/webhook/stripe", [PaymentController::class, "handleWebhook"])->name("stripe.webhook")->withoutMiddleware([VerifyCsrfToken::class]);

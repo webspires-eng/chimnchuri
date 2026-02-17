@@ -8,6 +8,7 @@ use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderItemAddon;
 use App\Models\Setting;
+use App\Models\TimeSlot;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -39,18 +40,60 @@ class PaymentController extends Controller
 
     public function processCheckout(Request $request)
     {
+        return Auth::user();
         // return response()->json($request->input());
 
 
         // dd($request->all());
         // 1. Validate the request (address, cart items, etc.)
+        // $timeSlot = TimeSlot::find($request->time_slot_id);
+
+        // $slotCapacity = $timeSlot->max_capacity; // 5
+        // $alreadyBooked = Order::where('time_slot_id', $timeSlot->id)
+        //     ->whereIn('order_status', ["pending", "accepted", "confirmed"])
+        //     ->sum('steak_quantity');
+        // $remainingCapacity = $slotCapacity - $alreadyBooked;
+
+        // if (5 > $remainingCapacity) {
+        //     return response()->json([
+        //         'error' => "This slot only has $remainingCapacity steaks left."
+        //     ]);
+        // }
+
+
+        // ✅ STEP 1: Count total steaks in THIS order
+        // $steaksInOrder = collect($request->items)->sum('quantity');
+
+        // // ✅ STEP 2: Check the 15-min slot capacity
+        $timeSlot = TimeSlot::find($request->time_slot_id);
+
+        // if (!$timeSlot) {
+        //     return response()->json(['error' => 'Invalid time slot.'], 422);
+        // }
+
+        // // Count steaks ALREADY booked in this slot
+        // $alreadyBookedInSlot = Order::where('time_slot_id', $timeSlot->id)
+        //     ->whereIn('order_status', ['pending', 'accepted', 'confirmed'])
+        //     ->sum('steak_quantity');  // total steaks, not orders
+
+        // $remainingInSlot = $timeSlot->max_capacity - $alreadyBookedInSlot;
+
+        // // ❌ Block if this order would exceed slot capacity
+        // if ($steaksInOrder > $remainingInSlot) {
+        //     return response()->json([
+        //         'error' => "This time slot only has $remainingInSlot steak(s) left. Please choose another slot."
+        //     ], 422);
+        // }
+
+
 
         $setting = Setting::first();
         $subTotal = 0;
+        $steakQty = 0;
 
         // 2. Create the Order in your DB
         $order = Order::create([
-            'user_id' => Auth::user()?->id ?? null,
+            'user_id' => Auth::user()->id ?? null,
             'uuid' => Str::uuid()->toString(),
             'order_number' => 'ORD-' . time(),
 
@@ -60,7 +103,10 @@ class PaymentController extends Controller
             'delivery_address' => $request?->street_address ?? "My addresss",
             'payment_method' => $request?->payment_method ?? "cod",
             'payment_status' => 'unpaid',
-            'order_status' => 'pending'
+            'order_status' => 'pending',
+            'steak_qty' => $steakQty,
+            "time_slot_id" => $request->time_slot_id,
+            "time_slot" => $timeSlot?->start_time . " - " . $timeSlot?->end_time,
         ]);
 
         foreach ($request->items as $cartItem) {
@@ -79,6 +125,7 @@ class PaymentController extends Controller
 
             ]);
             $subTotal += ($order_item->price * $order_item->quantity);
+            $steakQty += $order_item->quantity;
 
             if ($cartItem["selectedAddons"]) {
                 foreach ($cartItem["selectedAddons"] as $addon) {
@@ -113,6 +160,7 @@ class PaymentController extends Controller
             "tax_total" => $taxAmount ?? 0,
             "delivery_charges" => $deliveryCharge ?? 0,
             'sub_total' => $subTotal,
+            "steak_qty" => $steakQty,
             'grand_total' => $grandTotal
         ]);
 
@@ -149,5 +197,52 @@ class PaymentController extends Controller
             "message" => "Order placed successfully",
             'orderId' => $order->id
         ]);
+    }
+
+    public function handleWebhook(Request $request)
+    {
+        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+
+        $payload = $request->getContent();
+        $sig_header = $request->header('Stripe-Signature');
+        $event = null;
+
+        try {
+            $event = \Stripe\Webhook::constructEvent(
+                $payload,
+                $sig_header,
+                env('STRIPE_WEBHOOK_SECRET')
+            );
+        } catch (\UnexpectedValueException $e) {
+            return response()->json(['error' => 'Invalid payload'], 400);
+        } catch (\Exception $e) {
+            return response()->json(['error' => 'Invalid signature'], 400);
+        }
+
+        if ($event->type == 'charge.captured') {
+            $paymentIntent = $event->data->object;
+            $orderId = $paymentIntent->metadata->order_id;
+
+            $order = Order::find($orderId);
+            if ($order) {
+                $order->update([
+                    'payment_status' => 'paid',
+                ]);
+            }
+        }
+
+        if ($event->type == 'payment_intent.canceled') {
+            $paymentIntent = $event->data->object;
+            $orderId = $paymentIntent->metadata->order_id;
+
+            $order = Order::find($orderId);
+            if ($order) {
+                $order->update([
+                    'payment_status' => 'cancelled',
+                ]);
+            }
+        }
+
+        return response()->json(['success' => true]);
     }
 }

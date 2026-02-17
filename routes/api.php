@@ -2,6 +2,7 @@
 
 use App\Http\Controllers\Admin\AdminOrderController;
 use App\Http\Controllers\Admin\SettingController;
+use App\Http\Controllers\Admin\TimeSlotController;
 use App\Http\Controllers\Api\V1\Admin\AddonCategoryController;
 use App\Http\Controllers\Api\V1\Admin\AddonGroupController;
 use App\Http\Controllers\Api\V1\Admin\AddonItemController;
@@ -80,7 +81,7 @@ Route::prefix("v1")->group(function () {
 
         // CHECKOUT
         Route::post("/payment-intent", [PaymentController::class, "createPaymentIntent"])->name("payment-intent")->withoutMiddleware([VerifyCsrfToken::class]);
-        Route::post('/process-checkout', [PaymentController::class, 'processCheckout'])->withoutMiddleware([VerifyCsrfToken::class]);
+        Route::post('/process-checkout', [PaymentController::class, 'processCheckout'])->middleware("auth:sanctum");
 
 
         // SETTINGS API
@@ -89,6 +90,9 @@ Route::prefix("v1")->group(function () {
 
         // PAYMENT SETTINGS 
         Route::get("/payment-settings", [SettingController::class, "paymentSettings"]);
+
+        // TIME SLOTS
+        Route::get("/time-slots", [TimeSlotController::class, "getAllSlots"]);
     });
 });
 

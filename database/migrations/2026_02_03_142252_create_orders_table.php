@@ -22,12 +22,13 @@ return new class extends Migration
 
             $table->decimal('sub_total', 10, 2)->nullable();
             $table->decimal('discount_total', 10, 2)->nullable();
+            $table->decimal('delivery_charges', 10, 2)->nullable();
             $table->decimal('tax_total', 10, 2)->nullable();
             $table->decimal('grand_total', 10, 2)->nullable();
 
             $table->string('payment_intent_id')->nullable();
             $table->enum('payment_method', ['cod', 'online']);
-            $table->enum('payment_status', ['unpaid', 'paid', "failed", "refunded", 'cancelled'])->default('unpaid');
+            $table->enum('payment_status', ['unpaid', "pending", 'paid', "failed", "refunded", 'cancelled'])->default('pending');
 
             $table->enum('order_status', [
                 'pending',
@@ -37,6 +38,10 @@ return new class extends Migration
                 'completed',
                 'cancelled'
             ])->default('pending');
+
+            $table->integer("steak_qty")->nullable()->default(0);
+            $table->string("time_slot_id")->nullable();
+            $table->string("time_slot")->nullable();
 
             $table->string('customer_name');
             $table->string('customer_phone');
