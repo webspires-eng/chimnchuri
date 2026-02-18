@@ -31,9 +31,9 @@
                                             <span class="badge bg-info-subtle text-info  px-2 py-1 fs-13">Confirmed</span>
                                         @elseif ($order->order_status == 'processing')
                                             <span class="badge bg-info-subtle text-info  px-2 py-1 fs-13">Processing</span>
-                                        @elseif ($order->order_status == 'shipped')
+                                        @elseif ($order->order_status == 'dispatched')
                                             <span
-                                                class="badge bg-primary-subtle text-primary  px-2 py-1 fs-13">Shipped</span>
+                                                class="badge bg-primary-subtle text-primary  px-2 py-1 fs-13">Dispatched</span>
                                         @elseif ($order->order_status == 'completed')
                                             <span
                                                 class="badge bg-success-subtle text-success  px-2 py-1 fs-13">Completed</span>
@@ -120,8 +120,8 @@
                                         Confirmed</option>
                                     <option value="processing" {{ $order->order_status == 'processing' ? 'selected' : '' }}>
                                         Processing</option>
-                                    <option value="shipped" {{ $order->order_status == 'shipped' ? 'selected' : '' }}>
-                                        Shipped</option>
+                                    <option value="dispatched" {{ $order->order_status == 'dispatched' ? 'selected' : '' }}>
+                                        Dispatched</option>
                                     <option value="completed" {{ $order->order_status == 'completed' ? 'selected' : '' }}>
                                         Completed</option>
                                     <option value="cancelled" {{ $order->order_status == 'cancelled' ? 'selected' : '' }}>

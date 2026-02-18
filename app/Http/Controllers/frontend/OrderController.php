@@ -163,6 +163,14 @@ class OrderController extends Controller
                 ]);
             }
 
+            try {
+                if ($order->customer_email) {
+                    \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                }
+            } catch (\Exception $e) {
+                logger()->error('Failed to send order confirmation email in placeOrder: ' . $e->getMessage());
+            }
+
             return response()->json([
                 'status' => 'success',
                 'message' => 'Order placed successfully with Cash on Delivery',

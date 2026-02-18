@@ -44,6 +44,7 @@ class PasswordController extends Controller
         ]);
 
         $user = User::where('email', $request->email)->first();
+
         Mail::to($request->email)->send(new ForgetPassword($token, $request->email, $user));
 
         return response()->json([
@@ -102,7 +103,6 @@ class PasswordController extends Controller
                 'success' => true,
                 'message' => 'Your password has been reset successfully! You can now login with your new password.'
             ], 200);
-
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,
@@ -110,7 +110,5 @@ class PasswordController extends Controller
                 "errors" => $e,
             ], 500);
         }
-
-
     }
 }

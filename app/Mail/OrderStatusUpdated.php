@@ -8,21 +8,19 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
-use Illuminate\Mail\Mailables\Address;
 
-class ForgetPassword extends Mailable
+class OrderStatusUpdated extends Mailable
 {
     use Queueable, SerializesModels;
 
-    public $user;
-    public $token;
-    public $email;
+    public $order;
 
-    public function __construct($token, $email, $user)
+    /**
+     * Create a new message instance.
+     */
+    public function __construct($order)
     {
-        $this->token = $token;
-        $this->email = $email;
-        $this->user = $user;
+        $this->order = $order;
     }
 
     /**
@@ -31,8 +29,7 @@ class ForgetPassword extends Mailable
     public function envelope(): Envelope
     {
         return new Envelope(
-            subject: 'Reset Your Password - ' . config('app.name'),
-            // replyTo: [new Address('akifullah0340@gmail.com')],
+            subject: 'Order Status Updated - #' . $this->order->order_number . ' - ' . config('app.name'),
         );
     }
 
@@ -42,7 +39,7 @@ class ForgetPassword extends Mailable
     public function content(): Content
     {
         return new Content(
-            view: 'emails.forget-password',
+            view: 'emails.order-status-updated',
         );
     }
 

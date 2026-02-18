@@ -4,108 +4,224 @@
 <head>
     <meta charset="UTF-8">
     <meta name="viewport" content="width=device-width, initial-scale=1.0">
-    <title>Reset Password</title>
+    <title>Reset Your Password - {{ config('app.name') }}</title>
+    <!--[if mso]>
+    <noscript>
+        <xml>
+            <o:OfficeDocumentSettings>
+                <o:PixelsPerInch>96</o:PixelsPerInch>
+            </o:OfficeDocumentSettings>
+        </xml>
+    </noscript>
+    <![endif]-->
     <style>
         body {
-            font-family: Arial, sans-serif;
-            line-height: 1.6;
-            color: #333;
-            max-width: 600px;
-            margin: 0 auto;
-            padding: 20px;
+            margin: 0;
+            padding: 0;
+            width: 100% !important;
+            height: 100% !important;
+            background-color: #f8fafc;
+            font-family: 'Instrument Sans', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Helvetica, Arial, sans-serif;
+            -webkit-font-smoothing: antialiased;
         }
 
-        .container {
-            background-color: #f9f9f9;
-            border-radius: 10px;
-            padding: 30px;
-            box-shadow: 0 2px 5px rgba(0, 0, 0, 0.1);
+        table {
+            border-spacing: 0;
+            border-collapse: collapse;
+        }
+
+        img {
+            border: 0;
+            line-height: 100%;
+            outline: none;
+            text-decoration: none;
+        }
+
+        .wrapper {
+            width: 100%;
+            table-layout: fixed;
+            background-color: #f8fafc;
+            padding-bottom: 40px;
+        }
+
+        .main {
+            background-color: #ffffff;
+            margin: 0 auto;
+            width: 100%;
+            max-width: 600px;
+            border-spacing: 0;
+            font-family: sans-serif;
+            color: #1e293b;
+            border-radius: 16px;
+            overflow: hidden;
+            border: 1px solid #e2e8f0;
+            box-shadow: 0 4px 6px -1px rgba(0, 0, 0, 0.1), 0 2px 4px -1px rgba(0, 0, 0, 0.06);
         }
 
         .header {
+            padding: 40px 0 20px;
             text-align: center;
-            margin-bottom: 30px;
+            background-color: #ffffff;
+            border-bottom: 1px solid #f1f5f9;
         }
 
-        .header h1 {
-            color: #4CAF50;
-            margin: 0;
+        .logo {
+            font-size: 28px;
+            font-weight: 800;
+            letter-spacing: -0.025em;
+            color: #ffffff;
+            text-decoration: none;
+            text-transform: uppercase;
+            max-width: 100px;
+            margin: 0 auto;
         }
 
         .content {
-            background-color: white;
-            padding: 25px;
-            border-radius: 5px;
+            padding: 40px;
+        }
+
+        h1 {
+            font-size: 24px;
+            font-weight: 700;
+            margin-top: 0;
+            margin-bottom: 20px;
+            color: #0f172a;
+            text-align: center;
+        }
+
+        p {
+            font-size: 16px;
+            line-height: 1.6;
+            margin-bottom: 24px;
+            color: #475569;
+        }
+
+        .button-container {
+            text-align: center;
+            padding: 20px 0;
         }
 
         .button {
-            display: inline-block;
-            padding: 12px 30px;
-            background-color: #4CAF50;
-            color: white;
+            background-color: #396430;
+            /* Primary Brand Green */
+            color: #ffffff !important;
+            padding: 16px 36px;
             text-decoration: none;
-            border-radius: 5px;
-            margin: 20px 0;
-            font-weight: bold;
+            border-radius: 12px;
+            font-weight: 700;
+            font-size: 16px;
+            display: inline-block;
+            transition: background-color 0.2s;
+            box-shadow: 0 4px 6px -1px rgba(57, 100, 48, 0.2), 0 2px 4px -1px rgba(57, 100, 48, 0.1);
         }
 
-        .button:hover {
-            background-color: #45a049;
+        .link-text {
+            word-break: break-all;
+            background-color: #f1f5f9;
+            padding: 16px;
+            border-radius: 12px;
+            font-family: ui-monospace, SFMono-Regular, Menlo, Monaco, Consolas, "Liberation Mono", "Courier New", monospace;
+            font-size: 13px;
+            color: #64748b;
+            border: 1px solid #e2e8f0;
+        }
+
+        .warning-box {
+            background-color: #f0f4ef;
+            /* Light Green tint from brand color */
+            border-left: 4px solid #396430;
+            padding: 20px;
+            margin: 32px 0;
+            border-radius: 4px 12px 12px 4px;
+        }
+
+        .warning-box strong {
+            color: #396430;
+            display: block;
+            margin-bottom: 4px;
+            text-transform: uppercase;
+            font-size: 12px;
+            letter-spacing: 0.1em;
+        }
+
+        .warning-box p {
+            margin-bottom: 0;
+            font-size: 14px;
+            color: #475569;
         }
 
         .footer {
+            padding: 32px 40px;
             text-align: center;
-            margin-top: 30px;
-            font-size: 12px;
-            color: #666;
+            font-size: 13px;
+            color: #64748b;
         }
 
-        .warning {
-            background-color: #fff3cd;
-            border-left: 4px solid #ffc107;
-            padding: 10px;
-            margin: 15px 0;
+        .footer a {
+            color: #475569;
+            text-decoration: underline;
+        }
+
+        .divider {
+            height: 1px;
+            background: linear-gradient(to right, transparent, #e2e8f0, transparent);
+            margin: 32px 0;
         }
     </style>
 </head>
 
 <body>
-    <div class="container">
-        <div class="header">
-            <h1>{{ config('app.name') }}</h1>
-        </div>
+    <div class="wrapper">
+        <center>
+            <table class="main" width="100%">
+                <tr>
+                    <td class="header">
+                        <a href="{{ config('app.url') }}">
+                            <img src="{{ asset('admin/assets/images/logo2.png') }}" height="60"
+                                alt="{{ config('app.name') }}" style="display: block; margin: 0 auto;">
+                        </a>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="content">
+                        <h1>Reset Your Password</h1>
+                        <p>Hello {{ $user->name ?? 'there' }},</p>
+                        <p>We received a request to reset the password for your account. If you didn't make this
+                            request, you can safely ignore this email.</p>
 
-        <div class="content">
-            <h2>Hello {{ $user->name ?? 'User' }}!</h2>
+                        <div class="button-container">
+                            <a href="{{ url('reset-password/' . $token . '?email=' . $email) }}" class="button">
+                                Reset Password
+                            </a>
+                        </div>
 
-            <p>We received a request to reset your password. Click the button below to create a new password:</p>
+                        <div class="warning-box">
+                            <strong>Security Notice</strong>
+                            <p>This password reset link will expire in 60 minutes for your security.</p>
+                        </div>
 
-            <div style="text-align: center;">
-                <a href="{{ url('reset-password/' . $token . '?email=' . $email) }}" class="button">
-                    Reset Password
-                </a>
-            </div>
+                        <p>If the button above doesn't work, copy and paste the following link into your browser:</p>
+                        <div class="link-text">
+                            {{ url('reset-password?token=' . $token . '&email=' . $email) }}
+                        </div>
 
-            <p>Or copy and paste this link into your browser:</p>
-            <p style="word-break: break-all; background-color: #f5f5f5; padding: 10px; border-radius: 3px;">
-                {{ url('reset-password/' . $token . '?email=' . $email) }}
-            </p>
+                        <div class="divider"></div>
 
-            <div class="warning">
-                <strong>⚠️ Important:</strong> This password reset link will expire in 60 minutes.
-            </div>
-
-            <p>If you did not request a password reset, please ignore this email or contact support if you have
-                concerns.</p>
-
-            <p>Best regards,<br>
-                The {{ config('app.name') }} Team</p>
-        </div>
-
-        <div class="footer">
-            <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
-            <p>This is an automated email, please do not reply.</p>
-        </div>
+                        <p style="text-align: center; margin-bottom: 0;">
+                            Best regards,<br>
+                            <strong>The {{ config('app.name') }} Team</strong>
+                        </p>
+                    </td>
+                </tr>
+                <tr>
+                    <td class="footer">
+                        <p>&copy; {{ date('Y') }} {{ config('app.name') }}. All rights reserved.</p>
+                        <p>You're receiving this because a password reset was requested for your account.<br>Please do
+                            not reply to this automated message.</p>
+                    </td>
+                </tr>
+            </table>
+        </center>
     </div>
 </body>
 

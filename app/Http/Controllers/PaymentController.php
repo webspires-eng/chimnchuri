@@ -40,7 +40,7 @@ class PaymentController extends Controller
 
     public function processCheckout(Request $request)
     {
-        return Auth::user();
+        // return Auth::user();
         // return response()->json($request->input());
 
 
@@ -190,6 +190,14 @@ class PaymentController extends Controller
                 'clientSecret' => $paymentIntent->client_secret,
                 'orderId' => $order->id
             ]);
+        }
+
+        try {
+            if ($order->customer_email) {
+                \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+            }
+        } catch (\Exception $e) {
+            logger()->error('Failed to send order confirmation email: ' . $e->getMessage());
         }
 
         return response()->json([

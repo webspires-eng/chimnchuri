@@ -62,6 +62,10 @@ Route::prefix("v1")->group(function () {
         Route::post("/login", [RegisterController::class, "auth"])->name("auth.login")->withoutMiddleware([VerifyCsrfToken::class]);
         Route::post('/refresh', [TokenController::class, 'refresh'])->name("auth.refresh")->withoutMiddleware([VerifyCsrfToken::class]);
 
+        // FORGET PASSWORD
+        Route::post('/forgot-password', [PasswordController::class, 'forgotPassword'])->name("auth.forgetpassword")->withoutMiddleware([VerifyCsrfToken::class]);
+        Route::post('/reset-password', [PasswordController::class, 'resetPassword'])->name("password.reset")->withoutMiddleware([VerifyCsrfToken::class]);
+
         Route::group(["middleware" => "auth:sanctum"], function () {
             Route::get('profile', [AuthController::class, 'profile'])->name("auth.profile")->withoutMiddleware([VerifyCsrfToken::class]);
             Route::post('profile', [AuthController::class, 'updateProfile'])->name("auth.update.profile")->withoutMiddleware([VerifyCsrfToken::class]);
@@ -82,7 +86,7 @@ Route::prefix("v1")->group(function () {
 
         // CHECKOUT
         Route::post("/payment-intent", [PaymentController::class, "createPaymentIntent"])->name("payment-intent")->withoutMiddleware([VerifyCsrfToken::class]);
-        Route::post('/process-checkout', [PaymentController::class, 'processCheckout'])->middleware("auth:sanctum");
+        Route::post('/process-checkout', [PaymentController::class, 'processCheckout']);
 
 
         // SETTINGS API
