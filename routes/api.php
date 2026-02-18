@@ -64,6 +64,7 @@ Route::prefix("v1")->group(function () {
 
         Route::group(["middleware" => "auth:sanctum"], function () {
             Route::get('profile', [AuthController::class, 'profile'])->name("auth.profile")->withoutMiddleware([VerifyCsrfToken::class]);
+            Route::post('profile', [AuthController::class, 'updateProfile'])->name("auth.update.profile")->withoutMiddleware([VerifyCsrfToken::class]);
             Route::post('logout', [AuthController::class, 'logout'])->name("auth.logout")->withoutMiddleware([VerifyCsrfToken::class]);
         });
 

@@ -15,6 +15,7 @@ use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Hash;
 use Illuminate\Support\Facades\Mail;
 use Illuminate\Support\Facades\Password;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\Validator;
 use Laravel\Sanctum\PersonalAccessToken;
 use Pest\Support\Str;
@@ -84,5 +85,46 @@ class AuthController extends Controller
             'message' => 'Logged out successfully'
         ])->cookie('access_token', '', -1)
             ->cookie('refresh_token', '', -1);
+    }
+
+
+    public function updateProfile(Request $request)
+    {
+        $request->validate([
+            "name"           => "required|string|max:255",
+            "email"          => "required|email|max:255|unique:users,email," . $request->user()->id,
+            "phone"          => "required|string|max:255",
+            "city"           => "required|string|max:255",
+            "street_address" => "required|string|max:255",
+            "postal_code"    => "nullable|string|max:20",
+            "image"          => "nullable",
+        ]);
+
+        $user = $request->user();
+
+        if ($request->hasFile('image')) {
+            // Delete old image if exists
+            if ($user->image) {
+                Storage::disk('public')->delete($user->image);
+            }
+
+            $path = Storage::disk('public')->put('uploads', $request->file('image'));
+            $user->image = $path;
+        }
+
+        $user->name           = $request->name;
+        $user->email          = $request->email;
+        $user->phone          = $request->phone;
+        $user->city           = $request->city;
+        $user->street_address = $request->street_address;
+        $user->postal_code    = $request->postal_code;
+
+        $user->save();
+
+        return response()->json([
+            "success" => true,
+            "message" => "Profile updated successfully.",
+            "data"    => $user
+        ], 200);
     }
 }

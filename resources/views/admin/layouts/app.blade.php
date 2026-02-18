@@ -522,17 +522,21 @@
                                         Setting</a>
                                 </li>
                                 <li class="sub-nav-item">
-                                    <a class="sub-nav-link" href="{{ route('admin.branches.index') }}">Branches</a>
+                                    <a class="sub-nav-link" href="{{ route('admin.time-slots.index') }}">Time
+                                        Slots</a>
                                 </li>
+                                {{-- <li class="sub-nav-item">
+                                    <a class="sub-nav-link" href="{{ route('admin.branches.index') }}">Branches</a>
+                                </li> --}}
                                 <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.working-hours') }}">Working
                                         Hours</a>
                                 </li>
 
-                                <li class="sub-nav-item">
+                                {{-- <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('payment-gateways.index') }}">Payment
                                         Gateways</a>
-                                </li>
+                                </li> --}}
                                 <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.smtp.index') }}">SMTP Setting</a>
                                 </li>

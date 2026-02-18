@@ -19,6 +19,13 @@ return new class extends Migration
 
             $table->string('name');
             $table->string('email')->unique();
+
+            $table->string('phone')->nullable();
+            $table->string('city')->nullable();
+            $table->string('street_address')->nullable();
+            $table->string('postal_code')->nullable();
+            $table->string('image')->nullable();
+
             $table->timestamp('email_verified_at')->nullable();
             $table->string('password');
             $table->enum('role', ['admin', 'manager', "staff", 'user'])->default('user');
