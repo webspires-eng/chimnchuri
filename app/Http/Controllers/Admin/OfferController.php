@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Offer;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Validator;
 
@@ -108,5 +109,24 @@ class OfferController extends Controller
         $offer->delete();
 
         return redirect()->route("offers.index")->with("success", "Offer deleted successfully");
+    }
+
+
+    public function getOffer()
+    {
+        $offer = Offer::where("is_active", 1)->where("end_date", '>=', Carbon::now())->first();
+
+        if (!$offer) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Offer not found",
+            ]);
+        }
+
+        return response()->json([
+            "status" => "success",
+            "message" => "Offer fetched successfully",
+            "data" => $offer
+        ]);
     }
 }

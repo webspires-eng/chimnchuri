@@ -200,7 +200,7 @@
                             </div>
                         </div>
                     </div>
-                    <div class="card">
+                    {{-- <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Order Timeline</h4>
                         </div>
@@ -247,7 +247,7 @@
                                 @endforelse
                             </div>
                         </div>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>
@@ -265,7 +265,7 @@
                         <div>
                             <p class="mb-1">{{ $order->customer_name }}</p>
                             <a href="mailto:{{ $order->customer_email }}"
-                                class="link-primary fw-medium">{{ $order->customer_email }}</a>
+                                class="link-primary  fw-medium">{{ ucfirst($order->customer_email) }}</a>
                         </div>
                     </div>
                     <div class="d-flex justify-content-between mt-3">
@@ -345,22 +345,33 @@
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-3 mb-3">
                         <div class="rounded-3 bg-light avatar d-flex align-items-center justify-content-center">
-                            <img src="{{ asset('admin/assets/images/card/mastercard.svg') }}" alt=""
-                                class="avatar-sm">
+                            @if ($order->payment_method == 'cod')
+                                <iconify-icon icon="solar:hand-money-broken" class="fs-24 text-primary"></iconify-icon>
+                            @else
+                                <img src="{{ asset('admin/assets/images/card/mastercard.svg') }}" alt=""
+                                    class="avatar-sm">
+                            @endif
                         </div>
                         <div>
-                            <p class="mb-1 text-dark fw-medium">Master Card</p>
-                            <p class="mb-0 text-dark">xxxx xxxx xxxx 7812</p>
+                            <p class="mb-1 text-dark fw-medium">
+                                {{ $order->payment_method == 'cod' ? 'Cash on Delivery' : 'Online Payment' }}
+                            </p>
+                            <p class="mb-0 text-dark text-capitalize">{{ $order->payment_status }}</p>
                         </div>
                         <div class="ms-auto">
-                            <iconify-icon icon="solar:check-circle-broken" class="fs-22 text-success"></iconify-icon>
+                            @if ($order->payment_status == 'paid')
+                                <iconify-icon icon="solar:check-circle-broken" class="fs-22 text-success"></iconify-icon>
+                            @else
+                                <iconify-icon icon="solar:clock-circle-broken" class="fs-22 text-warning"></iconify-icon>
+                            @endif
                         </div>
                     </div>
-                    <p class="text-dark mb-1 fw-medium">Transaction ID : <span class="text-muted fw-normal fs-13">
-                            #IDN768139059</span></p>
-                    <p class="text-dark mb-0 fw-medium">Card Holder Name : <span class="text-muted fw-normal fs-13">
-                            Gaston Lapierre</span></p>
-
+                    @if ($order->payment_method == 'online')
+                        <p class="text-dark mb-1 fw-medium">Transaction ID : <span class="text-muted fw-normal fs-13">
+                                #{{ $order->payment_intent_id ?? 'N/A' }}</span></p>
+                    @endif
+                    <p class="text-dark mb-0 fw-medium">Customer : <span class="text-muted fw-normal fs-13">
+                            {{ $order->customer_name }}</span></p>
                 </div>
             </div>
             <div class="card">

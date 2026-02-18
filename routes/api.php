@@ -1,6 +1,7 @@
 <?php
 
 use App\Http\Controllers\Admin\AdminOrderController;
+use App\Http\Controllers\Admin\OfferController;
 use App\Http\Controllers\Admin\SettingController;
 use App\Http\Controllers\Admin\TimeSlotController;
 use App\Http\Controllers\Api\V1\Admin\AddonCategoryController;
@@ -103,6 +104,9 @@ Route::prefix("v1")->group(function () {
         Route::group(["middleware" => "auth:sanctum"], function () {
             Route::get("/orders", [OrderController::class, "getOrders"]);
         });
+
+        // OFFER
+        Route::get("/offer", [OfferController::class, "getOffer"]);
     });
 });
 

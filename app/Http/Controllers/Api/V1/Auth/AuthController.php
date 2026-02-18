@@ -78,13 +78,13 @@ class AuthController extends Controller
     // LOGOUT 
     public function logout(Request $request)
     {
-        $request->user()->currentAccessToken()->delete();
+        $request->user()->tokens()->delete();
 
         return response()->json([
             'success' => true,
             'message' => 'Logged out successfully'
-        ])->cookie('access_token', '', -1)
-            ->cookie('refresh_token', '', -1);
+        ])->cookie('access_token', '', -1, '/', null, true, true, false, 'none')
+            ->cookie('refresh_token', '', -1, '/', null, true, true, false, 'none');
     }
 
 

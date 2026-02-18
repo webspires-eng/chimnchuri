@@ -4,11 +4,13 @@ namespace App\Http\Controllers;
 
 use App\Models\Item;
 use App\Models\ItemSize;
+use App\Models\Offer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderItemAddon;
 use App\Models\Setting;
 use App\Models\TimeSlot;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Str;
@@ -93,7 +95,7 @@ class PaymentController extends Controller
 
         // 2. Create the Order in your DB
         $order = Order::create([
-            'user_id' => Auth::user()->id ?? null,
+            'user_id' => $request?->user_id ?? null,
             'uuid' => Str::uuid()->toString(),
             'order_number' => 'ORD-' . time(),
 
@@ -106,7 +108,7 @@ class PaymentController extends Controller
             'order_status' => 'pending',
             'steak_qty' => $steakQty,
             "time_slot_id" => $request->time_slot_id,
-            "time_slot" => $timeSlot?->start_time . " - " . $timeSlot?->end_time,
+            "time_slot" => Carbon::parse($timeSlot?->start_time)->format('h:i A') . " - " . Carbon::parse($timeSlot?->end_time)->format('h:i A'),
         ]);
 
         foreach ($request->items as $cartItem) {
@@ -154,11 +156,24 @@ class PaymentController extends Controller
             $deliveryCharge = $setting->delivery_charge;
         }
 
-        $grandTotal = $subTotal + $taxAmount + $deliveryCharge;
+
+        $offer = Offer::where("is_active", 1)->where("end_date", '>=', Carbon::now())->first();
+
+        $discountAmount = 0;
+
+        if ($offer && $offer->type == "percentage") {
+            $discountAmount = min(($subTotal * $offer->value / 100), $offer->maximum_discount_amount);
+        } else if ($offer && $offer->type == "fixed") {
+            $discountAmount = min($offer->value, $offer->maximum_discount_amount);
+        }
+
+
+        $grandTotal = $subTotal + $taxAmount + $deliveryCharge - $discountAmount;
 
         $order->update([
             "tax_total" => $taxAmount ?? 0,
             "delivery_charges" => $deliveryCharge ?? 0,
+            "discount_total" => $discountAmount ?? 0,
             'sub_total' => $subTotal,
             "steak_qty" => $steakQty,
             'grand_total' => $grandTotal

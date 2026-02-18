@@ -44,7 +44,7 @@
         }
 
         .content {
-            padding: 20px;
+            padding: 20px 5px;
         }
 
         h1 {
@@ -71,6 +71,7 @@
 
         .order-meta td {
             font-size: 12px;
+            padding: 2px 5px;
             color: #64748b;
         }
 
@@ -270,9 +271,10 @@
                         <div style="margin-top: 20px;">
                             <p style="font-weight: 700; color: #0f172a; margin-bottom: 8px;">Delivery Address</p>
                             <div class="address-box">
-                                {{ $order->customer_name }}<br>
-                                {{ $order->customer_phone }}<br>
-                                {{ $order->delivery_address }}
+                                <p><span>Name:</span> {{ $order->customer_name }}</p>
+                                <p><span>Phone:</span> {{ $order->customer_phone }}</p>
+                                <p><span>Email:</span> {{ $order->customer_email ?? 'N/A' }}</p>
+                                <p><span>Address:</span> {{ $order->delivery_address }}</p>
                             </div>
                         </div>
 
