@@ -43,49 +43,8 @@ class PaymentController extends Controller
     public function processCheckout(Request $request)
     {
         // return Auth::user();
-        // return response()->json($request->input());
 
-
-        // dd($request->all());
-        // 1. Validate the request (address, cart items, etc.)
-        // $timeSlot = TimeSlot::find($request->time_slot_id);
-
-        // $slotCapacity = $timeSlot->max_capacity; // 5
-        // $alreadyBooked = Order::where('time_slot_id', $timeSlot->id)
-        //     ->whereIn('order_status', ["pending", "accepted", "confirmed"])
-        //     ->sum('steak_quantity');
-        // $remainingCapacity = $slotCapacity - $alreadyBooked;
-
-        // if (5 > $remainingCapacity) {
-        //     return response()->json([
-        //         'error' => "This slot only has $remainingCapacity steaks left."
-        //     ]);
-        // }
-
-
-        // ✅ STEP 1: Count total steaks in THIS order
-        // $steaksInOrder = collect($request->items)->sum('quantity');
-
-        // // ✅ STEP 2: Check the 15-min slot capacity
-        $timeSlot = TimeSlot::find($request->time_slot_id);
-
-        // if (!$timeSlot) {
-        //     return response()->json(['error' => 'Invalid time slot.'], 422);
-        // }
-
-        // // Count steaks ALREADY booked in this slot
-        // $alreadyBookedInSlot = Order::where('time_slot_id', $timeSlot->id)
-        //     ->whereIn('order_status', ['pending', 'accepted', 'confirmed'])
-        //     ->sum('steak_quantity');  // total steaks, not orders
-
-        // $remainingInSlot = $timeSlot->max_capacity - $alreadyBookedInSlot;
-
-        // // ❌ Block if this order would exceed slot capacity
-        // if ($steaksInOrder > $remainingInSlot) {
-        //     return response()->json([
-        //         'error' => "This time slot only has $remainingInSlot steak(s) left. Please choose another slot."
-        //     ], 422);
-        // }
+        // $timeSlot = TimeSlot::find($request?->time_slot_id);
 
 
 
@@ -107,8 +66,8 @@ class PaymentController extends Controller
             'payment_status' => 'unpaid',
             'order_status' => 'pending',
             'steak_qty' => $steakQty,
-            "time_slot_id" => $request->time_slot_id,
-            "time_slot" => Carbon::parse($timeSlot?->start_time)->format('h:i A') . " - " . Carbon::parse($timeSlot?->end_time)->format('h:i A'),
+            // "time_slot_id" => $request?->time_slot_id,
+            // "time_slot" => Carbon::parse($timeSlot?->start_time)->format('h:i A') . " - " . Carbon::parse($timeSlot?->end_time)->format('h:i A'),
         ]);
 
         foreach ($request->items as $cartItem) {
@@ -178,6 +137,16 @@ class PaymentController extends Controller
             "steak_qty" => $steakQty,
             'grand_total' => $grandTotal
         ]);
+
+
+        foreach ($request->allocations as $allocation) {
+            $slotTime = TimeSlot::find($allocation['slot_id']);
+
+            if ($slotTime) {
+                $slotTime->max_capacity = $slotTime->max_capacity - $allocation['quantity'];
+                $slotTime->save();
+            }
+        }
 
         if ($request?->payment_method == "online") {
             // 3. Create Stripe Payment Intent
