@@ -49,18 +49,18 @@
                 </div>
                 <!-- Optional: Parent Category -->
                 <!--
-                                                                                                                                            <div class="row">
-                                                                                                                                                 <div class="col-lg-12">
-                                                                                                                                                    <div class="mb-3">
-                                                                                                                                                        <label for="parent_id" class="form-label">Parent Category</label>
-                                                                                                                                                         <select class="form-control" name="parent_id">
-                                                                                                                                                            <option value="">None</option>
-                                                                                                                                                             ...
-                                                                                                                                                         </select>
-                                                                                                                                                    </div>
-                                                                                                                                                 </div>
-                                                                                                                                            </div>
-                                                                                                                                            -->
+                                                                                                                                                <div class="row">
+                                                                                                                                                     <div class="col-lg-12">
+                                                                                                                                                        <div class="mb-3">
+                                                                                                                                                            <label for="parent_id" class="form-label">Parent Category</label>
+                                                                                                                                                             <select class="form-control" name="parent_id">
+                                                                                                                                                                <option value="">None</option>
+                                                                                                                                                                 ...
+                                                                                                                                                             </select>
+                                                                                                                                                        </div>
+                                                                                                                                                     </div>
+                                                                                                                                                </div>
+                                                                                                                                                -->
                 <div class="row">
                     <div class="col-lg-12">
                         <div class="mb-3">

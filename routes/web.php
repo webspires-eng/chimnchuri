@@ -79,6 +79,7 @@ Route::prefix('admin')->group(function () {
         Route::resource("offers", OfferController::class);
 
         Route::get("/data", [DashboardController::class, "getPerformanceData"])->name("admin.data");
+        Route::get("/data-12m", [DashboardController::class, "last12MonthSales"])->name("admin.data.12m");
 
         // BRANCHES
         Route::resource("branches", BranchController::class)->names("admin.branches");

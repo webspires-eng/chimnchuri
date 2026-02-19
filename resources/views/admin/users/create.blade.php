@@ -51,7 +51,7 @@
                         </div>
                     </div>
 
-                    <div class="col-lg-6">
+                    {{-- <div class="col-lg-6">
                         <div class="mb-3">
                             <label for="branches" class="form-label">Assign Branches</label>
                             <select name="branches[]" id="branches" class="form-select" data-choices-removeItem
@@ -62,7 +62,7 @@
                                 @endforeach
                             </select>
                         </div>
-                    </div>
+                    </div> --}}
 
                 </div>
             </div>

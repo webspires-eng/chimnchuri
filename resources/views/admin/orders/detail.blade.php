@@ -260,8 +260,8 @@
                 </div>
                 <div class="card-body">
                     <div class="d-flex align-items-center gap-2">
-                        <img src="{{ asset('admin/assets/images/users/avatar-1.jpg') }}" alt=""
-                            class="avatar rounded-3 border border-light border-3">
+                        <img src="{{ $order?->user?->image ? asset('storage/' . $order->user->image) : asset('admin/assets/images/users/avatar-1.jpg') }}"
+                            alt="" class="avatar rounded-3 border border-light border-3">
                         <div>
                             <p class="mb-1">{{ $order->customer_name }}</p>
                             <a href="mailto:{{ $order->customer_email }}"

@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin\Category;
 use App\Http\Controllers\Controller;
 use App\Services\Api\V1\Admin\CategoryService;
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Validator;
 
 class CategoryController extends Controller
 {
@@ -35,6 +36,21 @@ class CategoryController extends Controller
      */
     public function store(Request $request)
     {
+
+        $validator = Validator::make($request->all(), [
+            "name" => "required|string|max:200",
+            "slug" => "required|string|unique:categories,slug",
+            "description" => "nullable|string",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Validation failed",
+                "errors" => $validator->errors(),
+            ], 422);
+        }
+
         $category = $this->categoryService->create($request->all());
         return $category;
     }
@@ -53,6 +69,21 @@ class CategoryController extends Controller
      */
     public function update(Request $request, string $id)
     {
+
+        $validator = Validator::make($request->all(), [
+            "name" => "required|string|max:200",
+            "slug" => "required|string|unique:categories,slug," . $id,
+            "description" => "nullable|string",
+        ]);
+
+        if ($validator->fails()) {
+            return response()->json([
+                "status" => "error",
+                "message" => "Validation failed",
+                "errors" => $validator->errors(),
+            ], 422);
+        }
+
         $category = $this->categoryService->updateCategory($id, $request->all());
         return $category;
     }

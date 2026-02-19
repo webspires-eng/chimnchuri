@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin\Product;
 
 use App\Http\Controllers\Controller;
 use App\Http\Requests\Api\V1\Admin\ItemStoreRequest;
+use App\Http\Requests\Api\V1\Admin\ItemUpdateRequest;
 use App\Models\Category;
 use App\Models\Item;
 use App\Services\Api\V1\Admin\ItemService;
@@ -41,6 +42,9 @@ class ProductController extends Controller
      */
     public function store(ItemStoreRequest $request)
     {
+
+
+
         $products = $this->itemService->store($request->all());
 
         session()->flash('success', 'Product created successfully.');
@@ -70,7 +74,7 @@ class ProductController extends Controller
     /**
      * Update the specified resource in storage.
      */
-    public function update(Request $request, string $id)
+    public function update(ItemUpdateRequest $request, string $id)
     {
         $products = $this->itemService->updateItem($id, $request->all());
         session()->flash('success', 'Product updated successfully.');

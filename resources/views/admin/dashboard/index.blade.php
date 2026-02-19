@@ -56,7 +56,7 @@
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
                                     <p class="text-muted mb-0 text-truncate">Today Orders</p>
-                                    <h3 class="text-dark mt-1 mb-0">{{ $totalOrders }}</h3>
+                                    <h4 class="text-dark mt-1 mb-0">{{ $totalOrders }}</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
@@ -83,14 +83,14 @@
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
                                     <p class="text-muted mb-0 text-truncate">Pending Orders</p>
-                                    <h3 class="text-dark mt-1 mb-0">{{ $pendingOrders }}</h3>
+                                    <h4 class="text-dark mt-1 mb-0">{{ $pendingOrders }}</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
                         <div class="card-footer py-2 bg-light bg-opacity-50">
                             <div class="d-flex align-items-center justify-content-between">
                                 <div>
-                                    @if ($pendingChange > 0)
+                                    {{-- @if ($pendingChange > 0)
                                         <span class="text-danger"> <i class="bx bxs-down-arrow fs-12"></i>
                                             {{ $pendingChange }}%</span>
                                         <span class="text-muted ms-1 fs-12">Last Month</span>
@@ -98,7 +98,7 @@
                                         <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i>
                                             {{ $pendingChange }}%</span>
                                         <span class="text-muted ms-1 fs-12">Last Month</span>
-                                    @endif
+                                    @endif --}}
                                 </div>
                                 <a href="#!" class="text-reset fw-semibold fs-12">View More</a>
                             </div>
@@ -116,7 +116,7 @@
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
                                     <p class="text-muted mb-0 text-truncate">Total Revenue</p>
-                                    <h3 class="text-dark mt-1 mb-0"> £ {{ $totalRevenue }}</h3>
+                                    <h4 class="text-dark mt-1 mb-0 text-nowrap">£{{ $totalRevenue }}</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
@@ -146,12 +146,19 @@
                 <div class="card-body">
                     <div class="d-flex justify-content-between align-items-center">
                         <h4 class="card-title">Monthly Sales</h4>
-                        {{-- <div>
-                            <button type="button" class="btn btn-sm btn-outline-light">ALL</button>
-                            <button type="button" class="btn btn-sm btn-outline-light">1M</button>
-                            <button type="button" class="btn btn-sm btn-outline-light">6M</button>
-                            <button type="button" class="btn btn-sm btn-outline-light active">1Y</button>
-                        </div> --}}
+                        <div id="performance-btns">
+                            <button type="button" class="btn btn-sm btn-outline-light active"
+                                onclick="getPerformanceData({{ date('m') }}, {{ date('Y') }}, 'daily', this)">This
+                                Month</button>
+                            <button type="button" class="btn btn-sm btn-outline-light"
+                                onclick="getPerformanceData({{ date('m', strtotime('-1 month')) }}, {{ date('Y', strtotime('-1 month')) }}, 'daily', this)">Last
+                                Month</button>
+                            <button type="button" class="btn btn-sm btn-outline-light"
+                                onclick="getPerformanceData(null, null, '12m', this)">Last
+                                12M</button>
+                            {{-- <button type="button" class="btn btn-sm btn-outline-light active"
+                                onclick="getPerformanceData(4)">1Y</button> --}}
+                        </div>
                     </div> <!-- end card-title-->
 
                     <div dir="ltr">
@@ -163,26 +170,26 @@
     </div> <!-- end row -->
 
     <div class="row">
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Conversions</h5>
                     <div id="conversions" class="apex-charts mb-2 mt-n2"></div>
                     <div class="row text-center">
                         <div class="col-6">
-                            <p class="text-muted mb-2">This Week</p>
-                            <h3 class="text-dark mb-3">23.5k</h3>
+                            <p class="text-muted mb-2">New Customers</p>
+                            <h3 class="text-dark mb-3">{{ $newCustomersCount }}</h3>
                         </div> <!-- end col -->
                         <div class="col-6">
-                            <p class="text-muted mb-2">Last Week</p>
-                            <h3 class="text-dark mb-3">41.05k</h3>
+                            <p class="text-muted mb-2">Returning</p>
+                            <h3 class="text-dark mb-3">{{ $returningCustomersCount }}</h3>
                         </div> <!-- end col -->
                     </div> <!-- end row -->
                 </div>
             </div>
         </div> <!-- end left chart card -->
 
-        <div class="col-lg-4">
+        {{-- <div class="col-lg-4">
             <div class="card">
                 <div class="card-body">
                     <h5 class="card-title">Sessions by Country</h5>
@@ -200,9 +207,9 @@
                     </div> <!-- end row -->
                 </div>
             </div> <!-- end card-->
-        </div> <!-- end col -->
+        </div> <!-- end col --> --}}
 
-        <div class="col-lg-4">
+        <div class="col-lg-6">
             <div class="card card-height-100">
                 <div class="card-header d-flex align-items-center justify-content-between gap-2">
                     <h4 class="card-title flex-grow-1">Top Selling Items</h4>
@@ -345,22 +352,35 @@
 
 
     <script>
-        document.addEventListener("DOMContentLoaded", async function() {
+        let dashboardChart = null;
 
+        async function getPerformanceData(month = {{ date('m') }}, year = {{ date('Y') }}, type = 'daily', btn =
+            null) {
+            // Toggle active class
+            if (btn) {
+                document.querySelectorAll('#performance-btns .btn').forEach(b => b.classList.remove('active'));
+                btn.classList.add('active');
+            }
 
-            const data = await fetch("{{ route('admin.data') }}")
+            let url = "{{ route('admin.data') }}?month=" + month + "&year=" + year;
+            if (type === '12m') {
+                url = "{{ route('admin.data.12m') }}";
+            }
+
+            const data = await fetch(url)
                 .then(response => response.json())
                 .then(data => {
-                    console.log(data);
                     return data;
                 })
                 .catch(error => console.error(error));
-            console.log(data);
+
+            if (!data) return;
+
             var options = {
                 series: [{
                         name: "Orders",
                         type: "bar",
-                        data: data.sales,
+                        data: data.orders, // Updated to use orders from JSON
                     },
                     {
                         name: "Sales",
@@ -399,7 +419,7 @@
                     },
                 },
                 xaxis: {
-                    categories: data.months,
+                    categories: type === '12m' ? data.months : data.days, // Use months for 12m, days for others
                     axisTicks: {
                         show: false,
                     },
@@ -469,7 +489,7 @@
                         {
                             formatter: function(y) {
                                 if (typeof y !== "undefined") {
-                                    return y.toFixed(1);
+                                    return "£" + y.toFixed(1); // Added £ for sales
                                 }
                                 return y;
                             },
@@ -478,13 +498,93 @@
                 },
             }
 
-            var chart = new ApexCharts(
+            if (dashboardChart) {
+                dashboardChart.destroy();
+            }
+
+            dashboardChart = new ApexCharts(
                 document.querySelector("#dash-performance-chart"),
                 options
             );
 
-            chart.render();
+            dashboardChart.render();
+        }
 
+        document.addEventListener("DOMContentLoaded", function() {
+            getPerformanceData();
+
+            // Conversions Radial Chart
+            var options = {
+                chart: {
+                    height: 292,
+                    type: 'radialBar',
+                },
+                plotOptions: {
+                    radialBar: {
+                        startAngle: -135,
+                        endAngle: 135,
+                        dataLabels: {
+                            name: {
+                                fontSize: '14px',
+                                color: "undefined",
+                                offsetY: 100
+                            },
+                            value: {
+                                offsetY: 55,
+                                fontSize: '20px',
+                                color: undefined,
+                                formatter: function(val) {
+                                    return val + "%";
+                                }
+                            }
+                        },
+                        track: {
+                            background: "rgba(170,184,197, 0.2)",
+                            margin: 0
+                        },
+                    }
+                },
+                fill: {
+                    gradient: {
+                        enabled: true,
+                        shade: 'dark',
+                        shadeIntensity: 0.2,
+                        inverseColors: false,
+                        opacityFrom: 1,
+                        opacityTo: 1,
+                        stops: [0, 50, 65, 91]
+                    },
+                },
+                stroke: {
+                    dashArray: 4
+                },
+                colors: ["#396430", "#22c55e"],
+                series: [{{ $returningRate }}],
+                labels: ['Returning Customer'],
+                responsive: [{
+                    breakpoint: 380,
+                    options: {
+                        chart: {
+                            height: 180
+                        }
+                    }
+                }],
+                grid: {
+                    padding: {
+                        top: 0,
+                        right: 0,
+                        bottom: 0,
+                        left: 0
+                    }
+                }
+            }
+
+            var chart = new ApexCharts(
+                document.querySelector("#conversions"),
+                options
+            );
+
+            chart.render();
         });
     </script>
 @endsection

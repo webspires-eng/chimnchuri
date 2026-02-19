@@ -68,13 +68,32 @@ class DashboardController extends Controller
 
         $recentOrders = Order::latest()->take(10)->get();
 
+        // Customer Conversion (Last 30 Days)
+        $last30DaysStart = now()->subDays(30);
 
-        $monthlyOrders = Order::selectRaw('MONTH(created_at) as month, COUNT(*) as total')
-            ->groupBy('month')
-            ->pluck('total');
+        // A customer is identified by user_id if present, otherwise by customer_email
+        $activeIdentifiers = DB::table('orders')
+            ->select(DB::raw('DISTINCT CASE WHEN user_id IS NOT NULL THEN CAST(user_id AS CHAR) ELSE customer_email END as identifier'))
+            ->where('created_at', '>=', $last30DaysStart)
+            ->where(function ($query) {
+                $query->whereNotNull('user_id')
+                    ->orWhereNotNull('customer_email');
+            })
+            ->pluck('identifier');
 
+        $totalCustomersCount = $activeIdentifiers->count();
 
+        $returningCustomersCount = 0;
+        if ($totalCustomersCount > 0) {
+            $returningCustomersCount = DB::table('orders')
+                ->select(DB::raw('DISTINCT CASE WHEN user_id IS NOT NULL THEN CAST(user_id AS CHAR) ELSE customer_email END as identifier'))
+                ->where('created_at', '<', $last30DaysStart)
+                ->whereIn(DB::raw('CASE WHEN user_id IS NOT NULL THEN CAST(user_id AS CHAR) ELSE customer_email END'), $activeIdentifiers)
+                ->count(DB::raw('DISTINCT CASE WHEN user_id IS NOT NULL THEN CAST(user_id AS CHAR) ELSE customer_email END'));
+        }
 
+        $newCustomersCount = $totalCustomersCount - $returningCustomersCount;
+        $returningRate = $totalCustomersCount > 0 ? round(($returningCustomersCount / $totalCustomersCount) * 100, 1) : 0;
 
         // Total quantity sold from all items
         $totalSold = DB::table('order_items')->sum('quantity');
@@ -91,9 +110,10 @@ class DashboardController extends Controller
                 DB::raw('sum(quantity) as total')
             )
             ->groupBy('items.id', 'order_items.item_name', "order_items.size_name", "order_items.price", "order_items.quantity")
-            ->orderByDesc('quantity_sold',)
+            ->orderByDesc('quantity_sold')
             ->take(10)
             ->get();
+
 
         return view('admin.dashboard.index', compact(
             'totalOrders',
@@ -109,6 +129,9 @@ class DashboardController extends Controller
             'recentOrders',
             "topItems",
             "totalSold",
+            'newCustomersCount',
+            'returningCustomersCount',
+            'returningRate'
         ));
     }
 
@@ -176,6 +199,53 @@ class DashboardController extends Controller
 
         return response()->json([
             'days' => $days,
+            'sales' => $sales,
+            'orders' => $orders
+        ]);
+    }
+
+    public function last12MonthSales(Request $request)
+    {
+        $startDate = now()->subMonths(11)->startOfMonth();
+        $endDate = now()->endOfMonth();
+
+        $results = DB::table('orders')
+            ->select(
+                DB::raw('MONTH(created_at) as month'),
+                DB::raw('YEAR(created_at) as year'),
+                DB::raw('SUM(grand_total) as total'),
+                DB::raw('COUNT(*) as count')
+            )
+            ->where('order_status', 'completed')
+            ->whereBetween('created_at', [$startDate, $endDate])
+            ->groupBy('year', 'month')
+            ->orderBy('year', 'ASC')
+            ->orderBy('month', 'ASC')
+            ->get()
+            ->keyBy(function ($item) {
+                return $item->year . '-' . $item->month;
+            });
+
+        $labels = [];
+        $sales = [];
+        $orders = [];
+
+        for ($i = 11; $i >= 0; $i--) {
+            $date = now()->subMonths($i);
+            $key = $date->year . '-' . $date->month;
+
+            $labels[] = $date->format('M Y');
+            if (isset($results[$key])) {
+                $sales[] = (float)$results[$key]->total;
+                $orders[] = (int)$results[$key]->count;
+            } else {
+                $sales[] = 0;
+                $orders[] = 0;
+            }
+        }
+
+        return response()->json([
+            'months' => $labels,
             'sales' => $sales,
             'orders' => $orders
         ]);

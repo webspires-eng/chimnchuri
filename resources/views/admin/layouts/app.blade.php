@@ -496,15 +496,6 @@
                         </a>
                     </li>
 
-                    <li class="nav-item">
-                        <a class="nav-link" href="{{ route('admin.smtp.index') }}">
-                            <span class="nav-icon">
-                                <iconify-icon icon="solar:letter-bold-duotone"></iconify-icon>
-                            </span>
-                            <span class="nav-text"> SMTP Settings </span>
-                        </a>
-                    </li>
-
 
                     {{-- SETTINGS --}}
                     <li class="nav-item">
@@ -532,6 +523,12 @@
                                     <a class="sub-nav-link" href="{{ route('admin.working-hours') }}">Working
                                         Hours</a>
                                 </li>
+
+                                <li class="sub-nav-item">
+                                    <a class="sub-nav-link" href="{{ route('admin.time-slots.index') }}">Time Slots
+                                        Setting</a>
+                                </li>
+
 
                                 {{-- <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('payment-gateways.index') }}">Payment
