@@ -311,7 +311,8 @@
                     </div>
 
                     <div>
-                        <p class="mb-1">{{ $order->delivery_address }}</p>
+                        <p class="mb-1">{{ $order?->delivery_address }}, {{ $order?->city }},
+                            {{ $order?->postal_code }}</p>
                     </div>
                 </div>
             </div>
@@ -412,7 +413,7 @@
                     <div class="mapouter">
                         <div class="gmap_canvas"><iframe class="gmap_iframe rounded" width="100%"
                                 style="height: 418px;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                                src="https://maps.google.com/maps?width=1980&amp;height=400&amp;hl=en&amp;q={{ $order->delivery_address }}&amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                                src="https://maps.google.com/maps?width=1980&amp;height=400&amp;hl=en&amp;q={{ $order->delivery_address }}, {{ $order->city }}, {{ $order->postal_code }} &amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
                         </div>
                     </div>
                 </div>
