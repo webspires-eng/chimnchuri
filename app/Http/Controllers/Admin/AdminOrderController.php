@@ -22,7 +22,7 @@ class AdminOrderController extends Controller
 
     public function show($id)
     {
-        $order = Order::with("items.item.media", "items.addons", "user")->findOrFail($id);
+        $order = Order::with("items.item.media", "items.addons", "time_slots", "user")->findOrFail($id);
         return view('admin.orders.detail', compact('order'));
     }
 

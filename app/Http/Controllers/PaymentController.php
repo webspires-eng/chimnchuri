@@ -8,6 +8,7 @@ use App\Models\Offer;
 use App\Models\Order;
 use App\Models\OrderItem;
 use App\Models\OrderItemAddon;
+use App\Models\OrderTimeSlot;
 use App\Models\Setting;
 use App\Models\TimeSlot;
 use Carbon\Carbon;
@@ -66,6 +67,16 @@ class PaymentController extends Controller
             'payment_status' => 'unpaid',
             'order_status' => 'pending',
             'steak_qty' => $steakQty,
+
+            "postal_code" => $request?->postal_code ?? null,
+            "city" => $request?->city ?? null,
+            "country" => $request?->country ?? null,
+
+            "order_type" => $request?->order_type ?? "delivery",
+            "delivery_time" => $request?->delivery_time ?? null,
+            "pickup_time" => $request?->pickup_time ?? null,
+            "pickup_address" => $request?->pickup_address ?? null,
+
             // "time_slot_id" => $request?->time_slot_id,
             // "time_slot" => Carbon::parse($timeSlot?->start_time)->format('h:i A') . " - " . Carbon::parse($timeSlot?->end_time)->format('h:i A'),
         ]);
@@ -146,6 +157,14 @@ class PaymentController extends Controller
                 $slotTime->max_capacity = $slotTime->max_capacity - $allocation['quantity'];
                 $slotTime->save();
             }
+
+            OrderTimeSlot::create([
+                'order_id' => $order->id,
+                'time_slot_id' => $slotTime->id,
+                'start_time' => $slotTime->start_time,
+                'end_time' => $slotTime->end_time,
+                'capacity' => $allocation['quantity'],
+            ]);
         }
 
         if ($request?->payment_method == "online") {

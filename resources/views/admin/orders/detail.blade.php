@@ -136,14 +136,14 @@
                     </div>
                     <div class="card">
                         <div class="card-header">
-                            <h4 class="card-title">Product</h4>
+                            <h4 class="card-title">Items</h4>
                         </div>
                         <div class="card-body">
                             <div class="table-responsive">
                                 <table class="table align-middle mb-0 table-hover table-centered">
                                     <thead class="bg-light-subtle border-bottom">
                                         <tr>
-                                            <th>Product Name & Size</th>
+                                            <th>Item Name & Size</th>
                                             <th class="text-center">Quantity</th>
                                             <th class="text-end">Price</th>
                                             <th class="text-end">Total Amount</th>
@@ -200,6 +200,39 @@
                             </div>
                         </div>
                     </div>
+
+                    <div class="card">
+                        <div class="card-header">
+                            <h4 class="card-title">Time Slots</h4>
+                        </div>
+                        <div class="card-body">
+                            <div class="table-responsive">
+                                <table class="table align-middle mb-0 table-hover table-centered">
+                                    <thead class="bg-light-subtle border-bottom">
+                                        <tr>
+                                            <th>Time Slot</th>
+                                            <th class="text-center">Capacity</th>
+                                        </tr>
+                                    </thead>
+                                    <tbody>
+                                        @forelse($order->time_slots as $slot)
+                                            <tr>
+                                                <td>{{ $slot->start_time->format('h:i A') }} -
+                                                    {{ $slot->end_time->format('h:i A') }}</td>
+                                                <td class="text-center">{{ $slot->capacity }}</td>
+                                            </tr>
+                                        @empty
+                                            <tr>
+                                                <td colspan="2" class="text-center">No time slots assigned</td>
+                                            </tr>
+                                        @endforelse
+                                    </tbody>
+                                </table>
+                            </div>
+                        </div>
+                    </div>
+
+
                     {{-- <div class="card">
                         <div class="card-header">
                             <h4 class="card-title">Order Timeline</h4>

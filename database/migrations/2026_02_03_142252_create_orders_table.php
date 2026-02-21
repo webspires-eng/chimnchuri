@@ -47,8 +47,17 @@ return new class extends Migration
             $table->string('customer_name');
             $table->string('customer_phone');
             $table->string('customer_email')->nullable();
-
             $table->text('delivery_address');
+            $table->string('postal_code')->nullable();
+            $table->string('city')->nullable();
+            $table->string('country')->nullable();
+
+            $table->enum("order_type", ["delivery", "pickup"])->default("delivery");
+            $table->string("delivery_time")->nullable();
+
+            $table->string("pickup_time")->nullable();
+            $table->string("pickup_address")->nullable();
+
             $table->timestamps();
         });
     }

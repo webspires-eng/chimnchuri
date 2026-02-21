@@ -190,7 +190,7 @@ class OrderController extends Controller
     public function getOrder($id)
     {
 
-        $order = Order::with("items.item.media", "items.addons", "timelines", "user")->findOrFail($id);
+        $order = Order::with("items.item.media", "items.addons", "timelines", "user", "time_slots")->findOrFail($id);
         return response()->json([
             'status' => 'success',
             'message' => 'Order fetched successfully',
