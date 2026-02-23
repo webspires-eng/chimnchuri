@@ -28,7 +28,7 @@ class SettingController extends Controller
             "email" => "nullable|string|email",
             "address" => "nullable|string",
             "city" => "nullable|string",
-            "postcode" => "nullable|numeric",
+            "postcode" => "nullable",
             "state" => "nullable|string",
             "country" => "nullable|string",
             "currency_code" => "nullable|string",

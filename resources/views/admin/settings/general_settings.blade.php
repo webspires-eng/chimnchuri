@@ -37,10 +37,10 @@
 
                             <div class="col-lg-4">
                                 <div class="mb-3">
-                                    <label for="restaurant_logo" class="form-label">Restaurant Name</label>
+                                    <label for="restaurant_logo" class="form-label">Restaurant Logo</label>
                                     <input type="file" id="restaurant_logo"
                                         value="{{ old('restaurant_logo', $settings->restaurant_logo ?? '') }}"
-                                        name="restaurant_logo" class="form-control" placeholder="Restaurant Name">
+                                        name="restaurant_logo" class="form-control" placeholder="Restaurant Logo">
                                     @error('restaurant_logo')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
