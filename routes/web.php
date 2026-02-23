@@ -84,6 +84,9 @@ Route::prefix('admin')->group(function () {
         // BRANCHES
         Route::resource("branches", BranchController::class)->names("admin.branches");
 
+        // TEAMS
+        Route::resource("teams", \App\Http\Controllers\Admin\TeamController::class)->names("admin.teams");
+
         // TIME SLOTS
         Route::get('/time-slots', [TimeSlotController::class, 'index'])->name('admin.time-slots.index');
         Route::get('/time-slots/create', [TimeSlotController::class, 'create'])->name('admin.time-slots.create');

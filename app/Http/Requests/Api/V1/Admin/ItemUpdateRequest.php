@@ -12,7 +12,8 @@ class ItemUpdateRequest extends ApiFormRequest
      */
     public function rules(): array
     {
-        $itemId = $this->route("item");
+        $itemId = $this->route("product");
+
 
         return [
             "name" => "required|string|max:255",
@@ -30,5 +31,4 @@ class ItemUpdateRequest extends ApiFormRequest
 
         ];
     }
-
 }

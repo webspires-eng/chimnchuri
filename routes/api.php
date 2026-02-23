@@ -107,6 +107,12 @@ Route::prefix("v1")->group(function () {
 
         // OFFER
         Route::get("/offer", [OfferController::class, "getOffer"]);
+
+        // CONTACT
+        Route::post("/contact", [\App\Http\Controllers\frontend\ContactApiController::class, "sendContactEmail"]);
+
+        // TEAM
+        Route::get("/teams", [\App\Http\Controllers\Admin\TeamController::class, "getTeams"]);
     });
 });
 
