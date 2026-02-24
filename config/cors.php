@@ -15,19 +15,25 @@ return [
     |
     */
 
-    'paths' => ['api/*', 'sanctum/csrf-cookie', '*'],
+    'paths' => ['api/*', 'sanctum/csrf-cookie'],
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => ['*'],
+    'allowed_origins' => [
+        'http://localhost:3000',
+        'https://chimnchurri.com',
+        'https://www.chimnchurri.com',
+        "https://chimnchuri-frontend.vercel.app",
+        "https://www.chimnchuri-frontend.vercel.app",
+    ],
 
-    'allowed_origins_patterns' => ['#^https?://.*$#'],
+    'allowed_origins_patterns' => [],
 
     'allowed_headers' => ['*'],
 
     'exposed_headers' => [],
 
-    'max_age' => 600,
+    'max_age' => 86400,
 
     'supports_credentials' => true,
 
