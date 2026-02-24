@@ -19,13 +19,7 @@ return [
 
     'allowed_methods' => ['*'],
 
-    'allowed_origins' => [
-        'http://localhost:3000',
-        'https://chimnchurri.com',
-        'https://www.chimnchurri.com',
-        "https://chimnchuri-frontend.vercel.app",
-        "https://www.chimnchuri-frontend.vercel.app",
-    ],
+    'allowed_origins' => ['*'],
 
     'allowed_origins_patterns' => [],
 
@@ -35,6 +29,6 @@ return [
 
     'max_age' => 86400,
 
-    'supports_credentials' => true,
+    'supports_credentials' => false,
 
 ];
