@@ -234,6 +234,17 @@
                         </div>
                     </div>
 
+                    @if ($order->order_instruction)
+                        <div class="card">
+                            <div class="card-header">
+                                <h4 class="card-title">Order Instructions</h4>
+                            </div>
+                            <div class="card-body">
+                                <p class="mb-0 text-muted fst-italic">{{ $order->order_instruction }}</p>
+                            </div>
+                        </div>
+                    @endif
+
 
                     {{-- <div class="card">
                         <div class="card-header">
@@ -445,6 +456,7 @@
                             {{ $order->customer_name }}</span></p>
                 </div>
             </div>
+
             {{-- @if ($order->order_type == 'delivery' && $order->delivery_address)
                 <div class="card">
                     <div class="card-body">

@@ -52,6 +52,8 @@ return new class extends Migration
             $table->string('city')->nullable();
             $table->string('country')->nullable();
 
+            $table->text("order_instruction")->nullable();
+
             $table->enum("order_type", ["delivery", "collection"])->default("delivery");
             $table->string("delivery_time")->nullable();
 

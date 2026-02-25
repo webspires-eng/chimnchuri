@@ -402,6 +402,15 @@
                             @endif
                         </div>
 
+                        @if ($order->order_instruction)
+                            <div style="margin-top: 10px;">
+                                <p class="section-title">Order Instructions</p>
+                                <div class="info-box" style="font-style: italic;">
+                                    <p>"{{ $order->order_instruction }}"</p>
+                                </div>
+                            </div>
+                        @endif
+
                         <div style="text-align: center; margin-top: 16px;">
                             <a href="{{ config('app.frontend_url') }}/orders/{{ $order->id }}" class="btn">View
                                 Order Details</a>
