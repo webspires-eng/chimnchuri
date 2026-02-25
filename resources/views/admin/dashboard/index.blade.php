@@ -61,14 +61,15 @@
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
                         <div class="card-footer py-2 bg-light bg-opacity-50">
-                            {{-- <div class="d-flex align-items-center justify-content-between">
+                            <div class="d-flex align-items-center justify-content-between">
                                 <div>
-                                    <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i>
+                                    {{-- <span class="text-success"> <i class="bx bxs-up-arrow fs-12"></i>
                                         8.1%</span>
-                                    <span class="text-muted ms-1 fs-12">Last Month</span>
+                                    <span class="text-muted ms-1 fs-12">Last Month</span> --}}
                                 </div>
-                                <a href="#!" class="text-reset fw-semibold fs-12">View More</a>
-                            </div> --}}
+                                <a href="{{ route('admin.orders') }}" class="text-reset fw-semibold fs-12">View
+                                    More</a>
+                            </div>
                         </div> <!-- end card body -->
                     </div> <!-- end card -->
                 </div> <!-- end col -->
@@ -100,7 +101,8 @@
                                         <span class="text-muted ms-1 fs-12">Last Month</span>
                                     @endif --}}
                                 </div>
-                                {{-- <a href="" class="text-reset fw-semibold fs-12">View More</a> --}}
+                                <a href="{{ route('admin.orders') }}" class="text-reset fw-semibold fs-12">View
+                                    More</a>
                             </div>
                         </div> <!-- end card body -->
                     </div> <!-- end card -->
