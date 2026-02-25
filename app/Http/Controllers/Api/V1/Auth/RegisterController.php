@@ -57,8 +57,8 @@ class RegisterController extends Controller
                 "success" => true,
                 "message" => "User loggedin successfully.",
                 "data" => $user
-            ], 200)->cookie("access_token", $tokens["access_token"], 15, '/', null, true, true, false, 'none')
-                ->cookie("refresh_token", $tokens["refresh_token"], 60 * 24 * 7, '/', null, true, true, false, 'none');
+            ], 200)->cookie("access_token", $tokens["access_token"], 60 * 24 * 30, '/', null, true, true, false, 'none')
+                ->cookie("refresh_token", $tokens["refresh_token"], 60 * 24 * 30, '/', null, true, true, false, 'none');
         } catch (Exception $e) {
             return response()->json([
                 "success" => false,

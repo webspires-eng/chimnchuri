@@ -54,8 +54,7 @@ class TokenController extends Controller
         return response()->json([
             'success' => true,
             'message' => 'Token refreshed successfully'
-        ])->cookie("access_token", $tokens["access_token"], 15, "/", null, true, true, false, "none")
-            ->cookie("refresh_token", $tokens["refresh_token"], 60 * 24 * 7, "/", null, true, true, false, "none");
-
+        ])->cookie("access_token", $tokens["access_token"], 60 * 24 * 30, "/", null, true, true, false, "none")
+            ->cookie("refresh_token", $tokens["refresh_token"], 60 * 24 * 30, "/", null, true, true, false, "none");
     }
 }
