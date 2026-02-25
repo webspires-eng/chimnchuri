@@ -26,9 +26,9 @@ return Application::configure(basePath: dirname(__DIR__))
         $middleware->api(prepend: [
             authTokenVerification::class,
         ]);
-        // $middleware->validateCsrfTokens(except: [
-        //     'api/*',  // Exclude all API routes from CSRF
-        // ]);
+        $middleware->validateCsrfTokens(except: [
+            'api/*',  // Exclude all API routes from CSRF
+        ]);
     })
     ->withExceptions(function (Exceptions $exceptions): void {
         $exceptions->render(function (\Illuminate\Auth\AuthenticationException $e, $request) {

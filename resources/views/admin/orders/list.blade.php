@@ -21,7 +21,7 @@
                                     <th>Total</th>
                                     <th>Payment Status</th>
                                     <th>Items</th>
-                                    <th>Delivery Number</th>
+                                    <th>Order Type</th>
                                     <th>Order Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -49,7 +49,7 @@
                                             @endif
                                         </td>
                                         <td> {{ $order->items->count() }}</td>
-                                        <td> -</td>
+                                        <td class="text-capitalize"> {{ $order->order_type }}</td>
                                         <td>
 
                                             @if ($order->order_status == 'draft')

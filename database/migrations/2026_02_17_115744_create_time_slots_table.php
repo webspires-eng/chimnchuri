@@ -13,7 +13,7 @@ return new class extends Migration
     {
         Schema::create('time_slots', function (Blueprint $table) {
             $table->id();
-
+            $table->string("order_type")->nullable()->default("delivery");
             $table->date('date')->nullable();
             $table->time('start_time')->nullable();
             $table->time('end_time')->nullable();

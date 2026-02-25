@@ -87,7 +87,7 @@ Route::prefix("v1")->group(function () {
 
         // CHECKOUT
         Route::post("/payment-intent", [PaymentController::class, "createPaymentIntent"])->name("payment-intent")->withoutMiddleware([VerifyCsrfToken::class]);
-        Route::post('/process-checkout', [PaymentController::class, 'processCheckout']);
+        Route::post('/process-checkout', [PaymentController::class, 'processCheckout'])->withoutMiddleware([VerifyCsrfToken::class]);
 
 
         // SETTINGS API

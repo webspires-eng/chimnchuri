@@ -11,6 +11,18 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="mb-3">
+                            <label for="order_type" class="form-label">Order Type</label>
+                            <select id="order_type" name="order_type" class="form-select" required>
+                                <option value="delivery" {{ $timeSlot->order_type === 'delivery' ? 'selected' : '' }}>
+                                    Delivery</option>
+                                <option value="collection" {{ $timeSlot->order_type === 'collection' ? 'selected' : '' }}>
+                                    Collection</option>
+                            </select>
+                        </div>
+                    </div>
+
+                    <div class="col-lg-4">
+                        <div class="mb-3">
                             <label for="start_time" class="form-label">Start Time</label>
                             <input type="time" id="start_time" name="start_time" class="form-control"
                                 placeholder="Start Time" required value="{{ $timeSlot->start_time }}">

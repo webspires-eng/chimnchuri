@@ -7,6 +7,7 @@ use Illuminate\Database\Eloquent\Model;
 class TimeSlot extends Model
 {
     protected $fillable = [
+        'order_type',
         'start_time',
         'end_time',
         'max_capacity',

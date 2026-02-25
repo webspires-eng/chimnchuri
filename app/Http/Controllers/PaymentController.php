@@ -53,6 +53,13 @@ class PaymentController extends Controller
         $subTotal = 0;
         $steakQty = 0;
 
+
+        $pickupAddress = "";
+        if ($request->order_type == "collection") {
+            $pickupAddress = "{$setting?->address}, {$setting?->postcode}, {$setting?->city}";
+        }
+
+
         // 2. Create the Order in your DB
         $order = Order::create([
             'user_id' => $request?->user_id ?? null,
@@ -75,7 +82,7 @@ class PaymentController extends Controller
             "order_type" => $request?->order_type ?? "delivery",
             "delivery_time" => $request?->delivery_time ?? null,
             "pickup_time" => $request?->pickup_time ?? null,
-            "pickup_address" => $request?->pickup_address ?? null,
+            "pickup_address" => $pickupAddress,
 
             // "time_slot_id" => $request?->time_slot_id,
             // "time_slot" => Carbon::parse($timeSlot?->start_time)->format('h:i A') . " - " . Carbon::parse($timeSlot?->end_time)->format('h:i A'),
@@ -122,7 +129,8 @@ class PaymentController extends Controller
             $taxAmount = $subTotal * $setting->tax_percentage / 100;
         }
 
-        if ($setting->delivery_charge) {
+        $deliveryCharge = 0;
+        if ($setting->delivery_charge && $request->order_type == "delivery") {
             $deliveryCharge = $setting->delivery_charge;
         }
 

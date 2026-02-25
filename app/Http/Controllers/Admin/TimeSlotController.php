@@ -12,8 +12,9 @@ class TimeSlotController extends Controller
 {
     public function index()
     {
-        $timeSlots = TimeSlot::paginate(20);
-        return view('admin.time-slots.index', compact('timeSlots'));
+        $deliverySlots = TimeSlot::where('order_type', 'delivery')->paginate(20, ['*'], 'delivery_page');
+        $collectionSlots = TimeSlot::where('order_type', 'collection')->paginate(20, ['*'], 'collection_page');
+        return view('admin.time-slots.index', compact('deliverySlots', 'collectionSlots'));
     }
 
     public function create()
@@ -24,19 +25,21 @@ class TimeSlotController extends Controller
     public function store(Request $request)
     {
         $request->validate([
+            'order_type' => 'required|in:delivery,collection',
             'start_time' => 'required',
             'end_time' => 'required',
             'max_capacity' => 'required|integer|min:1',
         ]);
 
         TimeSlot::create([
+            'order_type' => $request->order_type,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'max_capacity' => $request->max_capacity,
             'is_active' => true,
         ]);
 
-        return redirect()->route('admin.time-slots.index')->with('success', 'Time slots generated successfully!');
+        return redirect()->route('admin.time-slots.index')->with('success', 'Time slot created successfully!');
     }
 
     public function edit(TimeSlot $timeSlot)
@@ -47,12 +50,14 @@ class TimeSlotController extends Controller
     public function update(Request $request, TimeSlot $timeSlot)
     {
         $request->validate([
+            'order_type' => 'required|in:delivery,collection',
             'start_time' => 'required',
             'end_time' => 'required',
             'max_capacity' => 'required|integer|min:1',
         ]);
 
         $timeSlot->update([
+            'order_type' => $request->order_type,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'max_capacity' => $request->max_capacity,
@@ -71,19 +76,20 @@ class TimeSlotController extends Controller
 
 
 
-    public function getAllSlots()
+    public function getAllSlots(Request $request)
     {
-        // $timeSlots = TimeSlot::get();
-        // $timeSlots->map(function ($timeSlot) {
-        //     $timeSlot->start_time = Carbon::parse($timeSlot->start_time)->format('g:i A');
-        //     $timeSlot->end_time = Carbon::parse($timeSlot->end_time)->format('g:i A');
-        // });
-
         $slotOrders = Order::with("items")->whereDate('created_at', Carbon::today())->get();
 
         $now = Carbon::now();
 
-        $timeSlots = TimeSlot::where("is_active", true)->get()->map(function ($timeSlot) use ($now, $slotOrders) {
+        $query = TimeSlot::where("is_active", true);
+
+        // Filter by order_type if provided
+        if ($request->has('order_type') && in_array($request->order_type, ['delivery', 'collection'])) {
+            $query->where('order_type', $request->order_type);
+        }
+
+        $timeSlots = $query->get()->map(function ($timeSlot) use ($now, $slotOrders) {
 
             $slotStart = Carbon::parse($timeSlot->start_time);
 

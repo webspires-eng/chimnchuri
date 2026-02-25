@@ -11,6 +11,7 @@
                                 <div>
                                     <h4 class="fw-medium text-dark d-flex align-items-center gap-2">
                                         #{{ $order->order_number }}
+                                        <span class="text-muted fs-12 ms-1">Payment:</span>
                                         @if ($order->payment_status == 'paid')
                                             <span class="badge bg-success-subtle text-success  px-2 py-1 fs-13">Paid</span>
                                         @elseif($order->payment_status == 'pending')
@@ -24,6 +25,7 @@
                                         @elseif($order->payment_status == 'unpaid')
                                             <span class="badge bg-danger-subtle text-danger  px-2 py-1 fs-13">Unpaid</span>
                                         @endif
+                                        <span class="text-muted fs-12 ms-1">Order:</span>
                                         @if ($order->order_status == 'pending')
                                             <span
                                                 class="badge bg-warning-subtle text-warning  px-2 py-1 fs-13">Pending</span>
@@ -289,6 +291,40 @@
 
             <div class="card">
                 <div class="card-header">
+                    <h4 class="card-title">Order Type</h4>
+                </div>
+                <div class="card-body">
+                    <div class="d-flex align-items-center gap-2">
+                        @if ($order->order_type == 'collection')
+                            <div class="rounded-3 bg-info-subtle avatar d-flex align-items-center justify-content-center">
+                                <iconify-icon icon="solar:shop-2-broken" class="fs-24 text-info"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="mb-0 text-dark fw-medium">Collection</p>
+                                <p class="mb-0 text-muted fs-13">Customer will pick up</p>
+                            </div>
+                        @else
+                            <div
+                                class="rounded-3 bg-primary-subtle avatar d-flex align-items-center justify-content-center">
+                                <iconify-icon icon="solar:delivery-broken" class="fs-24 text-primary"></iconify-icon>
+                            </div>
+                            <div>
+                                <p class="mb-0 text-dark fw-medium">Delivery</p>
+                                <p class="mb-0 text-muted fs-13">Deliver to customer</p>
+                            </div>
+                        @endif
+                    </div>
+                    @if ($order->order_type == 'collection' && $order->pickup_address)
+                        <div class="mt-3 pt-3 border-top">
+                            <h5>Pickup Address</h5>
+                            <p class="mb-0">{{ $order->pickup_address }}</p>
+                        </div>
+                    @endif
+                </div>
+            </div>
+
+            <div class="card">
+                <div class="card-header">
                     <h4 class="card-title">Customer Details</h4>
                 </div>
                 <div class="card-body">
@@ -306,14 +342,15 @@
                     </div>
                     <p class="mb-1">{{ $order->customer_phone }}</p>
 
-                    <div class="d-flex justify-content-between mt-3">
-                        <h5 class="">Shipping Address</h5>
-                    </div>
-
-                    <div>
-                        <p class="mb-1">{{ $order?->delivery_address }}, {{ $order?->city }},
-                            {{ $order?->postal_code }}</p>
-                    </div>
+                    @if ($order->order_type == 'delivery')
+                        <div class="d-flex justify-content-between mt-3">
+                            <h5 class="">Shipping Address</h5>
+                        </div>
+                        <div>
+                            <p class="mb-1">{{ $order?->delivery_address }}, {{ $order?->city }},
+                                {{ $order?->postal_code }}</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 
@@ -388,7 +425,7 @@
                         </div>
                         <div>
                             <p class="mb-1 text-dark fw-medium">
-                                {{ $order->payment_method == 'cod' ? 'Cash on Delivery' : 'Online Payment' }}
+                                {{ $order->payment_method == 'cod' ? ($order->order_type == 'collection' ? 'Pay on Collection' : 'Cash on Delivery') : 'Online Payment' }}
                             </p>
                             <p class="mb-0 text-dark text-capitalize">{{ $order->payment_status }}</p>
                         </div>
@@ -408,16 +445,31 @@
                             {{ $order->customer_name }}</span></p>
                 </div>
             </div>
-            <div class="card">
-                <div class="card-body">
-                    <div class="mapouter">
-                        <div class="gmap_canvas"><iframe class="gmap_iframe rounded" width="100%"
-                                style="height: 418px;" frameborder="0" scrolling="no" marginheight="0" marginwidth="0"
-                                src="https://maps.google.com/maps?width=1980&amp;height=400&amp;hl=en&amp;q={{ $order->delivery_address }}, {{ $order->city }}, {{ $order->postal_code }} &amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+            {{-- @if ($order->order_type == 'delivery' && $order->delivery_address)
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mapouter">
+                            <div class="gmap_canvas"><iframe class="gmap_iframe rounded" width="100%"
+                                    style="height: 418px;" frameborder="0" scrolling="no" marginheight="0"
+                                    marginwidth="0"
+                                    src="https://maps.google.com/maps?width=1980&amp;height=400&amp;hl=en&amp;q={{ $order->delivery_address }}, {{ $order->city }}, {{ $order->postal_code }} &amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                            </div>
                         </div>
                     </div>
                 </div>
-            </div>
+            @elseif ($order->order_type == 'collection' && $order->pickup_address)
+                <div class="card">
+                    <div class="card-body">
+                        <div class="mapouter">
+                            <div class="gmap_canvas"><iframe class="gmap_iframe rounded" width="100%"
+                                    style="height: 418px;" frameborder="0" scrolling="no" marginheight="0"
+                                    marginwidth="0"
+                                    src="https://maps.google.com/maps?width=1980&amp;height=400&amp;hl=en&amp;q={{ $order->pickup_address }} &amp;t=&amp;z=14&amp;ie=UTF8&amp;iwloc=B&amp;output=embed"></iframe>
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            @endif --}}
         </div>
     </div>
 @endsection
