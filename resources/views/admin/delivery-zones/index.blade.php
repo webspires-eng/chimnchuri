@@ -26,7 +26,7 @@
                                 <tr>
                                     <th style="width: 20px;">#ID</th>
                                     <th>Zone Name</th>
-                                    <th>Distance Range (KM)</th>
+                                    <th>Distance Range (Miles)</th>
                                     <th>Delivery Fee</th>
                                     <th>Min. Order</th>
                                     <th>Status</th>
