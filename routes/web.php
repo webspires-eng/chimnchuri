@@ -17,6 +17,7 @@ use App\Http\Controllers\Admin\SmtpController;
 use App\Http\Controllers\Admin\TimeSlotController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VoucherController;
+use App\Http\Controllers\Admin\DeliveryZoneController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
@@ -86,6 +87,9 @@ Route::prefix('admin')->group(function () {
 
         // TEAMS
         Route::resource("teams", \App\Http\Controllers\Admin\TeamController::class)->names("admin.teams");
+
+        // DELIVERY ZONES
+        Route::resource("delivery-zones", DeliveryZoneController::class)->names("admin.delivery-zones");
 
         // TIME SLOTS
         Route::get('/time-slots', [TimeSlotController::class, 'index'])->name('admin.time-slots.index');

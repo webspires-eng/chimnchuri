@@ -113,6 +113,10 @@ Route::prefix("v1")->group(function () {
 
         // TEAM
         Route::get("/teams", [\App\Http\Controllers\Admin\TeamController::class, "getTeams"]);
+
+        // DELIVERY ZONES
+        Route::get("/delivery-zones", [\App\Http\Controllers\Admin\DeliveryZoneController::class, "getDeliveryZones"]);
+        Route::post("/check-delivery", [\App\Http\Controllers\Admin\DeliveryZoneController::class, "checkDelivery"]);
     });
 });
 

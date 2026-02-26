@@ -494,6 +494,16 @@
                         </a>
                     </li>
 
+                    {{-- DELIVERY ZONES --}}
+                    <li class="nav-item">
+                        <a class="nav-link" href="{{ route('admin.delivery-zones.index') }}">
+                            <span class="nav-icon">
+                                <iconify-icon icon="solar:map-point-bold-duotone"></iconify-icon>
+                            </span>
+                            <span class="nav-text"> Delivery Zones </span>
+                        </a>
+                    </li>
+
                     {{-- <li class="nav-item">
                         <a class="nav-link" href="{{ route('vouchers.index') }}">
                             <span class="nav-icon">
