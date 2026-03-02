@@ -125,6 +125,7 @@ class PaymentController extends Controller
         }
 
 
+        $taxAmount = 0;
         $tax = $setting->tax_percentage > 0 ? $setting->tax_percentage : null;
         if ($tax) {
             $taxAmount = $subTotal * $setting->tax_percentage / 100;
