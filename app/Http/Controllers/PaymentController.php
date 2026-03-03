@@ -163,10 +163,10 @@ class PaymentController extends Controller
         foreach ($request->allocations as $allocation) {
             $slotTime = TimeSlot::find($allocation['slot_id']);
 
-            if ($slotTime) {
-                $slotTime->max_capacity = $slotTime->max_capacity - $allocation['quantity'];
-                $slotTime->save();
-            }
+            // if ($slotTime) {
+            //     $slotTime->max_capacity = $slotTime->max_capacity - $allocation['quantity'];
+            //     $slotTime->save();
+            // }
 
             OrderTimeSlot::create([
                 'order_id' => $order->id,
@@ -241,6 +241,8 @@ class PaymentController extends Controller
         } catch (\Exception $e) {
             return response()->json(['error' => 'Invalid signature'], 400);
         }
+
+        logger()->info('Stripe Webhook Event: ' . $event);
 
         if ($event->type == 'charge.captured') {
             $paymentIntent = $event->data->object;

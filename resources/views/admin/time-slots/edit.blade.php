@@ -64,7 +64,7 @@
         <div class="p-3 bg-light mb-3 rounded">
             <div class="row justify-content-end g-2">
                 <div class="col-lg-2">
-                    <button type="submit" class="btn btn-outline-success w-100">Create Time Slot</button>
+                    <button type="submit" class="btn btn-outline-success w-100">Update Time Slot</button>
                 </div>
             </div>
         </div>
