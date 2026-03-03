@@ -631,8 +631,7 @@
                                             @if ($item->addons->count() > 0)
                                                 <div class="addon-list">
                                                     @foreach ($item->addons as $addon)
-                                                        <div>+
-                                                            {{ $addon->quantity > 1 ? $addon->quantity . 'x ' : '' }}{{ $addon->name }}
+                                                        <div>+ {{ $addon->quantity }}x {{ $addon->name }}
                                                             — £{{ number_format($addon->price * $addon->quantity, 2) }}
                                                         </div>
                                                     @endforeach

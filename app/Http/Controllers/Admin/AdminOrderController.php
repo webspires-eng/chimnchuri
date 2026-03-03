@@ -55,6 +55,7 @@ class AdminOrderController extends Controller
                     $paymentIntent->cancel();
                     $order->payment_status = 'unpaid';
                 }
+                sleep(2);
             }
 
             // Handle COD

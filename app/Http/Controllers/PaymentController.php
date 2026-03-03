@@ -210,7 +210,7 @@ class PaymentController extends Controller
                 \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
             }
             // Notify the business with admin template
-            \Illuminate\Support\Facades\Mail::to('akifullah@gmail.com')->send(new \App\Mail\AdminOrderPlaced($order));
+            \Illuminate\Support\Facades\Mail::to('info@chimnchurri.com')->send(new \App\Mail\AdminOrderPlaced($order));
         } catch (\Exception $e) {
             logger()->error('Failed to send order confirmation email: ' . $e->getMessage());
         }
@@ -242,7 +242,6 @@ class PaymentController extends Controller
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
-        logger()->info('Stripe Webhook Event: ' . $event);
 
         if ($event->type == 'charge.captured') {
             $paymentIntent = $event->data->object;
