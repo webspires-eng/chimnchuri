@@ -236,6 +236,8 @@ class PaymentController extends Controller
                 $sig_header,
                 env('STRIPE_WEBHOOK_SECRET')
             );
+
+            logger()->info('Stripe Webhook Event:  ' . $event);
         } catch (\UnexpectedValueException $e) {
             return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Exception $e) {
