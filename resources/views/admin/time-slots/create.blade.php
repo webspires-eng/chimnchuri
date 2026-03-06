@@ -11,11 +11,7 @@
                 <div class="row">
                     <div class="col-lg-4">
                         <div class="mb-3">
-                            <label for="order_type" class="form-label">Order Type</label>
-                            <select id="order_type" name="order_type" class="form-select" required>
-                                <option value="delivery">Delivery</option>
-                                <option value="collection">Collection</option>
-                            </select>
+                            <input type="hidden" name="order_type" value="delivery">
                         </div>
                     </div>
 

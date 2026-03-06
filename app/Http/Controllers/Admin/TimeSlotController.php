@@ -12,9 +12,8 @@ class TimeSlotController extends Controller
 {
     public function index()
     {
-        $deliverySlots = TimeSlot::where('order_type', 'delivery')->paginate(20, ['*'], 'delivery_page');
-        $collectionSlots = TimeSlot::where('order_type', 'collection')->paginate(20, ['*'], 'collection_page');
-        return view('admin.time-slots.index', compact('deliverySlots', 'collectionSlots'));
+        $timeSlots = TimeSlot::paginate(20);
+        return view('admin.time-slots.index', compact('timeSlots'));
     }
 
     public function create()
@@ -25,14 +24,13 @@ class TimeSlotController extends Controller
     public function store(Request $request)
     {
         $request->validate([
-            'order_type' => 'required|in:delivery,collection',
             'start_time' => 'required',
             'end_time' => 'required',
             'max_capacity' => 'required|integer|min:1',
         ]);
 
         TimeSlot::create([
-            'order_type' => $request->order_type,
+            'order_type' => 'delivery',
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'max_capacity' => $request->max_capacity,
@@ -50,14 +48,13 @@ class TimeSlotController extends Controller
     public function update(Request $request, TimeSlot $timeSlot)
     {
         $request->validate([
-            'order_type' => 'required|in:delivery,collection',
             'start_time' => 'required',
             'end_time' => 'required',
             'max_capacity' => 'required|integer|min:1',
         ]);
 
         $timeSlot->update([
-            'order_type' => $request->order_type,
+            'order_type' => 'delivery',
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'max_capacity' => $request->max_capacity,
@@ -83,11 +80,6 @@ class TimeSlotController extends Controller
         $now = Carbon::now();
 
         $query = TimeSlot::where("is_active", true);
-
-        // Filter by order_type if provided
-        if ($request->has('order_type') && in_array($request->order_type, ['delivery', 'collection'])) {
-            $query->where('order_type', $request->order_type);
-        }
 
         $timeSlots = $query->get()->map(function ($timeSlot) use ($now, $slotOrders) {
 
