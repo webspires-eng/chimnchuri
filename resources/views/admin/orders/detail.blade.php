@@ -337,6 +337,13 @@
                             <p class="mb-0 fw-semibold text-dark">{{ $order->car_registration }}</p>
                         </div>
                     @endif
+                    @if ($order->order_date)
+                        <div class="mt-3 pt-3 border-top">
+                            <h5>📅 Order Date</h5>
+                            <p class="mb-0 fw-semibold text-dark">
+                                {{ \Carbon\Carbon::parse($order->order_date)->format('l, j M Y') }}</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 

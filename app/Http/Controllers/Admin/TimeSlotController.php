@@ -4,6 +4,8 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\OrderDate;
+use App\Models\OrderTimeSlot;
 use App\Models\TimeSlot;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -12,18 +14,20 @@ class TimeSlotController extends Controller
 {
     public function index()
     {
-        $timeSlots = TimeSlot::paginate(20);
+        $timeSlots = TimeSlot::with('orderDate')->orderBy('order_date_id', 'desc')->orderBy('start_time', 'asc')->paginate(50);
         return view('admin.time-slots.index', compact('timeSlots'));
     }
 
     public function create()
     {
-        return view('admin.time-slots.create');
+        $orderDates = OrderDate::where('date', '>=', Carbon::today())->orderBy('date', 'asc')->get();
+        return view('admin.time-slots.create', compact('orderDates'));
     }
 
     public function store(Request $request)
     {
         $request->validate([
+            'order_date_id' => 'required|exists:order_dates,id',
             'start_time' => 'required',
             'end_time' => 'required',
             'max_capacity' => 'required|integer|min:1',
@@ -31,6 +35,7 @@ class TimeSlotController extends Controller
 
         TimeSlot::create([
             'order_type' => 'delivery',
+            'order_date_id' => $request->order_date_id,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
             'max_capacity' => $request->max_capacity,
@@ -42,7 +47,8 @@ class TimeSlotController extends Controller
 
     public function edit(TimeSlot $timeSlot)
     {
-        return view('admin.time-slots.edit', compact('timeSlot'));
+        $orderDates = OrderDate::where('date', '>=', Carbon::today())->orderBy('date', 'asc')->get();
+        return view('admin.time-slots.edit', compact('timeSlot', 'orderDates'));
     }
 
     public function update(Request $request, TimeSlot $timeSlot)
@@ -71,38 +77,60 @@ class TimeSlotController extends Controller
     }
 
 
-
-
+    /**
+     * API: Get time slots for a specific order date
+     */
     public function getAllSlots(Request $request)
     {
-        $slotOrders = Order::with("items")->whereDate('created_at', Carbon::today())->get();
+        $orderDateId = $request->query('order_date_id');
 
-        $now = Carbon::now();
+        if (!$orderDateId) {
+            return response()->json([
+                "success" => true,
+                "message" => "No order date selected.",
+                "data" => []
+            ], 200);
+        }
 
-        $query = TimeSlot::where("is_active", true)->where("order_type", "delivery");
+        $orderDate = OrderDate::find($orderDateId);
 
-        $timeSlots = $query->get()->map(function ($timeSlot) use ($now, $slotOrders) {
+        if (!$orderDate || $orderDate->status !== 'open') {
+            return response()->json([
+                "success" => true,
+                "message" => "This date is not available for orders.",
+                "data" => []
+            ], 200);
+        }
+
+        // Get booked capacity for each slot on this date
+        $bookedSlots = OrderTimeSlot::whereHas('order', function ($q) use ($orderDate) {
+            $q->where('order_date', $orderDate->date->format('Y-m-d'));
+        })->get();
+
+        $query = TimeSlot::where("is_active", true)
+            ->where("order_date_id", $orderDateId);
+
+        $timeSlots = $query->get()->map(function ($timeSlot) use ($bookedSlots) {
 
             $slotStart = Carbon::parse($timeSlot->start_time);
 
             $timeSlot->start_time = $slotStart->format('g:i A');
             $timeSlot->end_time   = Carbon::parse($timeSlot->end_time)->format('g:i A');
 
-            $steak_qty = 0;
-            foreach ($slotOrders as $slotOrder) {
-                if ($slotOrder->time_slot_id == $timeSlot->id) {
-                    $steak_qty += $slotOrder->steak_qty;
-                }
-            }
+            // Calculate booked capacity for this specific slot
+            $bookedCapacity = $bookedSlots->where('time_slot_id', $timeSlot->id)->sum('capacity');
 
-            // ✅ true if slot start time has already passed today
-            $timeSlot->disabled = $steak_qty >= $timeSlot->max_capacity || $slotStart->lt($now);
+            $remainingCapacity = $timeSlot->max_capacity - $bookedCapacity;
+            $timeSlot->max_capacity = max(0, $remainingCapacity);
+
+            $timeSlot->disabled = $remainingCapacity <= 0;
 
             return $timeSlot;
         });
+
         return response()->json([
             "success" => true,
-            "message" => "Retrived time slots.",
+            "message" => "Retrieved time slots.",
             "data" => $timeSlots
         ], 200);
     }

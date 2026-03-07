@@ -373,6 +373,16 @@
                             </tr>
                         </table>
 
+                        {{-- Order Date --}}
+                        @if ($order->order_date)
+                            <div style="margin-top: 12px;">
+                                <p class="section-title">📅 Order Date</p>
+                                <div class="info-box">
+                                    <p><b>{{ \Carbon\Carbon::parse($order->order_date)->format('l, j M Y') }}</b></p>
+                                </div>
+                            </div>
+                        @endif
+
                         {{-- Address Section --}}
                         <div style="margin-top: 12px;">
                             @if ($order->order_type == 'collection')

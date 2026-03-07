@@ -32,6 +32,7 @@
                             <thead class="bg-light-subtle">
                                 <tr>
                                     <th style="width: 50px;">#ID</th>
+                                    <th>Order Date</th>
                                     <th>Time</th>
                                     <th>Capacity</th>
                                     <th>Status</th>
@@ -42,6 +43,15 @@
                                 @forelse ($timeSlots as $timeSlot)
                                     <tr>
                                         <td>{{ $timeSlot->id }}</td>
+                                        <td>
+                                            @if ($timeSlot->orderDate)
+                                                <span class="badge bg-info-subtle text-info">
+                                                    {{ \Carbon\Carbon::parse($timeSlot->orderDate->date)->format('D j M') }}
+                                                </span>
+                                            @else
+                                                <span class="badge bg-secondary-subtle text-secondary">No date</span>
+                                            @endif
+                                        </td>
                                         <td>
                                             {{ Carbon\Carbon::parse($timeSlot->start_time)->format('h:i A') }} -
                                             {{ Carbon\Carbon::parse($timeSlot->end_time)->format('h:i A') }}
@@ -75,7 +85,7 @@
                                     </tr>
                                 @empty
                                     <tr>
-                                        <td colspan="5" class="text-center">No time slots found.</td>
+                                        <td colspan="6" class="text-center">No time slots found.</td>
                                     </tr>
                                 @endforelse
                             </tbody>

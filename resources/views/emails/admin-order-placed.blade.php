@@ -564,6 +564,17 @@
                             <div class="label">Grand Total</div>
                             <div class="amount">£{{ number_format($order->grand_total, 2) }}</div>
                         </div>
+                        {{-- Order Date --}}
+                        @if ($order->order_date)
+                            <div
+                                style="background: rgba(14, 165, 233, 0.08); border: 1px solid rgba(14, 165, 233, 0.15); border-radius: 8px; padding: 10px 16px; margin-bottom: 16px; text-align: center;">
+                                <div
+                                    style="font-size: 10px; font-weight: 700; text-transform: uppercase; letter-spacing: 0.1em; color: #666; margin-bottom: 2px;">
+                                    📅 Order Date</div>
+                                <div style="font-size: 15px; font-weight: 800; color: #38bdf8;">
+                                    {{ \Carbon\Carbon::parse($order->order_date)->format('l, j M Y') }}</div>
+                            </div>
+                        @endif
 
                         {{-- Customer Details --}}
                         <p class="section-title">Customer Details</p>

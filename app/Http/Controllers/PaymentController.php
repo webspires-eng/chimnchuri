@@ -80,6 +80,7 @@ class PaymentController extends Controller
             "country" => $request?->country ?? null,
 
             "order_type" => $request?->order_type ?? "delivery",
+            "order_date" => $request?->order_date ?? null,
             "delivery_time" => $request?->delivery_time ?? null,
             "pickup_time" => $request?->pickup_time ?? null,
             "pickup_address" => $pickupAddress,

@@ -40,7 +40,7 @@
                         </div>
 
                         <div class="row">
-                            {{-- <div class="col-lg-6">
+                            <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label for="min_distance" class="form-label">Min Distance (miles)</label>
                                     <input type="number" step="0.01" id="min_distance" name="min_distance"
@@ -50,7 +50,7 @@
                                         <div class="invalid-feedback">{{ $message }}</div>
                                     @enderror
                                 </div>
-                            </div> --}}
+                            </div>
                             <div class="col-lg-6">
                                 <div class="mb-3">
                                     <label for="max_distance" class="form-label">Max Distance (miles)</label>

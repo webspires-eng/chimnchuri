@@ -18,6 +18,7 @@ use App\Http\Controllers\Admin\TimeSlotController;
 use App\Http\Controllers\Admin\UserController;
 use App\Http\Controllers\Admin\VoucherController;
 use App\Http\Controllers\Admin\DeliveryZoneController;
+use App\Http\Controllers\Admin\OrderDateController;
 use App\Http\Controllers\PaymentController;
 use Illuminate\Foundation\Http\Middleware\VerifyCsrfToken;
 use Illuminate\Support\Facades\Route;
@@ -98,6 +99,15 @@ Route::prefix('admin')->group(function () {
         Route::get("/time-slots/{timeSlot}/edit", [TimeSlotController::class, "edit"])->name("admin.time-slots.edit");
         Route::post("/time-slots/{timeSlot}/update", [TimeSlotController::class, "update"])->name("admin.time-slots.update");
         Route::delete("/time-slots/{timeSlot}/delete", [TimeSlotController::class, "destroy"])->name("admin.time-slots.destroy");
+
+        // ORDER DATES
+        Route::get('/order-dates', [OrderDateController::class, 'index'])->name('admin.order-dates.index');
+        Route::get('/order-dates/create', [OrderDateController::class, 'create'])->name('admin.order-dates.create');
+        Route::post('/order-dates/store', [OrderDateController::class, 'store'])->name('admin.order-dates.store');
+        Route::get('/order-dates/{orderDate}/edit', [OrderDateController::class, 'edit'])->name('admin.order-dates.edit');
+        Route::post('/order-dates/{orderDate}/update', [OrderDateController::class, 'update'])->name('admin.order-dates.update');
+        Route::delete('/order-dates/{orderDate}/delete', [OrderDateController::class, 'destroy'])->name('admin.order-dates.destroy');
+        Route::post('/order-dates/{orderDate}/toggle-status', [OrderDateController::class, 'toggleStatus'])->name('admin.order-dates.toggle-status');
     });
 });
 
