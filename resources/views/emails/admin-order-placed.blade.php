@@ -586,6 +586,11 @@
                                     Pickup: <strong>{{ $order->pickup_address }}</strong>
                                 </p>
                             @endif
+                            @if ($order->order_type == 'collection' && $order->car_registration)
+                                <p style="margin-top: 8px; padding-top: 8px; border-top: 1px solid #2a2a2a;">
+                                    🚗 Car Reg: <strong>{{ $order->car_registration }}</strong>
+                                </p>
+                            @endif
                         </div>
 
                         {{-- Time Slots --}}

@@ -331,6 +331,12 @@
                             <p class="mb-0">{{ $order->pickup_address }}</p>
                         </div>
                     @endif
+                    @if ($order->order_type == 'collection' && $order->car_registration)
+                        <div class="mt-3 pt-3 border-top">
+                            <h5>Car Registration</h5>
+                            <p class="mb-0 fw-semibold text-dark">{{ $order->car_registration }}</p>
+                        </div>
+                    @endif
                 </div>
             </div>
 

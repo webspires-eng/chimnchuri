@@ -84,6 +84,7 @@ class PaymentController extends Controller
             "pickup_time" => $request?->pickup_time ?? null,
             "pickup_address" => $pickupAddress,
             "order_instruction" => $request?->order_instruction ?? null,
+            "car_registration" => $request?->car_registration ?? null,
 
             // "time_slot_id" => $request?->time_slot_id,
             // "time_slot" => Carbon::parse($timeSlot?->start_time)->format('h:i A') . " - " . Carbon::parse($timeSlot?->end_time)->format('h:i A'),

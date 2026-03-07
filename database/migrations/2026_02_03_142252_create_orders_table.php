@@ -60,6 +60,8 @@ return new class extends Migration
             $table->string("pickup_time")->nullable();
             $table->string("pickup_address")->nullable();
 
+            $table->string("car_registration")->nullable();
+
             $table->timestamps();
         });
     }

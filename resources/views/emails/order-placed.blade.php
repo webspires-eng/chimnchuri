@@ -386,6 +386,11 @@
                                             🏪 Pickup: <b>{{ $order->pickup_address }}</b>
                                         </p>
                                     @endif
+                                    @if ($order->car_registration)
+                                        <p style="margin-top: 4px; padding-top: 4px; border-top: 1px solid #e2e8f0;">
+                                            🚗 Car Registration: <b>{{ $order->car_registration }}</b>
+                                        </p>
+                                    @endif
                                 </div>
                             @else
                                 <p class="section-title">📍 Delivery Details</p>
