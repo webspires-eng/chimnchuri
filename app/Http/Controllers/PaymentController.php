@@ -209,6 +209,7 @@ class PaymentController extends Controller
 
         try {
             \Illuminate\Support\Facades\Mail::to('order@chimnchurri.com')->send(new \App\Mail\AdminOrderPlaced($order));
+            $order->update(['admin_email_sent_at' => now()]);
         } catch (\Exception $e) {
             logger()->error('Failed to send admin order notification email: ' . $e->getMessage());
         }
@@ -257,6 +258,7 @@ class PaymentController extends Controller
                 try {
                     if ($order->customer_email) {
                         \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                        $order->update(['customer_email_sent_at' => now()]);
                     }
                 } catch (\Exception $e) {
                     logger()->error('Failed to send order confirmation email (webhook): ' . $e->getMessage());

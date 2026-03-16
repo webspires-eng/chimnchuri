@@ -4,11 +4,26 @@
     <div class="row">
         <div class="col-xl-12">
             <div class="card">
-                <div class="d-flex card-header justify-content-between align-items-center">
+                <div class="d-flex card-header justify-content-between align-items-center flex-wrap gap-2">
                     <div>
-                        <h4 class="card-title">All Order List</h4>
+                        <h4 class="card-title mb-0">All Order List</h4>
                     </div>
-
+                    {{-- ======= Print Day's Orders ======= --}}
+                    <form action="{{ route('admin.orders.print') }}" method="GET" target="_blank"
+                          class="d-flex align-items-center gap-2 flex-wrap">
+                        <label class="fw-semibold text-dark mb-0 text-nowrap" style="font-size:13px;">
+                            🖨 Print Day's Orders:
+                        </label>
+                        <input type="date"
+                               name="date"
+                               class="form-control form-control-sm"
+                               style="max-width:170px;"
+                               value="{{ date('Y-m-d') }}"
+                               required>
+                        <button type="submit" class="btn btn-sm btn-success text-nowrap">
+                            Print / View
+                        </button>
+                    </form>
                 </div>
                 <div class="card-body p-0">
                     <div class="table-responsive">
@@ -40,7 +55,7 @@
                                             <a href="#!"
                                                 class="link-primary fw-medium">{{ $order?->customer_name ?? 'Guest' }}</a>
                                         </td>
-                                        <td> ${{ $order->grand_total }}</td>
+                                        <td> £{{ $order->grand_total }}</td>
                                         <td>
                                             @if ($order->payment_status == 'paid')
                                                 <span class="badge bg-success text-light  px-2 py-1 fs-13">Paid</span>

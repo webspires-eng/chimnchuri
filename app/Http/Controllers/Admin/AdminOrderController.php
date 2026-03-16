@@ -5,6 +5,7 @@ namespace App\Http\Controllers\Admin;
 use App\Http\Controllers\Controller;
 use App\Models\Order;
 use App\Services\OrderTimelineService;
+use Carbon\Carbon;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Mail;
@@ -94,6 +95,7 @@ class AdminOrderController extends Controller
                     $order->load(['items.addons', 'time_slots']);
                     Mail::to($order->customer_email)
                         ->send(new \App\Mail\OrderPlaced($order));
+                    $order->update(['customer_email_sent_at' => now()]);
                 }
             }
         } catch (\Exception $e) {
@@ -103,6 +105,55 @@ class AdminOrderController extends Controller
         return back()->with('success', 'Order status updated successfully');
     }
 
+
+    public function printByDate(Request $request)
+    {
+        $request->validate([
+            'date' => 'required|date',
+        ]);
+
+        $date = Carbon::parse($request->date)->format('Y-m-d');
+
+        $orders = Order::with('items.addons', 'time_slots', 'user')
+            ->whereDate('order_date', $date)
+            ->orderBy('created_at', 'asc')
+            ->get();
+
+        $printDate = Carbon::parse($date)->format('l, j F Y');
+
+        return view('admin.orders.print', compact('orders', 'date', 'printDate'));
+    }
+    public function resendEmail(Request $request, $id)
+    {
+        $request->validate([
+            'type' => 'required|in:customer,admin',
+        ]);
+
+        $order = Order::with('items.addons', 'time_slots')->findOrFail($id);
+
+        try {
+            if ($request->type === 'customer') {
+                if (!$order->customer_email) {
+                    return back()->with('error', 'No customer email address on this order.');
+                }
+                Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                $order->update(['customer_email_sent_at' => now()]);
+                return back()->with('success', 'Customer confirmation email resent to ' . $order->customer_email);
+            }
+
+            if ($request->type === 'admin') {
+                $adminEmail = config('mail.admin_email', 'order@chimnchurri.com');
+                Mail::to($adminEmail)->send(new \App\Mail\AdminOrderPlaced($order));
+                $order->update(['admin_email_sent_at' => now()]);
+                return back()->with('success', 'Admin notification email resent to ' . $adminEmail);
+            }
+        } catch (\Exception $e) {
+            logger()->error('Failed to resend email: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+        }
+
+        return back()->with('error', 'Unknown email type.');
+    }
 
 
     // public function updateStatus(Request $request, $id)

@@ -470,6 +470,99 @@
                 </div>
             </div>
 
+            {{-- ======= EMAIL STATUS CARD ======= --}}
+            <div class="card">
+                <div class="card-header">
+                    <h4 class="card-title">Email Notifications</h4>
+                </div>
+                <div class="card-body">
+
+                    {{-- Flash Messages --}}
+                    @if(session('success'))
+                        <div class="alert alert-success alert-dismissible fade show py-2 px-3 mb-3 fs-13" role="alert">
+                            <iconify-icon icon="solar:check-circle-broken" class="align-middle me-1"></iconify-icon>
+                            {{ session('success') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+                    @if(session('error'))
+                        <div class="alert alert-danger alert-dismissible fade show py-2 px-3 mb-3 fs-13" role="alert">
+                            <iconify-icon icon="solar:danger-circle-broken" class="align-middle me-1"></iconify-icon>
+                            {{ session('error') }}
+                            <button type="button" class="btn-close" data-bs-dismiss="alert"></button>
+                        </div>
+                    @endif
+
+                    {{-- Customer Email Row --}}
+                    <div class="d-flex align-items-start justify-content-between gap-2 mb-3">
+                        <div class="d-flex align-items-center gap-2">
+                            @if($order->customer_email_sent_at)
+                                <span class="avatar-sm rounded-circle bg-success-subtle d-flex align-items-center justify-content-center flex-shrink-0">
+                                    <iconify-icon icon="solar:check-circle-broken" class="fs-18 text-success"></iconify-icon>
+                                </span>
+                            @else
+                                <span class="avatar-sm rounded-circle bg-danger-subtle d-flex align-items-center justify-content-center flex-shrink-0">
+                                    <iconify-icon icon="solar:close-circle-broken" class="fs-18 text-danger"></iconify-icon>
+                                </span>
+                            @endif
+                            <div>
+                                <p class="mb-0 fw-medium text-dark fs-13">Customer Email</p>
+                                @if($order->customer_email_sent_at)
+                                    <small class="text-success">Sent {{ $order->customer_email_sent_at->format('d M Y, h:i A') }}</small>
+                                @else
+                                    <small class="text-danger">Not sent yet</small>
+                                @endif
+                            </div>
+                        </div>
+                        <form action="{{ route('admin.orders.resend-email', $order->id) }}" method="POST" class="flex-shrink-0">
+                            @csrf
+                            <input type="hidden" name="type" value="customer">
+                            <button type="submit" class="btn btn-sm {{ $order->customer_email_sent_at ? 'btn-light' : 'btn-soft-primary' }}"
+                                    title="{{ $order->customer_email_sent_at ? 'Resend customer email' : 'Send customer email' }}">
+                                <iconify-icon icon="solar:letter-broken" class="align-middle me-1"></iconify-icon>
+                                {{ $order->customer_email_sent_at ? 'Resend' : 'Send Now' }}
+                            </button>
+                        </form>
+                    </div>
+
+                    <hr class="my-2">
+
+                    {{-- Admin Email Row --}}
+                    <div class="d-flex align-items-start justify-content-between gap-2 mt-3">
+                        <div class="d-flex align-items-center gap-2">
+                            @if($order->admin_email_sent_at)
+                                <span class="avatar-sm rounded-circle bg-success-subtle d-flex align-items-center justify-content-center flex-shrink-0">
+                                    <iconify-icon icon="solar:check-circle-broken" class="fs-18 text-success"></iconify-icon>
+                                </span>
+                            @else
+                                <span class="avatar-sm rounded-circle bg-danger-subtle d-flex align-items-center justify-content-center flex-shrink-0">
+                                    <iconify-icon icon="solar:close-circle-broken" class="fs-18 text-danger"></iconify-icon>
+                                </span>
+                            @endif
+                            <div>
+                                <p class="mb-0 fw-medium text-dark fs-13">Admin Notification</p>
+                                @if($order->admin_email_sent_at)
+                                    <small class="text-success">Sent {{ $order->admin_email_sent_at->format('d M Y, h:i A') }}</small>
+                                @else
+                                    <small class="text-danger">Not sent yet</small>
+                                @endif
+                            </div>
+                        </div>
+                        <form action="{{ route('admin.orders.resend-email', $order->id) }}" method="POST" class="flex-shrink-0">
+                            @csrf
+                            <input type="hidden" name="type" value="admin">
+                            <button type="submit" class="btn btn-sm {{ $order->admin_email_sent_at ? 'btn-light' : 'btn-soft-primary' }}"
+                                    title="{{ $order->admin_email_sent_at ? 'Resend admin email' : 'Send admin email' }}">
+                                <iconify-icon icon="solar:letter-broken" class="align-middle me-1"></iconify-icon>
+                                {{ $order->admin_email_sent_at ? 'Resend' : 'Send Now' }}
+                            </button>
+                        </form>
+                    </div>
+
+                </div>
+            </div>
+            {{-- ======= END EMAIL STATUS CARD ======= --}}
+
             {{-- @if ($order->order_type == 'delivery' && $order->delivery_address)
                 <div class="card">
                     <div class="card-body">

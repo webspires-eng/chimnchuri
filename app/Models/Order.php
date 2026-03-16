@@ -8,6 +8,10 @@ class Order extends Model
 {
     protected $guarded = [];
 
+    protected $casts = [
+        'customer_email_sent_at' => 'datetime',
+        'admin_email_sent_at'    => 'datetime',
+    ];
 
     public function items()
     {
