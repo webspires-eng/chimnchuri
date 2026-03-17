@@ -102,9 +102,10 @@ class TimeSlotController extends Controller
             ], 200);
         }
 
-        // Get booked capacity for each slot on this date
+        // Get booked capacity for each slot on this date (exclude cancelled orders)
         $bookedSlots = OrderTimeSlot::whereHas('order', function ($q) use ($orderDate) {
-            $q->where('order_date', $orderDate->date->format('Y-m-d'));
+            $q->where('order_date', $orderDate->date->format('Y-m-d'))
+              ->where('order_status', '!=', 'cancelled');
         })->get();
 
         $query = TimeSlot::where("is_active", true)
