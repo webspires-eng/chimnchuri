@@ -618,14 +618,18 @@
                                             </td>
                                         </tr>
                                         @foreach ($item->addons->groupBy('category_name') as $catName => $addons)
+                                            <tr class="addon-row">
+                                                <td colspan="4" style="padding-top:4px;">
+                                                    <strong style="color:#1a1a1a;font-style:normal;font-size:8.5px;">{{ $catName }}</strong>
+                                                </td>
+                                                <td></td>
+                                            </tr>
                                             @foreach ($addons as $addon)
                                                 <tr class="addon-row">
-                                                    <td colspan="2">+ {{ $addon->name }} <span
-                                                            style="color:#aaa;">({{ $catName }})</span></td>
-                                                    <td class="qty">{{ $addon->quantity }}</td>
-                                                    <td class="price">£{{ number_format($addon->price, 2) }}</td>
-                                                    <td class="price">
-                                                        £{{ number_format($addon->price * $addon->quantity, 2) }}</td>
+                                                    <td colspan="4" style="padding-left:20px;">
+                                                        + {{ $addon->name }} ({{ $addon->quantity }} x £{{ number_format($addon->price, 2) }})
+                                                    </td>
+                                                    <td class="price">£{{ number_format($addon->price * $addon->quantity, 2) }}</td>
                                                 </tr>
                                             @endforeach
                                         @endforeach
