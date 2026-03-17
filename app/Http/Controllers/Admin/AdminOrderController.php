@@ -42,19 +42,23 @@ class AdminOrderController extends Controller
 
             // Handle Online Payments
             if ($order->payment_method === 'online') {
-
-                Stripe::setApiKey(config('services.stripe.secret'));
-
-                $paymentIntent = PaymentIntent::retrieve($order->payment_intent_id);
-
-                if ($newStatus === 'confirmed' && $paymentIntent->status === 'requires_capture') {
-                    $paymentIntent->capture();
-                    $order->payment_status = 'pending';
-                }
-
-                if ($newStatus === 'cancelled' && $paymentIntent->status === 'requires_capture') {
-                    $paymentIntent->cancel();
-                    $order->payment_status = 'unpaid';
+                // Payment is captured automatically via Stripe — no manual capture needed
+                if ($newStatus === 'cancelled') {
+                    // Only refund/cancel if payment was already captured
+                    try {
+                        Stripe::setApiKey(config('services.stripe.secret'));
+                        $paymentIntent = PaymentIntent::retrieve($order->payment_intent_id);
+                        
+                        if ($paymentIntent->status === 'requires_capture') {
+                            $paymentIntent->cancel();
+                        } elseif ($paymentIntent->status === 'succeeded') {
+                            // Payment already captured — create a refund
+                            \Stripe\Refund::create(['payment_intent' => $order->payment_intent_id]);
+                        }
+                    } catch (\Exception $e) {
+                        logger()->error('Failed to cancel/refund Stripe payment: ' . $e->getMessage());
+                    }
+                    $order->payment_status = 'refunded';
                 }
             }
 
@@ -131,6 +135,9 @@ class AdminOrderController extends Controller
 
         $order = Order::with('items.addons', 'time_slots')->findOrFail($id);
 
+        // Set a shorter time limit for email sending
+        set_time_limit(30);
+
         try {
             if ($request->type === 'customer') {
                 if (!$order->customer_email) {
@@ -149,7 +156,7 @@ class AdminOrderController extends Controller
             }
         } catch (\Exception $e) {
             logger()->error('Failed to resend email: ' . $e->getMessage());
-            return back()->with('error', 'Failed to send email: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send email. Please check your SMTP settings in the admin panel. Error: ' . $e->getMessage());
         }
 
         return back()->with('error', 'Unknown email type.');

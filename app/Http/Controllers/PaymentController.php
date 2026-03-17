@@ -66,10 +66,10 @@ class PaymentController extends Controller
             'uuid' => Str::uuid()->toString(),
             'order_number' => 'ORD-' . time(),
 
-            'customer_name' => $request?->full_name ?? "Akif",
-            'customer_phone' => $request?->phone ?? "0318978978",
-            'customer_email' => $request?->email ?? "akifullah@gmail.com",
-            'delivery_address' => $request?->street_address ?? "My addresss",
+            'customer_name' => $request?->full_name ?? "NA",
+            'customer_phone' => $request?->phone ?? "NA",
+            'customer_email' => $request?->email ?? "NA",
+            'delivery_address' => $request?->street_address ?? "NA",
             'payment_method' => $request?->payment_method ?? "cod",
             'payment_status' => 'unpaid',
             'order_status' => 'pending',
@@ -93,10 +93,17 @@ class PaymentController extends Controller
 
         foreach ($request->items as $cartItem) {
 
+            $sizeId = $cartItem["selectedSize"]["id"] ?? null;
+            $itemId = $cartItem["productId"] ?? null;
+
+            // Validate foreign keys exist to prevent constraint violations
+            $sizeExists = $sizeId ? ItemSize::find($sizeId) : null;
+            $itemExists = $itemId ? Item::find($itemId) : null;
+
             $order_item =  OrderItem::create([
                 'order_id' => $order->id,
-                'item_id' => $cartItem["productId"],
-                'size_id' => $cartItem["selectedSize"]["id"],
+                'item_id' => $itemExists ? $itemId : null,
+                'size_id' => $sizeExists ? $sizeId : null,
 
                 'item_name' => $cartItem["name"],
                 'size_name' => $cartItem["selectedSize"]["name"],
@@ -180,13 +187,12 @@ class PaymentController extends Controller
         }
 
         if ($request?->payment_method == "online") {
-            // 3. Create Stripe Payment Intent
+            // 3. Create Stripe Payment Intent — automatic capture (charges immediately)
             Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
 
             $paymentIntent = PaymentIntent::create([
                 'amount' => $grandTotal * 100,
                 'currency' => $setting->currency_code ?? 'gbp',
-                'capture_method' => 'manual',
                 'automatic_payment_methods' => [
                     'enabled' => true,
                 ],
@@ -203,12 +209,14 @@ class PaymentController extends Controller
                 "success" => true,
                 "message" => "Order placed successfully",
                 'clientSecret' => $paymentIntent->client_secret,
+                'paymentIntentId' => $paymentIntent->id,
                 'orderId' => $order->id
             ]);
         }
 
+        // COD orders — send admin email immediately
         try {
-            \Illuminate\Support\Facades\Mail::to('order@chimnchurri.com')->send(new \App\Mail\AdminOrderPlaced($order));
+            \Illuminate\Support\Facades\Mail::to('akifullah0317@gmail.com')->send(new \App\Mail\AdminOrderPlaced($order));
             $order->update(['admin_email_sent_at' => now()]);
         } catch (\Exception $e) {
             logger()->error('Failed to send admin order notification email: ' . $e->getMessage());
@@ -219,6 +227,97 @@ class PaymentController extends Controller
             "message" => "Order placed successfully",
             'orderId' => $order->id
         ]);
+    }
+
+    /**
+     * Called by frontend after Stripe confirmCardPayment succeeds.
+     * Verifies the payment status with Stripe and updates order accordingly.
+     */
+    public function verifyPayment(Request $request)
+    {
+        $request->validate([
+            'order_id' => 'required|integer',
+            'payment_intent_id' => 'required|string',
+        ]);
+
+        $order = Order::with(['items.addons', 'time_slots'])->find($request->order_id);
+
+        if (!$order) {
+            return response()->json(['success' => false, 'message' => 'Order not found'], 404);
+        }
+
+        // Already paid — skip
+        if ($order->payment_status === 'paid') {
+            return response()->json([
+                'success' => true,
+                'paid' => true,
+                'message' => 'Payment already confirmed',
+                'orderId' => $order->id,
+            ]);
+        }
+
+        try {
+            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+            $paymentIntent = PaymentIntent::retrieve($request->payment_intent_id);
+
+            if ($paymentIntent->status === 'succeeded') {
+                // Payment confirmed by Stripe — mark as paid IMMEDIATELY
+                $order->update([
+                    'payment_status' => 'paid',
+                    'order_status' => 'confirmed',
+                ]);
+
+                // Send emails in background (non-blocking) so API responds instantly
+                $orderId = $order->id;
+                dispatch(function () use ($orderId) {
+                    $order = Order::with(['items.addons', 'time_slots'])->find($orderId);
+                    if (!$order) return;
+
+                    // Send customer confirmation email
+                    try {
+                        if ($order->customer_email && !$order->customer_email_sent_at) {
+                            \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                            $order->update(['customer_email_sent_at' => now()]);
+                        }
+                    } catch (\Exception $e) {
+                        logger()->error('Failed to send customer email: ' . $e->getMessage());
+                    }
+
+                    // Send admin notification email
+                    try {
+                        if (!$order->admin_email_sent_at) {
+                            \Illuminate\Support\Facades\Mail::to('akifullah0317@gmail.com')->send(new \App\Mail\AdminOrderPlaced($order));
+                            $order->update(['admin_email_sent_at' => now()]);
+                        }
+                    } catch (\Exception $e) {
+                        logger()->error('Failed to send admin email: ' . $e->getMessage());
+                    }
+                })->afterResponse();
+
+                return response()->json([
+                    'success' => true,
+                    'paid' => true,
+                    'message' => 'Payment confirmed and order updated',
+                    'orderId' => $order->id,
+                ]);
+            }
+
+            // Payment not succeeded — keep unpaid, no emails
+            return response()->json([
+                'success' => true,
+                'paid' => false,
+                'message' => 'Payment not completed. Stripe status: ' . $paymentIntent->status,
+                'orderId' => $order->id,
+            ]);
+
+        } catch (\Exception $e) {
+            logger()->error('Verify payment failed: ' . $e->getMessage());
+            return response()->json([
+                'success' => false,
+                'paid' => false,
+                'message' => 'Failed to verify payment with Stripe',
+            ], 500);
+        }
     }
 
     public function handleWebhook(Request $request)
@@ -236,45 +335,92 @@ class PaymentController extends Controller
                 env('STRIPE_WEBHOOK_SECRET')
             );
 
-            logger()->info('Stripe Webhook Event:  ' . $event);
+            logger()->info('Stripe Webhook Event: ' . $event->type);
         } catch (\UnexpectedValueException $e) {
             return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Exception $e) {
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
+        // Handle successful payment (automatic capture)
+        if ($event->type == 'payment_intent.succeeded') {
+            $paymentIntent = $event->data->object;
+            $orderId = $paymentIntent->metadata->order_id ?? null;
 
+            if ($orderId) {
+                $order = Order::with(['items.addons', 'time_slots'])->find($orderId);
+                if ($order && $order->payment_status !== 'paid') {
+                    $order->update([
+                        'payment_status' => 'paid',
+                        'order_status' => 'confirmed',
+                    ]);
+                }
+
+                // Send emails in background
+                if ($order) {
+                    dispatch(function () use ($orderId) {
+                        $order = Order::with(['items.addons', 'time_slots'])->find($orderId);
+                        if (!$order) return;
+
+                        try {
+                            if ($order->customer_email && !$order->customer_email_sent_at) {
+                                \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                                $order->update(['customer_email_sent_at' => now()]);
+                            }
+                        } catch (\Exception $e) {
+                            logger()->error('Failed to send customer email (webhook): ' . $e->getMessage());
+                        }
+
+                        try {
+                            if (!$order->admin_email_sent_at) {
+                                \Illuminate\Support\Facades\Mail::to('akifullah0317@gmail.com')->send(new \App\Mail\AdminOrderPlaced($order));
+                                $order->update(['admin_email_sent_at' => now()]);
+                            }
+                        } catch (\Exception $e) {
+                            logger()->error('Failed to send admin email (webhook): ' . $e->getMessage());
+                        }
+                    })->afterResponse();
+                }
+            }
+        }
+
+        // Handle manual capture (legacy fallback)
         if ($event->type == 'charge.captured') {
             $paymentIntent = $event->data->object;
-            $orderId = $paymentIntent->metadata->order_id;
+            $orderId = $paymentIntent->metadata->order_id ?? null;
 
-            $order = Order::with(['items.addons', 'time_slots'])->find($orderId);
-            if ($order) {
-                $order->update([
-                    'payment_status' => 'paid',
-                ]);
+            if ($orderId) {
+                $order = Order::with(['items.addons', 'time_slots'])->find($orderId);
+                if ($order && $order->payment_status !== 'paid') {
+                    $order->update([
+                        'payment_status' => 'paid',
+                        'order_status' => 'confirmed',
+                    ]);
 
-                // Send confirmation emails for online payments
-                try {
-                    if ($order->customer_email) {
-                        \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
-                        $order->update(['customer_email_sent_at' => now()]);
+                    try {
+                        if ($order->customer_email) {
+                            \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                            $order->update(['customer_email_sent_at' => now()]);
+                        }
+                    } catch (\Exception $e) {
+                        logger()->error('Failed to send order confirmation email (webhook): ' . $e->getMessage());
                     }
-                } catch (\Exception $e) {
-                    logger()->error('Failed to send order confirmation email (webhook): ' . $e->getMessage());
                 }
             }
         }
 
         if ($event->type == 'payment_intent.canceled') {
             $paymentIntent = $event->data->object;
-            $orderId = $paymentIntent->metadata->order_id;
+            $orderId = $paymentIntent->metadata->order_id ?? null;
 
-            $order = Order::find($orderId);
-            if ($order) {
-                $order->update([
-                    'payment_status' => 'cancelled',
-                ]);
+            if ($orderId) {
+                $order = Order::find($orderId);
+                if ($order) {
+                    $order->update([
+                        'payment_status' => 'cancelled',
+                        'order_status' => 'cancelled',
+                    ]);
+                }
             }
         }
 
