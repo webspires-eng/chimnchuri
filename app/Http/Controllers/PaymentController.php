@@ -214,9 +214,21 @@ class PaymentController extends Controller
             ]);
         }
 
+        // Send customer confirmation email
+        if ($request?->payment_method == "cod") {
+            try {
+                if ($order->customer_email && !$order->customer_email_sent_at) {
+                    \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                    $order->update(['customer_email_sent_at' => now()]);
+                }
+            } catch (\Exception $e) {
+                logger()->error('Failed to send customer email: ' . $e->getMessage());
+            }
+        }
+
         // COD orders — send admin email immediately
         try {
-            \Illuminate\Support\Facades\Mail::to('akifullah0317@gmail.com')->send(new \App\Mail\AdminOrderPlaced($order));
+            \Illuminate\Support\Facades\Mail::to('order@chimnchurri.com')->send(new \App\Mail\AdminOrderPlaced($order));
             $order->update(['admin_email_sent_at' => now()]);
         } catch (\Exception $e) {
             logger()->error('Failed to send admin order notification email: ' . $e->getMessage());
@@ -286,7 +298,7 @@ class PaymentController extends Controller
                     // Send admin notification email
                     try {
                         if (!$order->admin_email_sent_at) {
-                            \Illuminate\Support\Facades\Mail::to('akifullah0317@gmail.com')->send(new \App\Mail\AdminOrderPlaced($order));
+                            \Illuminate\Support\Facades\Mail::to('order@chimnchurri.com')->send(new \App\Mail\AdminOrderPlaced($order));
                             $order->update(['admin_email_sent_at' => now()]);
                         }
                     } catch (\Exception $e) {
@@ -309,7 +321,6 @@ class PaymentController extends Controller
                 'message' => 'Payment not completed. Stripe status: ' . $paymentIntent->status,
                 'orderId' => $order->id,
             ]);
-
         } catch (\Exception $e) {
             logger()->error('Verify payment failed: ' . $e->getMessage());
             return response()->json([
@@ -373,7 +384,7 @@ class PaymentController extends Controller
 
                         try {
                             if (!$order->admin_email_sent_at) {
-                                \Illuminate\Support\Facades\Mail::to('akifullah0317@gmail.com')->send(new \App\Mail\AdminOrderPlaced($order));
+                                \Illuminate\Support\Facades\Mail::to('order@chimnchurri.com')->send(new \App\Mail\AdminOrderPlaced($order));
                                 $order->update(['admin_email_sent_at' => now()]);
                             }
                         } catch (\Exception $e) {
@@ -397,14 +408,14 @@ class PaymentController extends Controller
                         'order_status' => 'confirmed',
                     ]);
 
-                    try {
-                        if ($order->customer_email) {
-                            \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
-                            $order->update(['customer_email_sent_at' => now()]);
-                        }
-                    } catch (\Exception $e) {
-                        logger()->error('Failed to send order confirmation email (webhook): ' . $e->getMessage());
-                    }
+                    // try {
+                    //     if ($order->customer_email) {
+                    //         \Illuminate\Support\Facades\Mail::to($order->customer_email)->send(new \App\Mail\OrderPlaced($order));
+                    //         $order->update(['customer_email_sent_at' => now()]);
+                    //     }
+                    // } catch (\Exception $e) {
+                    //     logger()->error('Failed to send order confirmation email (webhook): ' . $e->getMessage());
+                    // }
                 }
             }
         }
