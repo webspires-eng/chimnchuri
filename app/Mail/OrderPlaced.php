@@ -5,6 +5,7 @@ namespace App\Mail;
 use Illuminate\Bus\Queueable;
 use Illuminate\Contracts\Queue\ShouldQueue;
 use Illuminate\Mail\Mailable;
+use Illuminate\Mail\Mailables\Address;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
@@ -30,6 +31,9 @@ class OrderPlaced extends Mailable
     {
         return new Envelope(
             subject: 'Order Confirmation - #' . $this->order->order_number . ' - ' . config('app.name'),
+            replyTo: [
+                new Address(config('Info@chimnchurri.com'), config('mail.from.name')),
+            ],
         );
     }
 
