@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
 
 class OrderStatusUpdated extends Mailable
 {
@@ -30,6 +31,7 @@ class OrderStatusUpdated extends Mailable
     {
         return new Envelope(
             subject: 'Order Status Updated - #' . $this->order->order_number . ' - ' . config('app.name'),
+            replyTo: [new Address(config('mail.from.address'), config('mail.from.name'))],
         );
     }
 

@@ -8,6 +8,7 @@ use Illuminate\Mail\Mailable;
 use Illuminate\Mail\Mailables\Content;
 use Illuminate\Mail\Mailables\Envelope;
 use Illuminate\Queue\SerializesModels;
+use Illuminate\Mail\Mailables\Address;
 
 class ContactMail extends Mailable
 {
@@ -30,9 +31,7 @@ class ContactMail extends Mailable
     {
         return new Envelope(
             subject: 'New Contact Inquiry: ' . ($this->data['subject'] ?? 'No Subject'),
-            replyTo: [
-                $this->data['email'],
-            ],
+            replyTo: [new Address(config('mail.from.address'), config('mail.from.name'))],
         );
     }
 
