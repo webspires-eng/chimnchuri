@@ -31,7 +31,7 @@ class OrderPlaced extends Mailable
     {
         return new Envelope(
             subject: 'Order Confirmation - #' . $this->order->order_number . ' - ' . config('app.name'),
-            replyTo: [new Address('akifullah0340@gmail.com', 'Chim n Churri')],
+            replyTo: [new Address(config('mail.from.address'), config('mail.from.name'))],
         );
     }
 
