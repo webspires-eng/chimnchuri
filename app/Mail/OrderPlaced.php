@@ -32,7 +32,7 @@ class OrderPlaced extends Mailable
         return new Envelope(
             subject: 'Order Confirmation - #' . $this->order->order_number . ' - ' . config('app.name'),
             replyTo: [
-                new Address(config('Info@chimnchurri.com'), config('mail.from.name')),
+                new Address('Info@chimnchurri.com', config('mail.from.name')),
             ],
         );
     }
