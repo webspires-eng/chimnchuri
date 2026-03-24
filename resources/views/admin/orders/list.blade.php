@@ -10,16 +10,12 @@
                     </div>
                     {{-- ======= Print Day's Orders ======= --}}
                     <form action="{{ route('admin.orders.print') }}" method="GET" target="_blank"
-                          class="d-flex align-items-center gap-2 flex-wrap">
+                        class="d-flex align-items-center gap-2 flex-wrap">
                         <label class="fw-semibold text-dark mb-0 text-nowrap" style="font-size:13px;">
                             🖨 Print Day's Orders:
                         </label>
-                        <input type="date"
-                               name="date"
-                               class="form-control form-control-sm"
-                               style="max-width:170px;"
-                               value="{{ date('Y-m-d') }}"
-                               required>
+                        <input type="date" name="date" class="form-control form-control-sm" style="max-width:170px;"
+                            value="{{ date('Y-m-d') }}" required>
                         <button type="submit" class="btn btn-sm btn-success text-nowrap">
                             Print / View
                         </button>
@@ -63,7 +59,14 @@
                                                 <span class="badge bg-warning   px-2 py-1 fs-13">Unpaid</span>
                                             @endif
                                         </td>
-                                        <td> {{ $order->items->count() }}</td>
+                                        @php
+                                            $items = $order->items;
+                                            $totalItems = 0;
+                                            foreach ($items as $item) {
+                                                $totalItems += $item->quantity;
+                                            }
+                                        @endphp
+                                        <td> {{ $totalItems }}</td>
                                         <td class="text-capitalize"> {{ $order->order_type }}</td>
                                         <td>
 
