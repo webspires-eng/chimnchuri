@@ -393,6 +393,7 @@
                                     </td>
                                     <td class="text-end text-dark fw-medium px-0">£{{ $order->sub_total }}</td>
                                 </tr>
+                                @if ($order->order_type != 'collection')
                                 <tr>
                                     <td class="px-0">
                                         <p class="d-flex mb-0 align-items-center gap-1"><iconify-icon
@@ -410,6 +411,7 @@
                                     <td class="text-end text-dark fw-medium px-0">£{{ $order?->delivery_charges ?? 0 }}
                                     </td>
                                 </tr>
+                                @endif
                                 <tr>
                                     <td class="px-0">
                                         <p class="d-flex mb-0 align-items-center gap-1"><iconify-icon

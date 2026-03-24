@@ -553,14 +553,14 @@
                                 <td>Subtotal</td>
                                 <td align="right">£{{ number_format($order->sub_total, 2) }}</td>
                             </tr>
-                            @if ($order->discount_total > 0)
+                            @if ($order->order_type != 'collection' && $order->discount_total > 0)
                                 <tr>
                                     <td>Discount</td>
                                     <td align="right" style="color: #16a34a; font-weight: 600;">
                                         -£{{ number_format($order->discount_total, 2) }}</td>
                                 </tr>
                             @endif
-                            @if ($order->delivery_charges > 0)
+                            @if ($order->order_type != 'collection' && $order->delivery_charges > 0)
                                 <tr>
                                     <td>Delivery Fee</td>
                                     <td align="right">
