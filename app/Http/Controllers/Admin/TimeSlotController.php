@@ -30,7 +30,7 @@ class TimeSlotController extends Controller
             'order_date_id' => 'required|exists:order_dates,id',
             'start_time' => 'required',
             'end_time' => 'required',
-            'max_capacity' => 'required|integer|min:1',
+            'max_capacity' => 'required|integer|min:0',
         ]);
 
         TimeSlot::create([
