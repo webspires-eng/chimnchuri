@@ -56,7 +56,7 @@ class TimeSlotController extends Controller
         $request->validate([
             'start_time' => 'required',
             'end_time' => 'required',
-            'max_capacity' => 'required|integer|min:1',
+            'max_capacity' => 'required|integer|min:0',
         ]);
 
         $timeSlot->update([
@@ -105,7 +105,7 @@ class TimeSlotController extends Controller
         // Get booked capacity for each slot on this date (exclude cancelled orders)
         $bookedSlots = OrderTimeSlot::whereHas('order', function ($q) use ($orderDate) {
             $q->where('order_date', $orderDate->date->format('Y-m-d'))
-              ->where('order_status', '!=', 'cancelled');
+                ->where('order_status', '!=', 'cancelled');
         })->get();
 
         $query = TimeSlot::where("is_active", true)
