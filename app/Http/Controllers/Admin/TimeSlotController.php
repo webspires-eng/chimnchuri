@@ -59,13 +59,11 @@ class TimeSlotController extends Controller
             'available_capacity' => 'required|integer|min:0',
         ]);
 
-        $new_max_capacity = $request->available_capacity + $timeSlot->booked_capacity;
-
         $timeSlot->update([
             'order_type' => 'delivery',
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'max_capacity' => $new_max_capacity,
+            'max_capacity' => $request->available_capacity,
             'is_active' => $request->is_active,
         ]);
 
@@ -104,10 +102,14 @@ class TimeSlotController extends Controller
             ], 200);
         }
 
-        // Get booked capacity for each slot on this date (exclude cancelled orders)
+        // Get booked capacity for each slot on this date (exclude cancelled and unpaid online orders)
         $bookedSlots = OrderTimeSlot::whereHas('order', function ($q) use ($orderDate) {
             $q->where('order_date', $orderDate->date->format('Y-m-d'))
-                ->where('order_status', '!=', 'cancelled');
+                ->where('order_status', '!=', 'cancelled')
+                ->where(function ($sub) {
+                    $sub->where('payment_method', 'cod')
+                        ->orWhere('payment_status', 'paid');
+                });
         })->get();
 
         $query = TimeSlot::where("order_date_id", $orderDateId);
@@ -119,13 +121,9 @@ class TimeSlotController extends Controller
             $timeSlot->start_time = $slotStart->format('g:i A');
             $timeSlot->end_time   = Carbon::parse($timeSlot->end_time)->format('g:i A');
 
-            // Calculate booked capacity for this specific slot
-            $bookedCapacity = $bookedSlots->where('time_slot_id', $timeSlot->id)->sum('capacity');
-
-            $remainingCapacity = $timeSlot->max_capacity - $bookedCapacity;
-            $timeSlot->max_capacity = max(0, $remainingCapacity);
-
-            $timeSlot->disabled = ($remainingCapacity <= 0) || (!$timeSlot->is_active);
+            // Admin requested that capacity NEVER auto-decreases, even on paid orders.
+            // So we simply pass the configured max_capacity straight to the frontend.
+            $timeSlot->disabled = ($timeSlot->max_capacity <= 0) || (!$timeSlot->is_active);
 
             return $timeSlot;
         });

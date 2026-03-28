@@ -42,10 +42,10 @@
 
                     <div class="col-lg-2">
                         <div class="mb-3">
-                            <label for="available_capacity" class="form-label">Available Capacity</label>
+                            <label for="available_capacity" class="form-label">Available Capacity (Fixed)</label>
                             <input type="number" id="available_capacity" name="available_capacity" class="form-control"
-                                placeholder="Remaining Capacity" required value="{{ $timeSlot->available_capacity }}">
-                            <small class="text-muted" style="font-size: 0.75rem;">Total Max: {{ $timeSlot->max_capacity }} (Booked: {{ $timeSlot->booked_capacity }})</small>
+                                placeholder="Remaining Capacity" required value="{{ $timeSlot->max_capacity }}">
+                            <small class="text-muted" style="font-size: 0.75rem;">Orders Booked: {{ $timeSlot->booked_capacity }}</small>
                         </div>
                     </div>
 

@@ -24,7 +24,11 @@ class TimeSlot extends Model
     {
         return \App\Models\OrderTimeSlot::where('time_slot_id', $this->id)
             ->whereHas('order', function ($q) {
-                $q->where('order_status', '!=', 'cancelled');
+                $q->where('order_status', '!=', 'cancelled')
+                  ->where(function ($sub) {
+                      $sub->where('payment_method', 'cod')
+                          ->orWhere('payment_status', 'paid');
+                  });
             })->sum('capacity');
     }
 
