@@ -56,7 +56,7 @@
                                 </div> <!-- end col -->
                                 <div class="col-6 text-end">
                                     <p class="text-muted mb-0 text-truncate">Today Orders</p>
-                                    <h4 class="text-dark mt-1 mb-0">{{ $totalOrders }}</h3>
+                                    <h4 class="text-dark mt-1 mb-0">{{ $todayOrders }}</h3>
                                 </div> <!-- end col -->
                             </div> <!-- end row-->
                         </div> <!-- end card body -->
