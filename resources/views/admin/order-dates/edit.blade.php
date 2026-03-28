@@ -60,8 +60,9 @@
 
     {{-- Time Slots Table — kept outside the update form to avoid nested form conflicts --}}
     <div class="card">
-        <div class="card-header">
+        <div class="card-header d-flex justify-content-between align-items-center">
             <h5 class="card-title mb-0">Time Slots for this Date</h5>
+            <a href="{{ route('admin.time-slots.create', ['order_date_id' => $orderDate->id]) }}" class="btn btn-sm btn-primary">Add Time Slot</a>
         </div>
         <div class="card-body">
             @if ($orderDate->timeSlots->count() > 0)

@@ -111,8 +111,12 @@
                                         </td>
                                         <td>
                                             <div class="d-flex gap-2">
+                                                <a href="{{ route('admin.time-slots.create', ['order_date_id' => $orderDate->id]) }}"
+                                                    class="btn btn-soft-success btn-sm" title="Add Time Slot"><iconify-icon
+                                                        icon="solar:clock-circle-broken"
+                                                        class="align-middle fs-18"></iconify-icon></a>
                                                 <a href="{{ route('admin.order-dates.edit', $orderDate->id) }}"
-                                                    class="btn btn-soft-primary btn-sm"><iconify-icon
+                                                    class="btn btn-soft-primary btn-sm" title="Edit Date"><iconify-icon
                                                         icon="solar:pen-2-broken"
                                                         class="align-middle fs-18"></iconify-icon></a>
                                                 <form action="{{ route('admin.order-dates.destroy', $orderDate->id) }}"

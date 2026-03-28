@@ -17,7 +17,7 @@
                             <select id="order_date_id" name="order_date_id" class="form-select" required>
                                 <option value="">Select a date</option>
                                 @foreach ($orderDates as $orderDate)
-                                    <option value="{{ $orderDate->id }}">
+                                    <option value="{{ $orderDate->id }}" {{ request('order_date_id') == $orderDate->id ? 'selected' : '' }}>
                                         {{ \Carbon\Carbon::parse($orderDate->date)->format('l, j M Y') }}
                                         ({{ ucfirst($orderDate->status) }})
                                     </option>
