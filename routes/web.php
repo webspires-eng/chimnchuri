@@ -66,6 +66,7 @@ Route::prefix('admin')->group(function () {
         Route::get('/orders/{order}', [AdminOrderController::class, 'show'])->name('admin.orders.show');
         Route::post('/orders/{order}/status', [AdminOrderController::class, 'updateStatus'])->name('admin.orders.status');
         Route::post('/orders/{order}/resend-email', [AdminOrderController::class, 'resendEmail'])->name('admin.orders.resend-email');
+        Route::delete('/orders/{order}/delete', [AdminOrderController::class, 'destroy'])->name('admin.orders.destroy');
 
 
         // VOUCHERS

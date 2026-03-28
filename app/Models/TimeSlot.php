@@ -19,4 +19,17 @@ class TimeSlot extends Model
     {
         return $this->belongsTo(OrderDate::class);
     }
+
+    public function getBookedCapacityAttribute()
+    {
+        return \App\Models\OrderTimeSlot::where('time_slot_id', $this->id)
+            ->whereHas('order', function ($q) {
+                $q->where('order_status', '!=', 'cancelled');
+            })->sum('capacity');
+    }
+
+    public function getAvailableCapacityAttribute()
+    {
+        return max(0, $this->max_capacity - $this->booked_capacity);
+    }
 }

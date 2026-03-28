@@ -36,6 +36,7 @@ class SettingController extends Controller
             "tax_percentage" => "nullable|numeric",
             "delivery_charge" => "nullable|numeric",
             "min_order_amount" => "nullable|numeric",
+            "max_cart_items" => "nullable|numeric",
             "is_delivery_enabled" => "nullable|boolean",
             "is_pickup_enabled" => "nullable|boolean",
             "is_cod_enabled" => "nullable|boolean",

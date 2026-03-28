@@ -48,7 +48,7 @@ class AdminOrderController extends Controller
                     try {
                         Stripe::setApiKey(config('services.stripe.secret'));
                         $paymentIntent = PaymentIntent::retrieve($order->payment_intent_id);
-                        
+
                         if ($paymentIntent->status === 'requires_capture') {
                             $paymentIntent->cancel();
                         } elseif ($paymentIntent->status === 'succeeded') {
@@ -120,8 +120,12 @@ class AdminOrderController extends Controller
 
         $orders = Order::with('items.addons', 'time_slots', 'user')
             ->whereDate('order_date', $date)
-            ->orderBy('created_at', 'asc')
-            ->get();
+            ->get()
+            ->sortBy(function ($order) {
+                $minTime = $order->time_slots->min('start_time');
+                return $minTime ? clone \Carbon\Carbon::parse($minTime) : clone \Carbon\Carbon::parse('23:59:59');
+            })
+            ->values();
 
         $printDate = Carbon::parse($date)->format('l, j F Y');
 
@@ -135,8 +139,6 @@ class AdminOrderController extends Controller
 
         $order = Order::with('items.addons', 'time_slots')->findOrFail($id);
 
-        // Set a shorter time limit for email sending
-        set_time_limit(30);
 
         try {
             if ($request->type === 'customer') {
@@ -156,11 +158,24 @@ class AdminOrderController extends Controller
             }
         } catch (\Exception $e) {
             logger()->error('Failed to resend email: ' . $e->getMessage());
-            return back()->with('error', 'Failed to send email. Please check your SMTP settings in the admin panel. Error: ' . $e->getMessage());
+            return back()->with('error', 'Failed to send email. Error: ' . $e->getMessage());
         }
 
         return back()->with('error', 'Unknown email type.');
     }
+
+    public function destroy($id)
+    {
+        try {
+            $order = Order::findOrFail($id);
+            $order->delete();
+            return redirect()->route('admin.orders')->with('success', 'Order deleted successfully.');
+        } catch (\Exception $e) {
+            logger()->error('Failed to delete order: ' . $e->getMessage());
+            return back()->with('error', 'Failed to delete order.');
+        }
+    }
+
 
 
     // public function updateStatus(Request $request, $id)

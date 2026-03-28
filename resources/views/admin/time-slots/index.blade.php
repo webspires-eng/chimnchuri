@@ -34,7 +34,7 @@
                                     <th style="width: 50px;">#ID</th>
                                     <th>Order Date</th>
                                     <th>Time</th>
-                                    <th>Capacity</th>
+                                    <th>Available</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -56,7 +56,7 @@
                                             {{ Carbon\Carbon::parse($timeSlot->start_time)->format('h:i A') }} -
                                             {{ Carbon\Carbon::parse($timeSlot->end_time)->format('h:i A') }}
                                         </td>
-                                        <td>{{ $timeSlot->max_capacity }}</td>
+                                        <td>{{ $timeSlot->available_capacity }}</td>
                                         <td>
                                             @if ($timeSlot->is_active)
                                                 <span class="badge bg-success-subtle text-success">Active</span>

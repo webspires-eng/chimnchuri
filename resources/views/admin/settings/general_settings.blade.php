@@ -38,17 +38,20 @@
                             <div class="col-lg-4">
                                 <div class="mb-3">
                                     <label for="restaurant_logo" class="form-label">Restaurant Logo</label>
-                                    @if(!empty($settings->restaurant_logo))
+                                    @if (!empty($settings->restaurant_logo))
                                         <div class="mb-2" id="currentLogoWrapper">
-                                            <img src="{{ asset($settings->restaurant_logo) }}" alt="Current Logo" id="currentLogoPreview" class="img-thumbnail" style="max-height: 100px; background: #333; padding: 8px; border-radius: 8px;">
+                                            <img src="{{ asset($settings->restaurant_logo) }}" alt="Current Logo"
+                                                id="currentLogoPreview" class="img-thumbnail"
+                                                style="max-height: 100px; background: #333; padding: 8px; border-radius: 8px;">
                                         </div>
                                     @endif
-                                    <div class="mb-2 {{ empty($settings->restaurant_logo) ? 'd-none' : 'd-none' }}" id="newLogoPreviewWrapper">
-                                        <img src="" alt="New Logo Preview" id="newLogoPreview" class="img-thumbnail" style="max-height: 100px; background: #333; padding: 8px; border-radius: 8px;">
+                                    <div class="mb-2 {{ empty($settings->restaurant_logo) ? 'd-none' : 'd-none' }}"
+                                        id="newLogoPreviewWrapper">
+                                        <img src="" alt="New Logo Preview" id="newLogoPreview" class="img-thumbnail"
+                                            style="max-height: 100px; background: #333; padding: 8px; border-radius: 8px;">
                                     </div>
-                                    <input type="file" id="restaurant_logo"
-                                        name="restaurant_logo" class="form-control" accept="image/*"
-                                        onchange="previewLogo(this)">
+                                    <input type="file" id="restaurant_logo" name="restaurant_logo" class="form-control"
+                                        accept="image/*" onchange="previewLogo(this)">
                                     @error('restaurant_logo')
                                         <span class="text-danger">{{ $message }}</span>
                                     @enderror
@@ -196,6 +199,19 @@
                                     @enderror
                                 </div>
                             </div>
+
+                            <div class="col-lg-4">
+                                <div class="mb-3">
+                                    <label for="max_cart_items" class="form-label">Max Cart Items</label>
+                                    <input type="number" id="max_cart_items"
+                                        value="{{ old('max_cart_items', $settings->max_cart_items ?? 5) }}"
+                                        name="max_cart_items" class="form-control" placeholder="Max Cart Items">
+                                    @error('max_cart_items')
+                                        <span class="text-danger">{{ $message }}</span>
+                                    @enderror
+                                </div>
+                            </div>
+
 
                             <div class="col-12">
                                 <h4 class="text-start">Order Settings</h4>
@@ -383,25 +399,24 @@
                     </div>
                 </div>
             </form>
-        
-<script>
-    function previewLogo(input) {
-        const wrapper = document.getElementById('newLogoPreviewWrapper');
-        const preview = document.getElementById('newLogoPreview');
-        const currentWrapper = document.getElementById('currentLogoWrapper');
 
-        if (input.files && input.files[0]) {
-            const reader = new FileReader();
-            reader.onload = function(e) {
-                preview.src = e.target.result;
-                wrapper.classList.remove('d-none');
-                if (currentWrapper) {
-                    currentWrapper.classList.add('d-none');
+            <script>
+                function previewLogo(input) {
+                    const wrapper = document.getElementById('newLogoPreviewWrapper');
+                    const preview = document.getElementById('newLogoPreview');
+                    const currentWrapper = document.getElementById('currentLogoWrapper');
+
+                    if (input.files && input.files[0]) {
+                        const reader = new FileReader();
+                        reader.onload = function(e) {
+                            preview.src = e.target.result;
+                            wrapper.classList.remove('d-none');
+                            if (currentWrapper) {
+                                currentWrapper.classList.add('d-none');
+                            }
+                        };
+                        reader.readAsDataURL(input.files[0]);
+                    }
                 }
-            };
-            reader.readAsDataURL(input.files[0]);
-        }
-    }
-</script>
-
+            </script>
         @endsection

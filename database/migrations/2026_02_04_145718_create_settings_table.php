@@ -31,6 +31,7 @@ return new class extends Migration
 
             $table->decimal('delivery_charge', 10, 2)->nullable();
             $table->decimal('min_order_amount', 10, 2)->nullable();
+            $table->integer('max_cart_items')->default(5)->nullable();
 
             $table->boolean('is_order_enabled')->default(true);
             $table->boolean('is_delivery_enabled')->default(true);

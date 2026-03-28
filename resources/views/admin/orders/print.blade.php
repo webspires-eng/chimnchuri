@@ -319,10 +319,20 @@
 
         .items-table .addon-row td {
             padding: 1px 6px 1px 14px;
-            color: #777;
-            font-size: 8px;
+            color: #d32f2f !important;
+            font-size: 9px;
+            font-weight: 700;
             border-bottom: none;
-            font-style: italic;
+            font-style: normal;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
+        }
+
+        .items-table .main-item {
+            color: #d32f2f !important;
+            font-size: 11px;
+            -webkit-print-color-adjust: exact;
+            print-color-adjust: exact;
         }
 
         /* ---- Totals row ---- */
@@ -610,7 +620,7 @@
                                 <tbody>
                                     @forelse($order->items as $item)
                                         <tr>
-                                            <td><strong>{{ $item->item_name }}</strong></td>
+                                            <td><strong class="main-item">{{ $item->item_name }}</strong></td>
                                             <td>{{ $item->size_name ?? '—' }}</td>
                                             <td class="qty">{{ $item->quantity }}</td>
                                             <td class="price">£{{ number_format($item->price, 2) }}</td>

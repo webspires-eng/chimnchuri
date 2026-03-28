@@ -30,7 +30,7 @@ class TimeSlotController extends Controller
             'order_date_id' => 'required|exists:order_dates,id',
             'start_time' => 'required',
             'end_time' => 'required',
-            'max_capacity' => 'required|integer|min:0',
+            'available_capacity' => 'required|integer|min:0',
         ]);
 
         TimeSlot::create([
@@ -38,7 +38,7 @@ class TimeSlotController extends Controller
             'order_date_id' => $request->order_date_id,
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'max_capacity' => $request->max_capacity,
+            'max_capacity' => $request->available_capacity,
             'is_active' => true,
         ]);
 
@@ -56,14 +56,16 @@ class TimeSlotController extends Controller
         $request->validate([
             'start_time' => 'required',
             'end_time' => 'required',
-            'max_capacity' => 'required|integer|min:0',
+            'available_capacity' => 'required|integer|min:0',
         ]);
+
+        $new_max_capacity = $request->available_capacity + $timeSlot->booked_capacity;
 
         $timeSlot->update([
             'order_type' => 'delivery',
             'start_time' => $request->start_time,
             'end_time' => $request->end_time,
-            'max_capacity' => $request->max_capacity,
+            'max_capacity' => $new_max_capacity,
             'is_active' => $request->is_active,
         ]);
 
@@ -108,10 +110,9 @@ class TimeSlotController extends Controller
                 ->where('order_status', '!=', 'cancelled');
         })->get();
 
-        $query = TimeSlot::where("is_active", true)
-            ->where("order_date_id", $orderDateId);
+        $query = TimeSlot::where("order_date_id", $orderDateId);
 
-        $timeSlots = $query->get()->map(function ($timeSlot) use ($bookedSlots) {
+        $timeSlots = $query->orderBy('start_time', 'asc')->get()->map(function ($timeSlot) use ($bookedSlots) {
 
             $slotStart = Carbon::parse($timeSlot->start_time);
 
@@ -124,7 +125,7 @@ class TimeSlotController extends Controller
             $remainingCapacity = $timeSlot->max_capacity - $bookedCapacity;
             $timeSlot->max_capacity = max(0, $remainingCapacity);
 
-            $timeSlot->disabled = $remainingCapacity <= 0;
+            $timeSlot->disabled = ($remainingCapacity <= 0) || (!$timeSlot->is_active);
 
             return $timeSlot;
         });

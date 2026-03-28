@@ -95,12 +95,11 @@
                                                 <a href="{{ route('admin.orders.show', $order->id) }}"
                                                     class="btn btn-light btn-sm"><iconify-icon icon="solar:eye-broken"
                                                         class="align-middle fs-18"></iconify-icon></a>
-                                                {{-- <a href="#!" class="btn btn-soft-primary btn-sm"><iconify-icon
-                                                        icon="solar:pen-2-broken"
-                                                        class="align-middle fs-18"></iconify-icon></a>
-                                                <a href="#!" class="btn btn-soft-danger btn-sm"><iconify-icon
-                                                        icon="solar:trash-bin-minimalistic-2-broken"
-                                                        class="align-middle fs-18"></iconify-icon></a> --}}
+                                                <form action="{{ route('admin.orders.destroy', $order->id) }}" method="POST" class="d-inline-block m-0 p-0" onsubmit="return confirm('Are you sure you want to delete this order?');">
+                                                    @csrf
+                                                    @method('DELETE')
+                                                    <button type="submit" class="btn btn-soft-danger btn-sm m-0"><iconify-icon icon="solar:trash-bin-minimalistic-2-broken" class="align-middle fs-18"></iconify-icon></button>
+                                                </form>
                                             </div>
                                         </td>
                                     </tr>
