@@ -529,13 +529,13 @@
                                     <a class="sub-nav-link" href="{{ route('admin.general-settings') }}">General
                                         Setting</a>
                                 </li>
-                                <li class="sub-nav-item">
+                                {{-- <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.time-slots.index') }}">Time
                                         Slots</a>
-                                </li>
+                                </li> --}}
                                 <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.order-dates.index') }}">Order
-                                        Dates</a>
+                                        Dates/Time Slots</a>
                                 </li>
                                 {{-- <li class="sub-nav-item">
                                     <a class="sub-nav-link" href="{{ route('admin.branches.index') }}">Branches</a>
