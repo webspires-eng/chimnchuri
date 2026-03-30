@@ -12,10 +12,18 @@ use Illuminate\Http\Request;
 
 class TimeSlotController extends Controller
 {
-    public function index()
+    public function index(Request $request)
     {
-        $timeSlots = TimeSlot::with('orderDate')->orderBy('order_date_id', 'desc')->orderBy('start_time', 'asc')->paginate(50);
-        return view('admin.time-slots.index', compact('timeSlots'));
+        $query = TimeSlot::with('orderDate')->orderBy('order_date_id', 'desc')->orderBy('start_time', 'asc');
+
+        if ($request->has('order_date_id') && $request->order_date_id != '') {
+            $query->where('order_date_id', $request->order_date_id);
+        }
+
+        $timeSlots = $query->paginate(50)->appends($request->all());
+        $orderDates = OrderDate::orderBy('date', 'desc')->get();
+
+        return view('admin.time-slots.index', compact('timeSlots', 'orderDates'));
     }
 
     public function create()

@@ -20,7 +20,20 @@
 
             <div class="card">
                 <div class="card-header d-flex justify-content-between align-items-center gap-1">
-                    <h4 class="card-title flex-grow-1">All Time Slots</h4>
+                    <h4 class="card-title flex-grow-1">Time Slots</h4>
+
+                    <form action="{{ route('admin.time-slots.index') }}" method="GET"
+                        class="d-flex align-items-center gap-2 m-0">
+                        <select name="order_date_id" class="form-select form-select-sm" onchange="this.form.submit()">
+                            <option value="">All Dates</option>
+                            @foreach ($orderDates as $date)
+                                <option value="{{ $date->id }}"
+                                    {{ request('order_date_id') == $date->id ? 'selected' : '' }}>
+                                    {{ \Carbon\Carbon::parse($date->date)->format('D, j M Y') }}
+                                </option>
+                            @endforeach
+                        </select>
+                    </form>
 
                     <a href="{{ route('admin.time-slots.create') }}" class="btn btn-sm btn-primary">
                         Add Time Slot
@@ -34,7 +47,7 @@
                                     <th style="width: 50px;">#ID</th>
                                     <th>Order Date</th>
                                     <th>Time</th>
-                                    <th>Available</th>
+                                    <th>Capacity</th>
                                     <th>Status</th>
                                     <th>Action</th>
                                 </tr>
@@ -56,7 +69,7 @@
                                             {{ Carbon\Carbon::parse($timeSlot->start_time)->format('h:i A') }} -
                                             {{ Carbon\Carbon::parse($timeSlot->end_time)->format('h:i A') }}
                                         </td>
-                                        <td>{{ $timeSlot->available_capacity }}</td>
+                                        <td>{{ $timeSlot->max_capacity }}</td>
                                         <td>
                                             @if ($timeSlot->is_active)
                                                 <span class="badge bg-success-subtle text-success">Active</span>
