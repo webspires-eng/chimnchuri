@@ -172,18 +172,22 @@ class PaymentController extends Controller
         foreach ($request->allocations as $allocation) {
             $slotTime = TimeSlot::find($allocation['slot_id']);
 
-            // if ($slotTime) {
-            //     $slotTime->max_capacity = $slotTime->max_capacity - $allocation['quantity'];
-            //     $slotTime->save();
-            // }
+            if ($slotTime) {
+                $qty = (int) $allocation['quantity'];
+                $slotTime->max_capacity = max(0, $slotTime->max_capacity - $qty);
+                if ($slotTime->max_capacity <= 0) {
+                    $slotTime->is_active = false;
+                }
+                $slotTime->save();
 
-            OrderTimeSlot::create([
-                'order_id' => $order->id,
-                'time_slot_id' => $slotTime->id,
-                'start_time' => $slotTime->start_time,
-                'end_time' => $slotTime->end_time,
-                'capacity' => $allocation['quantity'],
-            ]);
+                OrderTimeSlot::create([
+                    'order_id'     => $order->id,
+                    'time_slot_id' => $slotTime->id,
+                    'start_time'   => $slotTime->start_time,
+                    'end_time'     => $slotTime->end_time,
+                    'capacity'     => $qty,
+                ]);
+            }
         }
 
         if ($request?->payment_method == "online") {

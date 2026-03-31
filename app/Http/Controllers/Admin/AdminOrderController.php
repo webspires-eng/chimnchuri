@@ -4,6 +4,7 @@ namespace App\Http\Controllers\Admin;
 
 use App\Http\Controllers\Controller;
 use App\Models\Order;
+use App\Models\TimeSlot;
 use App\Services\OrderTimelineService;
 use Carbon\Carbon;
 use Illuminate\Http\Request;
@@ -65,6 +66,19 @@ class AdminOrderController extends Controller
             // Handle COD
             if ($order->payment_method === 'cod' && $newStatus === 'completed') {
                 $order->payment_status = 'paid';
+            }
+
+            // Restore time-slot capacity when order is cancelled
+            if ($newStatus === 'cancelled' && $order->order_status !== 'cancelled') {
+                $order->load('time_slots');
+                foreach ($order->time_slots as $orderSlot) {
+                    $slot = TimeSlot::find($orderSlot->time_slot_id);
+                    if ($slot) {
+                        $slot->max_capacity += (int) $orderSlot->capacity;
+                        $slot->is_active = true;
+                        $slot->save();
+                    }
+                }
             }
 
             // Update Order Status once
