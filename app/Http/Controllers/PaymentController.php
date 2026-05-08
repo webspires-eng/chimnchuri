@@ -22,7 +22,7 @@ class PaymentController extends Controller
 {
     public function createPaymentIntent(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         try {
             $paymentIntent = PaymentIntent::create([
@@ -192,7 +192,7 @@ class PaymentController extends Controller
 
         if ($request?->payment_method == "online") {
             // 3. Create Stripe Payment Intent — automatic capture (charges immediately)
-            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+            Stripe::setApiKey(config('services.stripe.secret'));
 
             $paymentIntent = PaymentIntent::create([
                 'amount' => $grandTotal * 100,
@@ -273,7 +273,7 @@ class PaymentController extends Controller
         }
 
         try {
-            Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+            Stripe::setApiKey(config('services.stripe.secret'));
             $paymentIntent = PaymentIntent::retrieve($request->payment_intent_id);
 
             if ($paymentIntent->status === 'succeeded') {
@@ -337,7 +337,7 @@ class PaymentController extends Controller
 
     public function handleWebhook(Request $request)
     {
-        Stripe::setApiKey(env('STRIPE_SECRET_KEY'));
+        Stripe::setApiKey(config('services.stripe.secret'));
 
         $payload = $request->getContent();
         $sig_header = $request->header('Stripe-Signature');
@@ -347,7 +347,7 @@ class PaymentController extends Controller
             $event = \Stripe\Webhook::constructEvent(
                 $payload,
                 $sig_header,
-                env('STRIPE_WEBHOOK_SECRET')
+                config('services.stripe.webhook_secret')
             );
 
             logger()->info('Stripe Webhook Event: ' . $event->type);
