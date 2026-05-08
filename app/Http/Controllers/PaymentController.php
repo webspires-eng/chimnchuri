@@ -337,6 +337,11 @@ class PaymentController extends Controller
 
     public function handleWebhook(Request $request)
     {
+        logger()->info('Stripe Webhook Received', [
+            'payload_length' => strlen($request->getContent()),
+            'signature' => $request->header('Stripe-Signature') ? 'present' : 'missing'
+        ]);
+
         Stripe::setApiKey(config('services.stripe.secret'));
 
         $payload = $request->getContent();
@@ -352,8 +357,10 @@ class PaymentController extends Controller
 
             logger()->info('Stripe Webhook Event: ' . $event->type);
         } catch (\UnexpectedValueException $e) {
+            logger()->error('Stripe Webhook Invalid Payload: ' . $e->getMessage());
             return response()->json(['error' => 'Invalid payload'], 400);
         } catch (\Exception $e) {
+            logger()->error('Stripe Webhook Signature Verification Failed: ' . $e->getMessage());
             return response()->json(['error' => 'Invalid signature'], 400);
         }
 
